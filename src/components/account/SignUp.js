@@ -1,0 +1,147 @@
+import React, { Component } from 'react';
+import { Register } from '../../api/authApi';
+import { validateEmail, validatePassword, validateUserName, validateConfirmPassword } from './ValidationForm';
+
+class SignUp extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      userName: "",
+      password: "",
+      confirmPassword: "",
+      gender: 0,
+      emailValid: "",
+      userNameValid: "",
+      passwordValid: "",
+      confirmPasswordValid: ""
+    };
+  }
+
+  onHandleChange = (event) => {
+    let target = event.target;
+    let name = target.name;
+    let value = target.value;
+
+    this.setState({
+      [name]: value
+    })
+
+    if (name === 'email') {
+      this.setState({ emailValid: validateEmail(value) });
+    } else if (name === 'userName') {
+      this.setState({ userNameValid: validateUserName(value) });
+    } else if (name === 'password') {
+      this.setState({ passwordValid: validatePassword(value) });
+    } else if (name === 'confirmPassword') {
+      this.setState({ confirmPasswordValid: validateConfirmPassword(this.state.password, value) });
+    }
+  }
+
+  onHandleSubmit = async (event) => {
+
+    event.preventDefault();
+    const { email, userName, password, confirmPassword, gender, emailValid,
+      userNameValid, passwordValid, confirmPasswordValid } = this.state;
+
+    console.log(this.state)
+
+    if (emailValid === "" && userNameValid === "" && passwordValid === "" &&
+      confirmPasswordValid === "") {
+      try {
+        let res = await Register({
+          userName: userName, password: password,
+          confirmPassword: confirmPassword, email: email, gender: gender
+        });
+
+        if (res.isSuccessed) {
+          alert("Đăng ký tài khoản thành công!");
+        } else {
+          alert(res.message);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+  render() {
+
+    const { email, userName, password, confirmPassword, gender, emailValid,
+      userNameValid, passwordValid, confirmPasswordValid, genderValid } = this.state;
+
+    return (
+      <div className="col-md-6 col-sm-6 create-new-account">
+        <h4 className="checkout-subtitle">Create a new account</h4>
+        <p className="text title-tag-line">Create your new account.</p>
+        <form className="register-form outer-top-xs" onSubmit={this.onHandleSubmit}>
+          <div className="form-group">
+            <label className="info-title" htmlFor="EmailUp">Email Address <span>*</span></label>
+            <input
+              type="email"
+              className="form-control unicase-form-control text-input"
+              id="EmailUp"
+              name="email"
+              value={email}
+              onChange={this.onHandleChange}
+            />
+            {emailValid !== '' && <label className="alert-danger">{emailValid}</label>}
+          </div>
+          <div className="form-group">
+            <label className="info-title" htmlFor="UserName">User Name <span>*</span></label>
+            <input
+              type='text'
+              className="form-control unicase-form-control text-input"
+              id="UserName"
+              name="userName"
+              value={userName}
+              onChange={this.onHandleChange} />
+            {userNameValid !== '' && <label className="alert-danger">{userNameValid}</label>}
+          </div>
+          <div className="form-group">
+            <label className="info-title">Gender <span>*</span></label>
+            <select
+              className="form-control"
+              name="gender"
+              value={gender}
+              onChange={this.onHandleChange}>
+              <option value={0}>Nam</option>
+              <option value={1}>Nữ</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="info-title" htmlFor="PasswordUp">Password <span>*</span></label>
+            <input
+              required
+              type="password"
+              className="form-control unicase-form-control text-input"
+              id="PasswordUp"
+              name="password"
+              value={password}
+              onChange={this.onHandleChange} />
+            {passwordValid !== '' && <label className="alert-danger">{passwordValid}</label>}
+          </div>
+          <div className="form-group">
+            <label className="info-title" htmlFor="cPassword">Confirm Password <span>*</span></label>
+            <input
+              required
+              type="password"
+              className="form-control unicase-form-control text-input"
+              id="cPassword"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={this.onHandleChange}
+            />
+            {confirmPasswordValid !== '' && <label className="alert-danger">{confirmPasswordValid}</label>}
+          </div>
+
+          <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Sign Up</button>
+
+        </form>
+      </div>
+    );
+  }
+}
+
+export default SignUp;
