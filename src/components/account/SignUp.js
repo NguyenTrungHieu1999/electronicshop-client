@@ -47,8 +47,8 @@ class SignUp extends Component {
 
     console.log(this.state)
 
-    if (emailValid === "" && userNameValid === "" && passwordValid === "" &&
-      confirmPasswordValid === "") {
+    if (emailValid === "" && userNameValid === "" &&
+      passwordValid === "" && confirmPasswordValid === "") {
       try {
         let res = await Register({
           userName: userName, password: password,

@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Login } from '../../api/authApi';
 import Cookies from 'universal-cookie';
 import { validateEmail, validatePassword } from './ValidationForm';
+import GoogleLogin from 'react-google-login';
+// import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 
 // import { useHistory } from 'react-router-dom';
 
@@ -65,14 +68,44 @@ function SignIn() {
       }
     }
   }
+  const responseGoogle = (response) => {
+    console.log(response);
+  }
 
+  const responseFacebook = (response) => {
+    console.log(response);
+  }
   return (
     <div className="col-md-6 col-sm-6 sign-in">
       <h4>Sign in</h4>
       <p>Hello, Welcome to your account.</p>
       <div className="social-sign-in outer-top-xs">
-        <a href="#a" className="facebook-sign-in"><i className="fa fa-facebook" /> Sign In with Facebook</a>
-        <a href="#a" className="twitter-sign-in"><i className="fa fa-google" /> Sign In with Google</a>
+        <GoogleLogin
+          clientId="266745939810-8pkul8mbskjscf713hlrticfepc1a38m.apps.googleusercontent.com"
+          buttonText="Login"
+          onSuccess={responseGoogle}
+          onFailure={responseGoogle}
+        >
+          <span> Sign In with Google</span>
+        </GoogleLogin>
+
+        <FacebookLogin
+          appId="136478068166816"
+          autoLoad
+          callback={responseFacebook}
+          render={renderProps => (
+            <a
+              href
+              className="facebook-sign-in"
+              style={{ cursor: 'pointer', float: 'right' }}
+              onClick={renderProps.onClick}>
+              <i className="fa fa-facebook" />
+              Sign In with Facebook
+            </a>
+          )}
+        />
+        {/* <a href="#a" className="facebook-sign-in"><i className="fa fa-facebook" /> Sign In with Facebook</a> */}
+        {/* <a href="#a" className="twitter-sign-in"><i className="fa fa-google" /> Sign In with Google</a> */}
       </div>
       <form className="register-form outer-top-xs" onSubmit={onHandleSubmit}>
         <div className="form-group">
