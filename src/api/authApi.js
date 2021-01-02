@@ -26,3 +26,15 @@ export const Register = async ({ userName, password, confirmPassword, email, gen
     console.log(error);
   }
 }
+
+export const External = async ({ email, userName, firstMiddleName, lastName, loginProvider, providerKey, providerDisplayName }) => {
+  const data = { email, userName, firstMiddleName, lastName, loginProvider, providerKey, providerDisplayName };
+
+  try {
+    let res = await axios.post(`${apiURL}/api/auth/external-logins`, data);
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}

@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Login } from '../../api/authApi';
+import { Login } from '../../../api/authApi';
 import Cookies from 'universal-cookie';
-import { validateEmail, validatePassword } from './ValidationForm';
-import GoogleLogin from 'react-google-login';
-// import FacebookLogin from 'react-facebook-login';
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import { validateEmail, validatePassword } from '../ValidationForm';
+import ExternalLogins from './ExternalLogins';
 
 // import { useHistory } from 'react-router-dom';
 
@@ -53,8 +51,9 @@ function SignIn() {
 
         if (res.isSuccessed) {
 
-          //localStorage.setItem("token", JSON.stringify(res));
           cookies.set('token', res, { path: '/', expires: new Date(Date.now() + 3600000) });
+
+          cookies.set('isAuthen', true, {patth:'/', expires: new Date(Date.now() + 3600000)});
 
           window.location.href = '/';
 
@@ -68,48 +67,17 @@ function SignIn() {
       }
     }
   }
-  const responseGoogle = (response) => {
-    console.log(response);
-  }
 
-  const responseFacebook = (response) => {
-    console.log(response);
-  }
   return (
     <div className="col-md-6 col-sm-6 sign-in">
-      <h4>Sign in</h4>
-      <p>Hello, Welcome to your account.</p>
+      <h4>Đăng nhập</h4>
+      <p>Xin chào, Chào mừng đến với tài khoản của bạn.</p>
       <div className="social-sign-in outer-top-xs">
-        <GoogleLogin
-          clientId="266745939810-8pkul8mbskjscf713hlrticfepc1a38m.apps.googleusercontent.com"
-          buttonText="Login"
-          onSuccess={responseGoogle}
-          onFailure={responseGoogle}
-        >
-          <span> Sign In with Google</span>
-        </GoogleLogin>
-
-        <FacebookLogin
-          appId="136478068166816"
-          autoLoad
-          callback={responseFacebook}
-          render={renderProps => (
-            <a
-              href
-              className="facebook-sign-in"
-              style={{ cursor: 'pointer', float: 'right' }}
-              onClick={renderProps.onClick}>
-              <i className="fa fa-facebook" />
-              Sign In with Facebook
-            </a>
-          )}
-        />
-        {/* <a href="#a" className="facebook-sign-in"><i className="fa fa-facebook" /> Sign In with Facebook</a> */}
-        {/* <a href="#a" className="twitter-sign-in"><i className="fa fa-google" /> Sign In with Google</a> */}
+        <ExternalLogins/>
       </div>
       <form className="register-form outer-top-xs" onSubmit={onHandleSubmit}>
         <div className="form-group">
-          <label className="info-title" htmlFor="Email">Email Address <span>*</span></label>
+          <label className="info-title" htmlFor="Email">Địa chỉ Email<span>*</span></label>
           <input
             type="email"
             className="form-control unicase-form-control text-input"
@@ -122,7 +90,7 @@ function SignIn() {
         </div>
 
         <div className="form-group">
-          <label className="info-title" htmlFor="Password">Password <span>*</span></label>
+          <label className="info-title" htmlFor="Password">Mật khẩu <span>*</span></label>
           <input
             type="password"
             className="form-control unicase-form-control text-input"
@@ -142,11 +110,11 @@ function SignIn() {
               checked={signInModel.rememberMe}
               onChange={onHandleChange}
             />
-              Remember me!
+              Ghi nhớ!
             </label>
-          <a href="#a" className="forgot-password pull-right">Forgot your Password?</a>
+          <a href className="forgot-password pull-right">Bạn đã quên mật khẩu?</a>
         </div>
-        <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Login</button>
+        <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Đăng nhập</button>
       </form>
     </div>
   );
