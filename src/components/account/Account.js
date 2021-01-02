@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import SignIn from './signIn/SignIn';
 import SignUp from './SignUp';
-import SignIn from './SignIn';
 
 class Account extends Component {
   render() {
@@ -10,8 +10,8 @@ class Account extends Component {
           <div className="container">
             <div className="breadcrumb-inner">
               <ul className="list-inline list-unstyled">
-                <li><a href="home.html">Home</a></li>
-                <li className="active">Account</li>
+                <a href="/" className="disable">Trang chủ /</a>
+                <li className="active">Tài khoản</li>
               </ul>
             </div>
           </div>

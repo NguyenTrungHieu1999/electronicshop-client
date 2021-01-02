@@ -13,10 +13,14 @@ export default class Header extends Component {
             <div className="row">
               <div className="col-xs-12 col-sm-12 col-md-3 logo-holder">
                 {/* ============================================================= LOGO ============================================================= */}
-                <div className="logo"> <a href="home.html"> <img src="assets/images/logo.png" alt="logo" /> </a> </div>
-                {/* /.logo */}
-                {/* ============================================================= LOGO : END ============================================================= */} </div>
-              {/* /.logo-holder */}
+                <div className="logo">
+                  <a href="/">
+                    <img src="assets/images/logo.png" alt="logo"
+                    />
+                  </a>
+                </div>
+                {/* ============================================================= LOGO : END ============================================================= */}
+              </div>
               <div className="col-lg-7 col-md-6 col-sm-8 col-xs-12 top-search-holder">
                 {/* /.contact-row */}
                 {/* ============================================================= SEARCH AREA ============================================================= */}
@@ -35,12 +39,12 @@ export default class Header extends Component {
                         </li>
                       </ul>
                       <input className="search-field" placeholder="Search here..." />
-                      <a className="search-button" href="#a" /> </div>
+                      <a className="search-button" href = "a"></a>
+                    </div>
                   </form>
                 </div>
-                {/* /.search-area */}
-                {/* ============================================================= SEARCH AREA : END ============================================================= */} </div>
-              {/* /.top-search-holder */}
+                {/* ============================================================= SEARCH AREA : END ============================================================= */}
+              </div>
               <div className="col-lg-2 col-md-3 col-sm-4 col-xs-12 animate-dropdown top-cart-row">
                 {/* ============================================================= SHOPPING CART DROPDOWN ============================================================= */}
                 <div className="dropdown dropdown-cart"> <a href="#a" className="dropdown-toggle lnk-cart" data-toggle="dropdown">
@@ -65,27 +69,21 @@ export default class Header extends Component {
                           <div className="col-xs-1 action"> <a href="#a"><i className="fa fa-trash" /></a> </div>
                         </div>
                       </div>
-                      {/* /.cart-item */}
                       <div className="clearfix" />
                       <hr />
                       <div className="clearfix cart-total">
                         <div className="pull-right"> <span className="text">Sub Total :</span><span className="price">$600.00</span> </div>
                         <div className="clearfix" />
-                        <a href="checkout.html" className="btn btn-upper btn-primary btn-block m-t-20">Checkout</a> </div>
-                      {/* /.cart-total*/}
+                        <a href="checkout.html" className="btn btn-upper btn-primary btn-block m-t-20">Checkout</a>
+                      </div>
                     </li>
                   </ul>
-                  {/* /.dropdown-menu*/}
                 </div>
-                {/* /.dropdown-cart */}
-                {/* ============================================================= SHOPPING CART DROPDOWN : END============================================================= */} </div>
-              {/* /.top-cart-row */}
+                {/* ============================================================= SHOPPING CART DROPDOWN : END============================================================= */}
+              </div>
             </div>
-            {/* /.row */}
           </div>
-          {/* /.container */}
         </div>
-        {/* /.main-header */}
         {/* ============================================== NAVBAR ============================================== */}
         <div className="header-nav animate-dropdown">
           <div className="container">

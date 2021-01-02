@@ -10,7 +10,7 @@ const validatePassword = (password) => {
 }
 
 const validateEmail = (email) => {
-  const pattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+  const pattern = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g
   const check = pattern.exec(email);
 
   if (check !== null) {
@@ -21,7 +21,7 @@ const validateEmail = (email) => {
 }
 
 const validateUserName = (userName) => {
-  if (userName === null) {
+  if (userName === "") {
     return `Bạn cần nhập thông tin người dùng`;
   }
 

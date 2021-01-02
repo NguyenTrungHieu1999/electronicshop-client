@@ -47,8 +47,8 @@ class SignUp extends Component {
 
     console.log(this.state)
 
-    if (emailValid === "" && userNameValid === "" && passwordValid === "" &&
-      confirmPasswordValid === "") {
+    if (emailValid === "" && userNameValid === "" &&
+      passwordValid === "" && confirmPasswordValid === "") {
       try {
         let res = await Register({
           userName: userName, password: password,
@@ -69,15 +69,15 @@ class SignUp extends Component {
   render() {
 
     const { email, userName, password, confirmPassword, gender, emailValid,
-      userNameValid, passwordValid, confirmPasswordValid, genderValid } = this.state;
+      userNameValid, passwordValid, confirmPasswordValid } = this.state;
 
     return (
       <div className="col-md-6 col-sm-6 create-new-account">
-        <h4 className="checkout-subtitle">Create a new account</h4>
-        <p className="text title-tag-line">Create your new account.</p>
+        <h4 className="checkout-subtitle">Tạo mới tài khoản</h4>
+        <p className="text title-tag-line">Tạo mới tài khoản cho bạn.</p>
         <form className="register-form outer-top-xs" onSubmit={this.onHandleSubmit}>
           <div className="form-group">
-            <label className="info-title" htmlFor="EmailUp">Email Address <span>*</span></label>
+            <label className="info-title" htmlFor="EmailUp">Địa chỉ Email <span>*</span></label>
             <input
               type="email"
               className="form-control unicase-form-control text-input"
@@ -89,7 +89,7 @@ class SignUp extends Component {
             {emailValid !== '' && <label className="alert-danger">{emailValid}</label>}
           </div>
           <div className="form-group">
-            <label className="info-title" htmlFor="UserName">User Name <span>*</span></label>
+            <label className="info-title" htmlFor="UserName">Tên tài khoản <span>*</span></label>
             <input
               type='text'
               className="form-control unicase-form-control text-input"
@@ -100,7 +100,7 @@ class SignUp extends Component {
             {userNameValid !== '' && <label className="alert-danger">{userNameValid}</label>}
           </div>
           <div className="form-group">
-            <label className="info-title">Gender <span>*</span></label>
+            <label className="info-title">Giới tính <span>*</span></label>
             <select
               className="form-control"
               name="gender"
@@ -111,7 +111,7 @@ class SignUp extends Component {
             </select>
           </div>
           <div className="form-group">
-            <label className="info-title" htmlFor="PasswordUp">Password <span>*</span></label>
+            <label className="info-title" htmlFor="PasswordUp">Mật khẩu <span>*</span></label>
             <input
               required
               type="password"
@@ -123,7 +123,7 @@ class SignUp extends Component {
             {passwordValid !== '' && <label className="alert-danger">{passwordValid}</label>}
           </div>
           <div className="form-group">
-            <label className="info-title" htmlFor="cPassword">Confirm Password <span>*</span></label>
+            <label className="info-title" htmlFor="cPassword">Xác nhận mật khẩu <span>*</span></label>
             <input
               required
               type="password"
@@ -136,7 +136,7 @@ class SignUp extends Component {
             {confirmPasswordValid !== '' && <label className="alert-danger">{confirmPasswordValid}</label>}
           </div>
 
-          <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Sign Up</button>
+          <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Đăng ký</button>
 
         </form>
       </div>
