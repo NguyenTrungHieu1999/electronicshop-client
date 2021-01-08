@@ -33,24 +33,48 @@ export default function ExternalLogins() {
       providerDisplayName: 'Google'
     };
 
+    await sendRequest(LogInModel);
+
+  }
+
+  const responseFacebook = async (res) => {
+    console.log(res);
+
+
+    const index = res.name.lastIndexOf(" ");
+
+    LogInModel = {
+      email: res.email,
+      userName: res.email,
+      firstMiddleName: res.name.substring(0, index),
+      lastName: res.name.substring(index + 1),
+      loginProvider: 'Facebook',
+      providerKey: res.id,
+      providerDisplayName: 'Facebook'
+    }
+
+
+    console.log(LogInModel);
+
+    await sendRequest(LogInModel);
+  }
+
+  const sendRequest = async (model) => {
+
+    console.log(model);
     try {
-      const res = await External(LogInModel);
+      const res = await External(model);
 
       if (res.isSuccessed) {
         cookies.set('token', res, { path: '/', expires: new Date(Date.now() + 3600000) });
 
-        cookies.set('isAuthen', true, { patth: '/', expires: new Date(Date.now() + 3600000) });
+        cookies.set('isAuth', true, { patth: '/', expires: new Date(Date.now() + 3600000) });
 
         window.location.href = '/';
       }
     } catch (error) {
-      console.log(error);
+      alert("Không kết nối được với máy chủ.");
     }
-
-  }
-
-  const responseFacebook = (response) => {
-    console.log(response);
   }
 
   return (
@@ -67,10 +91,11 @@ export default function ExternalLogins() {
       <FacebookLogin
         appId="136478068166816"
         autoLoad
+        fields="name,email,picture"
         callback={responseFacebook}
         render={renderProps => (
+          // eslint-disable-next-line jsx-a11y/anchor-is-valid
           <a
-            href
             className="facebook-sign-in"
             style={{ cursor: 'pointer', float: 'right' }}
             onClick={renderProps.onClick}>

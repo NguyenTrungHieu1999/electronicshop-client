@@ -22,24 +22,28 @@ export default class Header extends Component {
                 {/* ============================================================= LOGO : END ============================================================= */}
               </div>
               <div className="col-lg-7 col-md-6 col-sm-8 col-xs-12 top-search-holder">
-                {/* /.contact-row */}
                 {/* ============================================================= SEARCH AREA ============================================================= */}
                 <div className="search-area">
                   <form>
                     <div className="control-group">
                       <ul className="categories-filter animate-dropdown">
-                        <li className="dropdown"> <a className="dropdown-toggle" data-toggle="dropdown" href="category.html">Categories <b className="caret" /></a>
+                        <li className="dropdown"> <a className="dropdown-toggle" data-toggle="dropdown" href="category.html">Thuộc tính<b className="caret" /></a>
                           <ul className="dropdown-menu" role="menu">
-                            <li className="menu-header">Computer</li>
-                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">- Clothing</a></li>
-                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">- Electronics</a></li>
-                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">- Shoes</a></li>
-                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">- Watches</a></li>
+                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">Clothing</a></li>
+                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">Electronics</a></li>
+                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">Shoes</a></li>
+                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">Watches</a></li>
                           </ul>
                         </li>
                       </ul>
-                      <input className="search-field" placeholder="Search here..." />
-                      <a className="search-button" href = "a"></a>
+                      <input
+                        className="search-field"
+                        placeholder="Nhập từ khóa để tìm kiếm..."
+                        style={{ outline: 'none' }} />
+                      <li
+                        className="search-button"
+                        style={{ cursor: 'pointer' }}>
+                      </li>
                     </div>
                   </form>
                 </div>
@@ -96,99 +100,37 @@ export default class Header extends Component {
                 <div className="navbar-collapse collapse" id="mc-horizontal-menu-collapse">
                   <div className="nav-outer">
                     <ul className="nav navbar-nav">
-                      <li className="active dropdown"> <a href="home.html">Home</a> </li>
+                      <li className="active dropdown"> <a href="home.html">Trang chủ</a> </li>
                       <li className="dropdown mega-menu">
-                        <a href="category.html" data-hover="dropdown" className="dropdown-toggle" data-toggle="dropdown">Electronics <span className="menu-label hot-menu hidden-xs">hot</span> </a>
+                        <a href="category.html" data-hover="dropdown" className="dropdown-toggle" data-toggle="dropdown">Laptop</a>
                         <ul className="dropdown-menu container">
                           <li>
                             <div className="yamm-content">
                               <div className="row">
                                 <div className="col-xs-12 col-sm-12 col-md-2 col-menu">
-                                  <h2 className="title">Laptops</h2>
+                                  <h2 className="title">Laptop Dell</h2>
                                   <ul className="links">
-                                    <li><a href="#a">Gaming</a></li>
-                                    <li><a href="#a">Laptop Skins</a></li>
-                                    <li><a href="#a">Apple</a></li>
-                                    <li><a href="#a">Dell</a></li>
-                                    <li><a href="#a">Lenovo</a></li>
-                                    <li><a href="#a">Microsoft</a></li>
-                                    <li><a href="#a">Asus</a></li>
-                                    <li><a href="#a">Adapters</a></li>
-                                    <li><a href="#a">Batteries</a></li>
-                                    <li><a href="#a">Cooling Pads</a></li>
-                                  </ul>
-                                </div>
-                                {/* /.col */}
-                                <div className="col-xs-12 col-sm-12 col-md-2 col-menu">
-                                  <h2 className="title">Desktops</h2>
-                                  <ul className="links">
-                                    <li><a href="#a">Routers &amp; Modems</a></li>
-                                    <li><a href="#a">CPUs, Processors</a></li>
-                                    <li><a href="#a">PC Gaming Store</a></li>
-                                    <li><a href="#a">Graphics Cards</a></li>
-                                    <li><a href="#a">Components</a></li>
-                                    <li><a href="#a">Webcam</a></li>
-                                    <li><a href="#a">Memory (RAM)</a></li>
-                                    <li><a href="#a">Motherboards</a></li>
-                                    <li><a href="#a">Keyboards</a></li>
-                                    <li><a href="#a">Headphones</a></li>
-                                  </ul>
-                                </div>
-                                {/* /.col */}
-                                <div className="col-xs-12 col-sm-12 col-md-2 col-menu">
-                                  <h2 className="title">Cameras</h2>
-                                  <ul className="links">
-                                    <li><a href="#a">Accessories</a></li>
-                                    <li><a href="#a">Binoculars</a></li>
-                                    <li><a href="#a">Telescopes</a></li>
-                                    <li><a href="#a">Camcorders</a></li>
-                                    <li><a href="#a">Digital</a></li>
-                                    <li><a href="#a">Film Cameras</a></li>
-                                    <li><a href="#a">Flashes</a></li>
-                                    <li><a href="#a">Lenses</a></li>
-                                    <li><a href="#a">Surveillance</a></li>
-                                    <li><a href="#a">Tripods</a></li>
-                                  </ul>
-                                </div>
-                                {/* /.col */}
-                                <div className="col-xs-12 col-sm-12 col-md-2 col-menu">
-                                  <h2 className="title">Mobile Phones</h2>
-                                  <ul className="links">
-                                    <li><a href="#a">Apple</a></li>
-                                    <li><a href="#a">Samsung</a></li>
-                                    <li><a href="#a">Lenovo</a></li>
-                                    <li><a href="#a">Motorola</a></li>
-                                    <li><a href="#a">LeEco</a></li>
-                                    <li><a href="#a">Asus</a></li>
-                                    <li><a href="#a">Acer</a></li>
-                                    <li><a href="#a">Accessories</a></li>
-                                    <li><a href="#a">Headphones</a></li>
-                                    <li><a href="#a">Memory Cards</a></li>
+                                    <li style={{ color: '#A19999', paddingTop: '10%' }}>Laptop Dell Inspiron 15</li>
+                                    <li style={{ color: '#A19999', paddingTop: '10%' }}>Laptop Dell Inspiron 15</li>
+                                    <li style={{ color: '#A19999', paddingTop: '10%' }}>Laptop Dell Inspiron 15</li>
+                                    <li style={{ color: '#A19999', paddingTop: '10%' }}>Laptop Dell Inspiron 15</li>
                                   </ul>
                                 </div>
                                 <div className="col-xs-12 col-sm-12 col-md-4 col-menu custom-banner"> <a href="#a"><img alt="" src="assets/images/banners/top-menu-banner1.jpg" /></a> </div>
                               </div>
-                              {/* /.row */}
                             </div>
-                            {/* /.yamm-content */} </li>
+                          </li>
                         </ul>
                       </li>
                       <li className="dropdown  navbar-right special-menu"> <a href="#a">Get 30% off on selected items</a> </li>
                     </ul>
-                    {/* /.navbar-nav */}
                     <div className="clearfix" />
                   </div>
-                  {/* /.nav-outer */}
                 </div>
-                {/* /.navbar-collapse */}
               </div>
-              {/* /.nav-bg-class */}
             </div>
-            {/* /.navbar-default */}
           </div>
-          {/* /.container-class */}
         </div>
-        {/* /.header-nav */}
         {/* ============================================== NAVBAR : END ============================================== */}
       </header>
     )

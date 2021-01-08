@@ -53,7 +53,7 @@ function SignIn() {
 
           cookies.set('token', res, { path: '/', expires: new Date(Date.now() + 3600000) });
 
-          cookies.set('isAuthen', true, {patth:'/', expires: new Date(Date.now() + 3600000)});
+          cookies.set('isAuth', true, { patth: '/', expires: new Date(Date.now() + 3600000) });
 
           window.location.href = '/';
 
@@ -73,7 +73,7 @@ function SignIn() {
       <h4>Đăng nhập</h4>
       <p>Xin chào, Chào mừng đến với tài khoản của bạn.</p>
       <div className="social-sign-in outer-top-xs">
-        <ExternalLogins/>
+        <ExternalLogins />
       </div>
       <form className="register-form outer-top-xs" onSubmit={onHandleSubmit}>
         <div className="form-group">
@@ -112,7 +112,7 @@ function SignIn() {
             />
               Ghi nhớ!
             </label>
-          <a href className="forgot-password pull-right">Bạn đã quên mật khẩu?</a>
+          <a href="#a" className="forgot-password pull-right">Bạn đã quên mật khẩu?</a>
         </div>
         <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Đăng nhập</button>
       </form>
