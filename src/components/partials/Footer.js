@@ -3,8 +3,7 @@ import React, { Component } from 'react'
 export default class Footer extends Component {
   render() {
     return (
-      <div>
-        <div>
+        <>
           {/* ============================================== INFO BOXES ============================================== */}
           <div className="row our-features-box">
             <div className="container">
@@ -128,16 +127,16 @@ export default class Footer extends Component {
               <div className="container">
                 <div className="col-xs-12 col-sm-4 no-padding social">
                   <ul className="link">
-                    <li className="fb pull-left"><a target="_blank" rel="nofollow" href="#a" title="Facebook" /></li>
-                    <li className="tw pull-left"><a target="_blank" rel="nofollow" href="#a" title="Twitter" /></li>
-                    <li className="googleplus pull-left"><a target="_blank" rel="nofollow" href="#a" title="GooglePlus" /></li>
-                    <li className="rss pull-left"><a target="_blank" rel="nofollow" href="#a" title="RSS" /></li>
-                    <li className="pintrest pull-left"><a target="_blank" rel="nofollow" href="#a" title="PInterest" /></li>
-                    <li className="linkedin pull-left"><a target="_blank" rel="nofollow" href="#a" title="Linkedin" /></li>
-                    <li className="youtube pull-left"><a target="_blank" rel="nofollow" href="#a" title="Youtube" /></li>
+                    <li className="fb pull-left"><a rel="nofollow" href="#a" title="Facebook"> </a></li>
+                    <li className="tw pull-left"><a  rel="nofollow" href="#a" title="Twitter" > </a></li>
+                    <li className="googleplus pull-left"><a rel="nofollow" href="#a" title="GooglePlus" > </a></li>
+                    <li className="rss pull-left"><a rel="nofollow" href="#a" title="RSS" > </a></li>
+                    <li className="pintrest pull-left"><a  rel="nofollow" href="#a" title="PInterest" > </a></li>
+                    <li className="linkedin pull-left"><a rel="nofollow" href="#a" title="Linkedin" > </a></li>
+                    <li className="youtube pull-left"><a  rel="nofollow" href="#a" title="Youtube" > </a></li>
                   </ul>
                 </div>
-                <div className="col-xs-12 col-sm-4 no-padding copyright"><a target="_blank" href="https://www.templateshub.net">Templates Hub</a> </div>
+              <div className="col-xs-12 col-sm-4 no-padding copyright">Electronic Design ©2021 Created by Hieu</div>
                 <div className="col-xs-12 col-sm-4 no-padding">
                   <div className="clearfix payment-methods">
                     <ul>
@@ -154,8 +153,7 @@ export default class Footer extends Component {
             </div>
           </footer>
           {/* ============================================================= FOOTER : END============================================================= */}
-        </div>
-      </div>
+        </>
     )
   }
 }

@@ -23,40 +23,42 @@ export default function ExternalLogins() {
 
     console.log(res);
 
-    LogInModel = {
-      email: res.profileObj.email,
-      userName: res.profileObj.email,
-      firstMiddleName: res.profileObj.familyName,
-      lastName: res.profileObj.givenName,
-      loginProvider: 'Google',
-      providerKey: res.profileObj.googleId,
-      providerDisplayName: 'Google'
-    };
+    if (res) {
+      LogInModel = {
+        email: res.profileObj.email,
+        userName: res.profileObj.email,
+        firstMiddleName: res.profileObj.familyName,
+        lastName: res.profileObj.givenName,
+        loginProvider: 'Google',
+        providerKey: res.profileObj.googleId,
+        providerDisplayName: 'Google'
+      };
 
-    await sendRequest(LogInModel);
+      await sendRequest(LogInModel);
+    }
 
   }
 
   const responseFacebook = async (res) => {
     console.log(res);
 
+    if (res) {
+      const index = res.name.lastIndexOf(" ");
 
-    const index = res.name.lastIndexOf(" ");
+      LogInModel = {
+        email: res.email,
+        userName: res.email,
+        firstMiddleName: res.name.substring(0, index),
+        lastName: res.name.substring(index + 1),
+        loginProvider: 'Facebook',
+        providerKey: res.id,
+        providerDisplayName: 'Facebook'
+      }
 
-    LogInModel = {
-      email: res.email,
-      userName: res.email,
-      firstMiddleName: res.name.substring(0, index),
-      lastName: res.name.substring(index + 1),
-      loginProvider: 'Facebook',
-      providerKey: res.id,
-      providerDisplayName: 'Facebook'
+      console.log(LogInModel);
+
+      await sendRequest(LogInModel);
     }
-
-
-    console.log(LogInModel);
-
-    await sendRequest(LogInModel);
   }
 
   const sendRequest = async (model) => {
@@ -66,7 +68,7 @@ export default function ExternalLogins() {
       const res = await External(model);
 
       if (res.isSuccessed) {
-        cookies.set('token', res, { path: '/', expires: new Date(Date.now() + 3600000) });
+        cookies.set('token', res.resultObj, { path: '/', expires: new Date(Date.now() + 3600000) });
 
         cookies.set('isAuth', true, { patth: '/', expires: new Date(Date.now() + 3600000) });
 
@@ -83,7 +85,7 @@ export default function ExternalLogins() {
         clientId="499129772453-mqgkumi1dogjb9dbvl1k57u434n1slob.apps.googleusercontent.com"
         buttonText="Login"
         onSuccess={responseGoogle}
-        onFailure={responseGoogle}
+      // onFailure={responseGoogle}
       >
         <span> Đăng nhập với Google</span>
       </GoogleLogin>

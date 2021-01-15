@@ -3,8 +3,8 @@ import { Login } from '../../../api/authApi';
 import Cookies from 'universal-cookie';
 import { validateEmail, validatePassword } from '../ValidationForm';
 import ExternalLogins from './ExternalLogins';
-
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import loginservice_json from '../../../api/loginservice_json';
 
 function SignIn() {
 
@@ -16,9 +16,9 @@ function SignIn() {
     passValid: ""
   })
 
-  const cookies = new Cookies();
+  const history = useHistory();
 
-  // const history = useHistory();
+  const cookies = new Cookies();
 
   const onHandleChange = (event) => {
     let target = event.target;
@@ -47,21 +47,30 @@ function SignIn() {
 
     if (signInModel.emailValid === "" && signInModel.passValid === "") {
       try {
-        const res = await Login({ email: signInModel.email, password: signInModel.password, rememberMe: signInModel.rememberMe });
+        // const res = await Login({ email: signInModel.email, password: signInModel.password, rememberMe: signInModel.rememberMe });
 
-        if (res.isSuccessed) {
+        // debugger;
 
-          cookies.set('token', res, { path: '/', expires: new Date(Date.now() + 3600000) });
+        // if (res.isSuccessed) {
+        //   cookies.set('token', res.resultObj, { path: '/', expires: new Date(Date.now() + 3600000) });
+        //   cookies.set('isAuth', true, { patth: '/', expires: new Date(Date.now() + 3600000) });
+        //   window.location.href = '/';
+        // } else {
+        //   alert(res.message);
+        // }
 
-          cookies.set('isAuth', true, { patth: '/', expires: new Date(Date.now() + 3600000) });
-
-          window.location.href = '/';
-
-          //history.push('/')
-        } else {
-          alert(res.message);
-        }
-
+        loginservice_json
+          .login({ email: signInModel.email, password: signInModel.password, rememberMe: signInModel.rememberMe })
+          .then(res => {
+            if (res.data.isSuccessed) {
+              debugger;
+              cookies.set('token', res.data.resultObj, { path: '/', expires: new Date(Date.now() + 3600000) });
+              cookies.set('isAuth', true, { patth: '/', expires: new Date(Date.now() + 3600000) });
+              window.location.href = '/';
+            } else {
+              alert(res.data.message);
+            }
+          })
       } catch (error) {
         console.log(error);
       }
@@ -112,7 +121,11 @@ function SignIn() {
             />
               Ghi nhớ!
             </label>
-          <a href="#a" className="forgot-password pull-right">Bạn đã quên mật khẩu?</a>
+          <li
+            style={{ listStyleType: 'none', cursor: 'pointer' }}
+            className="forgot-password pull-right"
+            onClick={() => history.push('/chinh-sua-mat-khau')}
+          >Bạn đã quên mật khẩu?</li>
         </div>
         <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Đăng nhập</button>
       </form>

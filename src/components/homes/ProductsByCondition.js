@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
+import { getAllCategory } from '../../api/categoryApi';
 import { getAllProduct } from '../../api/productApi';
 import CardItem from './CardItem';
 import "./ProductsByCondition.css";
@@ -13,8 +14,7 @@ class ProductsByCondition extends Component {
     this.state = {
       products: [],
       offset: 0,
-      data: [],
-      perPage: 4,
+      perPage: 5,
       currentPage: 0,
       postData: []
     };
@@ -26,31 +26,41 @@ class ProductsByCondition extends Component {
     try {
       let res = await getAllProduct();
 
-      const data = res.resultObj;
+      let resCate = await getAllCategory();
 
-      let { condition } = this.props;
+      if (res && res.isSuccessed && resCate && resCate.isSuccessed) {
+        const productData = res.resultObj;
+        const categories = resCate.resultObj;
 
-      let products = [];
+        let cateData = []
+        categories.map(cate => {
+          if (cate.productTypeId === this.props.id && cate.rootId !== null) {
+            cateData.push(cate);
+          }
+        });
 
-      data.forEach(product => {
-        if (product && product.status === condition) {
-          products.push(product)
-        }
-      });
+        let products = [];
+        productData.map(product => {
+          cateData.map(cate => {
+            if (product.categoryId === cate.id) {
+              products.push(product);
+            }
+          })
+        });
 
-      const slice = products.slice(this.state.offset, this.state.offset + this.state.perPage);
+        const slice = products.slice(this.state.offset, this.state.offset + this.state.perPage);
+        const postData = slice.map(pd =>
+          <CardItem
+            product={pd} key={pd.id}
+          />
+        )
 
-      const postData = slice.map(pd =>
-        <CardItem
-          product={pd} key={pd.id}
-        />
-      )
-
-      this.setState({
-        pageCount: Math.ceil(data.length / this.state.perPage),
-        products: data,
-        postData: postData
-      })
+        this.setState({
+          pageCount: Math.ceil(productData.length / this.state.perPage),
+          products: productData,
+          postData: postData
+        })
+      }
     } catch (error) {
       console.log(error);
     }
@@ -98,18 +108,21 @@ class ProductsByCondition extends Component {
                   </div>
                 </div>
               </div>
-              <ReactPaginate
-                previousLabel={"<"}
-                nextLabel={">"}
-                breakLabel={"..."}
-                breakClassName={"break-me"}
-                pageCount={this.state.pageCount}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={this.handlePageClick}
-                containerClassName={"pagination"}
-                subContainerClassName={"pages pagination"}
-                activeClassName={"active"} />
+              <div style={{ display: 'flex' }}>
+                <ReactPaginate
+                  previousLabel={"<"}
+                  nextLabel={">"}
+                  breakLabel={"..."}
+                  breakClassName={"break-me"}
+                  pageCount={this.state.pageCount}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={this.handlePageClick}
+                  containerClassName={"pagination"}
+                  subContainerClassName={"pages pagination"}
+                  activeClassName={"active"} />
+              </div>
+
             </>
             : <h4>Không có sản phẩm</h4>
           }

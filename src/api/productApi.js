@@ -2,7 +2,7 @@ import axios from "axios";
 
 const apiURL = process.env.REACT_APP_API_URL
 
-export const getAllProduct = async () => {
+const getAllProduct = async () => {
   try {
     let res = await axios.get(`${apiURL}/api/products`)
     return res.data;
@@ -11,7 +11,7 @@ export const getAllProduct = async () => {
   }
 }
 
-export const getProductById = async (productId) => {
+const getProductById = async (productId) => {
   try {
     let res = await axios.get(`${apiURL}/api/products/${productId}`);
     return res.data;
@@ -19,3 +19,14 @@ export const getProductById = async (productId) => {
     console.log(error);
   }
 }
+
+const getProductByCateId = async (cateId) => { 
+  try {
+    let res = await axios.get(`${apiURL}/api/products/cateId=${cateId}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { getAllProduct, getProductById, getProductByCateId };

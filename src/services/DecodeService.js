@@ -3,11 +3,12 @@ import jwt_decode from "jwt-decode";
 
 const cookies = new Cookies();
 const tokenFromCookies = cookies.get('token');
+const cookiesAuth = cookies.get('isAuth');
 
 let token = '';
 
-if (tokenFromCookies !== null && tokenFromCookies !== undefined) {
-  token = jwt_decode(cookies.get('token').resultObj);
+if (tokenFromCookies) {
+  token = jwt_decode(cookies.get('token'));
 }
 
 let emailDecode = '';
@@ -33,4 +34,4 @@ Object.keys(token).forEach(function (key) {
   }
 });
 
-export { emailDecode, userIdDecode, roleDecode, nameDecode };
+export { emailDecode, userIdDecode, roleDecode, nameDecode, cookiesAuth };

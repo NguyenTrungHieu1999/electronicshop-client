@@ -84,6 +84,31 @@ export default class HotDeals extends Component {
                   </div>
                   {/* /.product-micro */}
                 </div>
+                <div className="product">
+                  <div className="product-micro">
+                    <div className="row product-micro-row">
+                      <div className="col col-xs-5">
+                        <div className="product-image">
+                          <div className="image"> <a href="#a"> <img src="assets/images/products/p11.jpg" alt="" /> </a> </div>
+                          {/* /.image */}
+                        </div>
+                        {/* /.product-image */}
+                      </div>
+                      {/* /.col */}
+                      <div className="col col-xs-7">
+                        <div className="product-info">
+                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
+                          <div className="rating rateit-small" />
+                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
+                          {/* /.product-price */}
+                        </div>
+                      </div>
+                      {/* /.col */}
+                    </div>
+                    {/* /.product-micro-row */}
+                  </div>
+                  {/* /.product-micro */}
+                </div>
               </div>
             </div>
             <div className="item">

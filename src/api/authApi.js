@@ -2,7 +2,7 @@ import axios from "axios";
 
 const apiURL = process.env.REACT_APP_API_URL
 
-export const Login = async ({ email, password, rememberMe }) => {
+const Login = async ({ email, password, rememberMe }) => {
   const data = { email, password, rememberMe };
 
   try {
@@ -15,7 +15,7 @@ export const Login = async ({ email, password, rememberMe }) => {
   }
 }
 
-export const Register = async ({ userName, password, confirmPassword, email, gender }) => {
+const Register = async ({ userName, password, confirmPassword, email, gender }) => {
   const data = { userName, password, confirmPassword, email, gender };
 
   try {
@@ -27,7 +27,7 @@ export const Register = async ({ userName, password, confirmPassword, email, gen
   }
 }
 
-export const External = async ({ email, userName, firstMiddleName, lastName, loginProvider, providerKey, providerDisplayName }) => {
+const External = async ({ email, userName, firstMiddleName, lastName, loginProvider, providerKey, providerDisplayName }) => {
   const data = { email, userName, firstMiddleName, lastName, loginProvider, providerKey, providerDisplayName };
 
   try {
@@ -38,3 +38,35 @@ export const External = async ({ email, userName, firstMiddleName, lastName, log
     console.log(error);
   }
 }
+
+const forgotPassWord = async (email) => {
+  const data = { email };
+  try {
+    let res = await axios.post(`${apiURL}/api/auth/forgot-password`, data);
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const resetPassword = async ({ token, email, password, confirmPassword }) => {
+  const data = { token, email, password, confirmPassword };
+  try {
+    let res = await axios.post(`${apiURL}/api/auth/reset-password`, data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const signOut = async()=>{
+  try {
+    let res = await axios.post(`${apiURL}/api/auth/sign-out`);
+    return res.data
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { Login, Register, External, forgotPassWord, resetPassword, signOut };

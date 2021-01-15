@@ -1,51 +1,49 @@
 import React, { Component } from 'react';
-
+import "./CardItem.css";
+import CurrencyFormat from 'react-currency-format';
 class CardItem extends Component {
   render() {
 
-    let { product } = this.props;
+    const { product } = this.props;
 
     return (
-      <div className="col-sm-6 col-md-4 col-lg-3">
+      <div className="col-lg-15">
         <div className="item">
           <div className="products">
             <div className="product">
-              <div className="product-image">
+              <div className="product-image" style={{ marginBottom: "-30%" }}>
                 <div className="image">
                   {product.productPhotos && product.productPhotos.length > 1
-                    ? <a href="a#">
-                      <img src={product.productPhotos[0].url} alt="photo1" />
-                      <img src={product.productPhotos[1].url} alt="photo2" className="hover-image" />
+                    ? <a href={`/san-pham/${product.alias}&${product.id}`}>
+                      <img src={product.productPhotos[0].url} style={{ width: "100%", height: "60%" }} alt="photo1" />
+                      <img src={product.productPhotos[1].url} style={{ width: "100%", height: "60%" }} alt="photo2" className="hover-image" />
                     </a>
-                    : <a href="a#">
+                    : <a href={`/san-pham/${product.alias}&${product.id}`}>
                       <img alt="photo1" />
                       <img alt="photo2" className="hover-image" />
                     </a>
                   }
                 </div>
-                <div className="tag sale"><span>sale</span></div>
+                {
+                  product.status === '2' && <div className="tag sale"><span>Giảm giá</span></div>
+                }
+                {
+                  product.status === '1' && <div className="tag new"><span>Mới</span></div>
+                }
               </div>
               <div className="product-info text-left">
-                <h3 className="name"><a href="#a">{product.name}</a></h3>
+                <h3 className="name"><a style={{ color: 'steelblue' }} href={`/san-pham/${product.alias}&${product.id}`}>{product.name}</a></h3>
                 <div className="description" />
                 <div className="product-price">
-                  <span className="price">
-                    {product.price} VND
-                  </span>
-                  <span className="price-before-discount">
-                    {product.price} VND
-                  </span>
+                  <CurrencyFormat value={product.price} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <span style={{ color: 'red' }} className="price">{value}₫</span>} />
+                  <CurrencyFormat value={product.price} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <span className="price-before-discount">{value}₫</span>} />
                 </div>
               </div>
               <div className="cart clearfix animate-effect">
                 <div className="action">
                   <ul className="list-unstyled">
-                    <li className="add-cart-button btn-group">
-                      <button className="btn btn-primary icon" data-toggle="dropdown" type="button"> <i className="fa fa-shopping-cart" /> </button>
-                      <button className="btn btn-primary cart-btn" type="button">Add to cart</button>
-                    </li>
-                    <li className="lnk wishlist"> <a className="add-to-cart" href="detail.html" title="Wishlist"> <i className="icon fa fa-heart" /> </a> </li>
-                    <li className="lnk"> <a className="add-to-cart" href="detail.html" title="Compare"> <i className="fa fa-signal" /> </a> </li>
+                    <li className="lnk"> <a className="add-to-cart" href="detail.html" title="Thêm giỏ hàng"> <i className="fa fa-shopping-cart" /></a></li>
+                    <li className="lnk wishlist"> <a className="add-to-cart" href="" title="Yêu thích"> <i className="icon fa fa-heart" /> </a> </li>
                   </ul>
                 </div>
               </div>

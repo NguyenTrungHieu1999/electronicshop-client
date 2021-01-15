@@ -5,31 +5,14 @@ import Cookies from 'universal-cookie';
 
 class Account extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isAuth: false
-    }
-  }
-
-
-  componentDidMount() {
-    const cookies = new Cookies();
-
-    this.setState({
-      isAuth: cookies.get('isAuth')
-    });
-  }
-
   render() {
-
-
-    const {isAuth} = this.state;
-
+    const cookies = new Cookies();
+    document.title = 'Đăng nhập && Đăng ký';
     return (
       <div>
-        {isAuth === false || isAuth === undefined
-          ? <div>
+        {cookies.get('isAuth') !== undefined && cookies.get('isAuth')===true
+          ? window.location.href = '/'
+          : <div>
             <div className="breadcrumb">
               <div className="container">
                 <div className="breadcrumb-inner">
@@ -51,7 +34,6 @@ class Account extends Component {
               </div>
             </div>
           </div>
-          : window.location.href = '/'
         }
       </div>
     );

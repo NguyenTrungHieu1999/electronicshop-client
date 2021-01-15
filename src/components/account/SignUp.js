@@ -84,6 +84,7 @@ class SignUp extends Component {
               id="EmailUp"
               name="email"
               value={email}
+              required
               onChange={this.onHandleChange}
             />
             {emailValid !== '' && <label className="alert-danger">{emailValid}</label>}
@@ -91,6 +92,7 @@ class SignUp extends Component {
           <div className="form-group">
             <label className="info-title" htmlFor="UserName">Tên tài khoản <span>*</span></label>
             <input
+              required
               type='text'
               className="form-control unicase-form-control text-input"
               id="UserName"

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import Navbar from './Navbar'
 import TopMenu from './TopMenu'
+import Logo from '../../logo.png'
 
 export default class Header extends Component {
   render() {
@@ -15,7 +17,7 @@ export default class Header extends Component {
                 {/* ============================================================= LOGO ============================================================= */}
                 <div className="logo">
                   <a href="/">
-                    <img src="assets/images/logo.png" alt="logo"
+                    <img src={Logo} alt="logo"
                     />
                   </a>
                 </div>
@@ -27,13 +29,7 @@ export default class Header extends Component {
                   <form>
                     <div className="control-group">
                       <ul className="categories-filter animate-dropdown">
-                        <li className="dropdown"> <a className="dropdown-toggle" data-toggle="dropdown" href="category.html">Thuộc tính<b className="caret" /></a>
-                          <ul className="dropdown-menu" role="menu">
-                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">Clothing</a></li>
-                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">Electronics</a></li>
-                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">Shoes</a></li>
-                            <li role="presentation"><a role="menuitem" tabIndex={-1} href="category.html">Watches</a></li>
-                          </ul>
+                        <li className="dropdown"> <a className="dropdown-toggle" data-toggle="dropdown" href="category.html">Tìm kiếm<b className="caret" /></a>
                         </li>
                       </ul>
                       <input
@@ -89,7 +85,7 @@ export default class Header extends Component {
           </div>
         </div>
         {/* ============================================== NAVBAR ============================================== */}
-        <div className="header-nav animate-dropdown">
+        {/* <div className="header-nav animate-dropdown">
           <div className="container">
             <div className="yamm navbar navbar-default" role="navigation">
               <div className="navbar-header">
@@ -130,7 +126,8 @@ export default class Header extends Component {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+        <Navbar/>
         {/* ============================================== NAVBAR : END ============================================== */}
       </header>
     )
