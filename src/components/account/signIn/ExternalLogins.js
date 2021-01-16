@@ -1,8 +1,8 @@
 import React from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from "react-google-login";
-import { External } from '../../../api/authApi';
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
+import loginservice_json from '../../../api/loginservice_json';
 
 
 export default function ExternalLogins() {
@@ -16,8 +16,6 @@ export default function ExternalLogins() {
     providerKey: '',
     providerDisplayName: ''
   };
-
-  const cookies = new Cookies();
 
   const responseGoogle = async (res) => {
 
@@ -57,26 +55,26 @@ export default function ExternalLogins() {
 
       console.log(LogInModel);
 
-      await sendRequest(LogInModel);
+      sendRequest(LogInModel);
     }
   }
 
-  const sendRequest = async (model) => {
+  const sendRequest = (model) => {
 
     console.log(model);
-    try {
-      const res = await External(model);
 
-      if (res.isSuccessed) {
-        cookies.set('token', res.resultObj, { path: '/', expires: new Date(Date.now() + 3600000) });
+    loginservice_json
+      .externalLogins(model)
+      .then(res => {
+        if (res.data.isSuccessed) {
+          Cookies.set('token', res.data.resultObj, {expires:1 });
 
-        cookies.set('isAuth', true, { patth: '/', expires: new Date(Date.now() + 3600000) });
+          Cookies.set('isAuth', 'true', {expires: 1 });
 
-        window.location.href = '/';
-      }
-    } catch (error) {
-      alert("Không kết nối được với máy chủ.");
-    }
+          window.location.href = '/';
+        }
+      })
+      .catch(error => alert("Không thể kết nối với máy chủ."));
   }
 
   return (

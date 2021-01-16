@@ -1,14 +1,13 @@
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
 import jwt_decode from "jwt-decode";
 
-const cookies = new Cookies();
-const tokenFromCookies = cookies.get('token');
-const cookiesAuth = cookies.get('isAuth');
+const tokenFromCookies = Cookies.get('token');
+const cookiesAuth = Cookies.get('isAuth');
 
 let token = '';
 
 if (tokenFromCookies) {
-  token = jwt_decode(cookies.get('token'));
+  token = jwt_decode(Cookies.get('token'));
 }
 
 let emailDecode = '';

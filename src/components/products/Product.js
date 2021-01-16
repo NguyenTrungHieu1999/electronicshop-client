@@ -9,7 +9,10 @@ import CardItem from '../homes/CardItem';
 import ReactPaginate from 'react-paginate';
 import { getReviewByProductId, totalRate } from '../../api/reviewApi';
 import createReviewApi from '../../api/createReviewApi';
+import Cookies from 'js-cookie';
 import Moment from 'moment';
+import { ContextApi, ContextProvider } from '../../contexts/Context';
+
 class Product extends Component {
 
   constructor(props) {
@@ -26,7 +29,9 @@ class Product extends Component {
       perPage: 5,
       currentPage: 0,
       review: '',
-      allReviews: []
+      total: 1,
+      allReviews: [],
+      validateAuth: ''
     }
 
     this.changeRating = this.changeRating.bind(this);
@@ -54,7 +59,7 @@ class Product extends Component {
         let products = slice.map(product => {
           return (
             <React.Fragment key={product.id}>
-              <CardItem product={product} />
+              <CardItem product={product} key={product.id} />
             </React.Fragment>
           )
         })
@@ -105,8 +110,12 @@ class Product extends Component {
 
   onHandleSubmit = (event) => {
     event.preventDefault();
+    const isAuth = Cookies.get('isAuth');
     const { ratingForReview, review } = this.state;
     if (review !== '') {
+      if (isAuth === false || isAuth === undefined || isAuth === null) {
+        alert("Bạn phải đăng nhập hệ thống để thực hiện đánh giá.");
+      }
       createReviewApi
         .createReview({
           productId: this.props.match.params.id,
@@ -127,7 +136,6 @@ class Product extends Component {
         })
     }
   }
-
 
   async componentDidMount() {
     await this.receivedData();
@@ -238,10 +246,9 @@ class Product extends Component {
                                   />
                                 </div>
                               </div>
-
                             </div>
-                          </div>{/* /.row */}
-                        </div>{/* /.rating-reviews */}
+                          </div>
+                        </div>
                         <div className="stock-container info-container m-t-10">
                           <div className="row">
                             <div className="col-lg-12">
@@ -287,12 +294,29 @@ class Product extends Component {
                             <div className="qty-count">
                               <div className="cart-quantity">
                                 <div className="quant-input">
-                                  <input type="number" min={1} max={product.inventory} defaultValue={1} />
+                                  <input
+                                    type="number"
+                                    min={1}
+                                    max={product.inventory}
+                                    value={this.state.total}
+                                    name='total'
+                                    onChange={this.onHandleChange}
+                                  />
                                 </div>
                               </div>
                             </div>
                             <div className="add-btn">
-                              <a href="#" className="btn btn-primary"><i className="fa fa-shopping-cart inner-right-vs" /> Thêm giỏ hàng</a>
+                              <ContextApi.Consumer>
+                                {({ addToCart }) => (
+                                  <button
+                                    className="btn btn-primary"
+                                    onClick={() => addToCart(product, this.state.total)}
+                                  >
+                                    <i className="fa fa-shopping-cart inner-right-vs" />
+                                    Thêm giỏ hàng
+                                  </button>
+                                )}
+                              </ContextApi.Consumer>
                             </div>
                           </div>
                         </div>
@@ -428,7 +452,6 @@ class Product extends Component {
                                 </div>
                               </div>
                             </div>
-
                           </div>
                         </div>
                       </div>

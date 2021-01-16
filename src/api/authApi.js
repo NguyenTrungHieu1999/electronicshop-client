@@ -2,36 +2,11 @@ import axios from "axios";
 
 const apiURL = process.env.REACT_APP_API_URL
 
-const Login = async ({ email, password, rememberMe }) => {
-  const data = { email, password, rememberMe };
-
-  try {
-    let res = await axios.post(`${apiURL}/api/auth`, data);
-
-    return res.data;
-
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 const Register = async ({ userName, password, confirmPassword, email, gender }) => {
   const data = { userName, password, confirmPassword, email, gender };
 
   try {
     let res = await axios.post(`${apiURL}/api/users/create`, data);
-
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-const External = async ({ email, userName, firstMiddleName, lastName, loginProvider, providerKey, providerDisplayName }) => {
-  const data = { email, userName, firstMiddleName, lastName, loginProvider, providerKey, providerDisplayName };
-
-  try {
-    let res = await axios.post(`${apiURL}/api/auth/external-logins`, data);
 
     return res.data;
   } catch (error) {
@@ -60,13 +35,13 @@ const resetPassword = async ({ token, email, password, confirmPassword }) => {
   }
 }
 
-const signOut = async()=>{
+const signOut = async () => {
   try {
     let res = await axios.post(`${apiURL}/api/auth/sign-out`);
-    return res.data
+    return res.data;
   } catch (error) {
     console.log(error);
   }
 }
 
-export { Login, Register, External, forgotPassWord, resetPassword, signOut };
+export { Register, forgotPassWord, resetPassword, signOut };

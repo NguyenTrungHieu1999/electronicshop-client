@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Login } from '../../../api/authApi';
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
 import { validateEmail, validatePassword } from '../ValidationForm';
 import ExternalLogins from './ExternalLogins';
 import { useHistory } from 'react-router-dom';
@@ -17,8 +16,6 @@ function SignIn() {
   })
 
   const history = useHistory();
-
-  const cookies = new Cookies();
 
   const onHandleChange = (event) => {
     let target = event.target;
@@ -47,25 +44,13 @@ function SignIn() {
 
     if (signInModel.emailValid === "" && signInModel.passValid === "") {
       try {
-        // const res = await Login({ email: signInModel.email, password: signInModel.password, rememberMe: signInModel.rememberMe });
-
-        // debugger;
-
-        // if (res.isSuccessed) {
-        //   cookies.set('token', res.resultObj, { path: '/', expires: new Date(Date.now() + 3600000) });
-        //   cookies.set('isAuth', true, { patth: '/', expires: new Date(Date.now() + 3600000) });
-        //   window.location.href = '/';
-        // } else {
-        //   alert(res.message);
-        // }
-
         loginservice_json
           .login({ email: signInModel.email, password: signInModel.password, rememberMe: signInModel.rememberMe })
           .then(res => {
             if (res.data.isSuccessed) {
               debugger;
-              cookies.set('token', res.data.resultObj, { path: '/', expires: new Date(Date.now() + 3600000) });
-              cookies.set('isAuth', true, { patth: '/', expires: new Date(Date.now() + 3600000) });
+              Cookies.set('token', res.data.resultObj, {expires: 1 });
+              Cookies.set('isAuth', 'true', {expires: 1 });
               window.location.href = '/';
             } else {
               alert(res.data.message);

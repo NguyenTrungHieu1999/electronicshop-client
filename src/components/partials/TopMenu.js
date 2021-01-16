@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
 import { signOut } from '../../api/authApi';
 import { nameDecode } from '../../services/DecodeService'
 
 function TopMenu() {
 
   const history = useHistory();
-  const cookies = new Cookies();
   const style = { color: 'white', cursor: 'pointer' };
 
-  const cookiesAuth = cookies.get('isAuth');
+  const cookiesAuth = Cookies.get('isAuth');
 
   const [isAuth, setisAuth] = useState(cookiesAuth)
   const [name, setname] = useState(nameDecode)
 
   console.log(isAuth);
   const signOutHandle = async () => {
-    cookies.remove('isAuth');
-    cookies.remove('token');
+    Cookies.remove('isAuth');
+    Cookies.remove('token');
     setisAuth(null);
     await signOut();
+    debugger
   }
 
   return (

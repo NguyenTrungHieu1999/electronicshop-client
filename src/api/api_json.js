@@ -1,5 +1,5 @@
 import axios from "axios";
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
 
 const url = {
   baseURL: "https://localhost:5001/api",
@@ -12,10 +12,7 @@ const url = {
   reviewLink: "/Reviews"
 };
 
-const cookies = new Cookies();
-
-const Token = cookies.get("token");
-console.log(Token);
+const Token = Cookies.get("token");
 
 const instance = axios.create({
   withCredentials: true,
@@ -30,7 +27,7 @@ const instance = axios.create({
 
 
 axios.interceptors.request.use(request => {
-  console.log("Starting Request", JSON.stringify(request, null, 2));
+  // console.log("Starting Request", JSON.stringify(request, null, 2));
   return request;
 });
 

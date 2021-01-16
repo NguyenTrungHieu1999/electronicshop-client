@@ -92,7 +92,7 @@ class ProductsByCondition extends Component {
     let { postData } = this.state;
 
     return (
-      <>
+      <React.Fragment>
         <section className="section new-arriavls ProductsByCondition">
           <h3 className="section-title">{title}</h3>
           {postData.length > 0
@@ -127,7 +127,7 @@ class ProductsByCondition extends Component {
             : <h4>Không có sản phẩm</h4>
           }
         </section >
-      </>
+      </React.Fragment>
     );
   }
 }

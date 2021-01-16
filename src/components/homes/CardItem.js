@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import "./CardItem.css";
 import CurrencyFormat from 'react-currency-format';
+import { ContextApi } from '../../contexts/Context';
+
 class CardItem extends Component {
   render() {
 
@@ -42,7 +44,18 @@ class CardItem extends Component {
               <div className="cart clearfix animate-effect">
                 <div className="action">
                   <ul className="list-unstyled">
-                    <li className="lnk"> <a className="add-to-cart" href="detail.html" title="Thêm giỏ hàng"> <i className="fa fa-shopping-cart" /></a></li>
+                    <ContextApi.Consumer>
+                      {({ addToCart }) => (
+                        <li className="lnk" onClick={() => addToCart(product, 1)}>
+                          <a
+                            className="add-to-cart"
+                            title="Thêm giỏ hàng"
+                          >
+                            <i className="fa fa-shopping-cart" />
+                          </a>
+                        </li>
+                      )}
+                    </ContextApi.Consumer>
                     <li className="lnk wishlist"> <a className="add-to-cart" href="" title="Yêu thích"> <i className="icon fa fa-heart" /> </a> </li>
                   </ul>
                 </div>

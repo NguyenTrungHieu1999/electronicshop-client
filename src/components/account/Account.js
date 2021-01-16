@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import SignIn from './signIn/SignIn';
 import SignUp from './SignUp';
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
 
 class Account extends Component {
 
   render() {
-    const cookies = new Cookies();
     document.title = 'Đăng nhập && Đăng ký';
     return (
       <div>
-        {cookies.get('isAuth') !== undefined && cookies.get('isAuth')===true
+        {Cookies.get('isAuth')==='true'
           ? window.location.href = '/'
           : <div>
             <div className="breadcrumb">
