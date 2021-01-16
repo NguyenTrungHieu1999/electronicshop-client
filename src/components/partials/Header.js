@@ -3,8 +3,12 @@ import Navbar from './Navbar';
 import TopMenu from './TopMenu';
 import Logo from '../../logo.png';
 import { ContextApi } from '../../contexts/Context';
+import { withRouter } from 'react-router-dom';
+import CurrencyFormat from 'react-currency-format';
 
-export default class Header extends Component {
+
+class Header extends Component {
+
   render() {
     return (
       <header className="header-style-1">
@@ -49,14 +53,18 @@ export default class Header extends Component {
               <div className="col-lg-2 col-md-3 col-sm-4 col-xs-12 animate-dropdown top-cart-row">
                 {/* ============================================================= SHOPPING CART DROPDOWN ============================================================= */}
                 {<ContextApi.Consumer>
-                  {({ cartItems }) => (
-                    <div
+                  {({ cartItems, totalPrice }) => (
+                    <div onClick={() => this.props.history.push('/gio-hang')}
                       style={{ cursor: 'pointer' }}
                       className="dropdown dropdown-cart">
                       <span className="dropdown-toggle lnk-cart" data-toggle="dropdown">
                         <div className="items-cart-inner">
                           <div className="basket">
                             <div className="basket-item-count"><span className="count">{cartItems ? cartItems.length : 0}</span></div>
+                            <div class="total-price-basket">
+                              <span class="lbl">Tổng tiền</span>
+                              <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <span className="price-before-discount">{value}₫</span>} />
+                            </div>
                           </div>
                         </div>
                       </span>
@@ -76,3 +84,4 @@ export default class Header extends Component {
     )
   }
 }
+export default withRouter(Header);
