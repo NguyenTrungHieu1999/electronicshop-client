@@ -22,7 +22,7 @@ const validateEmail = (email) => {
 
 const validateUserName = (userName) => {
   if (userName === "") {
-    return `Bạn cần nhập thông tin người dùng`;
+    return `Không được bỏ trống.`;
   }
 
   return "";
@@ -36,4 +36,13 @@ const validateConfirmPassword = (password, confirmPassword) => {
   return "";
 }
 
-export { validatePassword, validateEmail, validateUserName, validateConfirmPassword };
+const validatePhoneNumber = (phone) => {
+  const pattern = /^[0-9]{10}$/g
+  const check = pattern.exec(phone)
+  if (check != null) {
+    return "";
+  }
+  return `Quý khách vui lòng nhập số điện thoại gồm 10 chữ số.`;
+}
+
+export { validatePassword, validateEmail, validateUserName, validateConfirmPassword, validatePhoneNumber };

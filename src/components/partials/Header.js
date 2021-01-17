@@ -61,8 +61,8 @@ class Header extends Component {
                         <div className="items-cart-inner">
                           <div className="basket">
                             <div className="basket-item-count"><span className="count">{cartItems ? cartItems.length : 0}</span></div>
-                            <div class="total-price-basket">
-                              <span class="lbl">Tổng tiền</span>
+                            <div className="total-price-basket">
+                              <span className="lbl">Tổng tiền</span>
                               <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <span className="price-before-discount">{value}₫</span>} />
                             </div>
                           </div>

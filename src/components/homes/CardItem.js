@@ -38,7 +38,7 @@ class CardItem extends Component {
                 <div className="description" />
                 <div className="product-price">
                   <CurrencyFormat value={product.price} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <span style={{ color: 'red' }} className="price">{value}₫</span>} />
-                  <CurrencyFormat value={product.price} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <span className="price-before-discount">{value}₫</span>} />
+                  {/* <CurrencyFormat value={product.price} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <span className="price-before-discount">{value}₫</span>} /> */}
                 </div>
               </div>
               <div className="cart clearfix animate-effect">
@@ -46,7 +46,7 @@ class CardItem extends Component {
                   <ul className="list-unstyled">
                     <ContextApi.Consumer>
                       {({ addToCart }) => (
-                        <li className="lnk" onClick={() => addToCart(product, 1)}>
+                        <li style={{cursor: 'pointer'}} className="lnk" onClick={() => addToCart(product, 1)}>
                           <a
                             className="add-to-cart"
                             title="Thêm giỏ hàng"

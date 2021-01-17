@@ -1,24 +1,77 @@
 import React, { Component } from 'react';
 import { ContextApi } from '../../contexts/Context';
-import Payment from './Payment';
 import CurrencyFormat from 'react-currency-format';
+import Payment from './Payment';
+import { validatePhoneNumber, validateUserName } from '../account/ValidationForm';
+import paymentApi from '../../api/paymentApi';
 
 class ShoppingCart extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      cartItems: []
+      cartItems: [],
+      receiver: '',
+      receiversAddress: '',
+      phoneNumber: '',
+      receiverValid: '',
+      receiversAddressValid: '',
+      phoneNumberValid: ''
     }
   }
 
+  onHandleChange = (event) => {
+    let target = event.target;
+    let name = target.name;
+    let value = target.value;
 
-  componentDidMount() {
-    const cartItems = JSON.parse(localStorage.getItem('cartItems'));
-    console.log("CartItems: ", cartItems);
+    this.setState({
+      [name]: value
+    });
+
+    if (name === 'receiver') {
+      this.setState({ receiverValid: validateUserName(value) });
+    } else if (name === 'receiversAddress') {
+      this.setState({ receiversAddressValid: validateUserName(value) });
+    } else if (name === 'phoneNumber') {
+      this.setState({ phoneNumberValid: validatePhoneNumber(value) });
+    }
   }
 
+  onHandleClick = (event) => {
+    event.preventDefault();
+    const cartItems = JSON.parse(localStorage.getItem('cartItems'));
+    const totalPrice = localStorage.getItem('totalPrice');
+    const { receiver, receiversAddress, phoneNumber } = this.state;
+    let orderDetailModel = [];
+    if (cartItems && cartItems.length) {
+      cartItems.map(item => {
+        orderDetailModel.push({
+          productId: item.product.id,
+          quantity: item.total,
+          price: item.product.price
+        })
+      })
+    }
+    if (receiver === '' || receiversAddress === '' || phoneNumber === '') {
+      alert("Quý khách vui lòng điền đầy đủ thông tin.");
+    }
+    else {
+      paymentApi
+        .checkout({ paid: false, receiver: receiver, receiversAddress: receiversAddress, phoneNumber: phoneNumber, totalMoney: totalPrice, orderDetails: orderDetailModel })
+        .then(res => {
+          if (res.data.isSuccessed) {
+            localStorage.removeItem('cartItems');
+            localStorage.removeItem('totalPrice');
+            alert(res.data.resultObj);
+            window.location.href = ('/');
+          }
+        })
+        .catch(error => console.log(error));
+    }
+  }
   render() {
+    const { receiver, receiversAddress, phoneNumber, receiverValid, receiversAddressValid, phoneNumberValid } = this.state;
     return (
       <React.Fragment>
         <div className="breadcrumb">
@@ -118,14 +171,13 @@ class ShoppingCart extends Component {
                                 <ContextApi.Consumer>
                                   {({ cleanCart }) => (
                                     <button
-                                      className="btn btn-upper btn-danger pull-right outer-right-xs"
+                                      className="btn btn-upper btn-danger pull-right"
                                       onClick={() => cleanCart()}
                                     >
                                       Xóa toàn bộ giỏ hàng
                                     </button>
                                   )}
                                 </ContextApi.Consumer>
-
                               </span>
                             </div>
                           </td>
@@ -134,79 +186,88 @@ class ShoppingCart extends Component {
                     </table>
                   </div>
                 </div>
-                {/* <div className="col-md-4 col-sm-12 estimate-ship-tax">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>
-                          <span className="estimate-title">Estimate shipping and tax</span>
-                          <p>Enter your destination to get shipping and tax.</p>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <div className="form-group">
-                            <label className="info-title control-label">Country <span>*</span></label>
-                            <select className="form-control unicase-form-control selectpicker">
-                              <option>--Select options--</option>
-                              <option>India</option>
-                              <option>SriLanka</option>
-                              <option>united kingdom</option>
-                              <option>saudi arabia</option>
-                              <option>united arab emirates</option>
-                            </select>
-                          </div>
-                          <div className="form-group">
-                            <label className="info-title control-label">State/Province <span>*</span></label>
-                            <select className="form-control unicase-form-control selectpicker">
-                              <option>--Select options--</option>
-                              <option>TamilNadu</option>
-                              <option>Kerala</option>
-                              <option>Andhra Pradesh</option>
-                              <option>Karnataka</option>
-                              <option>Madhya Pradesh</option>
-                            </select>
-                          </div>
-                          <div className="form-group">
-                            <label className="info-title control-label">Zip/Postal Code</label>
-                            <input type="text" className="form-control unicase-form-control text-input" placeholder />
-                          </div>
-                          <div className="pull-right">
-                            <button type="submit" className="btn-upper btn btn-primary">GET A QOUTE</button>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div className="body-content">
+                  <div className="container">
+                    <div className="sign-in-page">
+                      <div className="row">
+                        <div className="col-md-6 col-sm-6 sign-in">
+                          <h4>Thêm địa chỉ giao hàng</h4>
+                          <p>Xin chào, Chào mừng quý khách đến với Electronic Shop.</p>
+                          <form className="register-form outer-top-xs">
+                            <div className="form-group">
+                              <label className="info-title" htmlFor="Address">Địa chỉ<span>*</span></label>
+                              <input
+                                required
+                                type="text"
+                                className="form-control unicase-form-control text-input"
+                                id="Address"
+                                name="receiversAddress"
+                                value={this.state.receiversAddress}
+                                onChange={this.onHandleChange}
+                              />
+                              {receiversAddressValid !== '' ? <label className="alert-danger">{receiversAddressValid}</label> : null}
+                            </div>
+
+                            <div className="form-group">
+                              <label className="info-title" htmlFor="Receiver">Người nhận <span>*</span></label>
+                              <input
+                                required
+                                type="text"
+                                className="form-control unicase-form-control text-input"
+                                id="Receiver"
+                                name="receiver"
+                                value={this.state.receiver}
+                                onChange={this.onHandleChange}
+                              />
+                              {receiverValid !== '' ? <label className="alert-danger">{receiverValid}</label> : null}
+                            </div>
+                            <div className="form-group">
+                              <label className="info-title" htmlFor="PhoneNumber">Số điện thoại <span>*</span></label>
+                              <input
+                                type="tel"
+                                className="form-control unicase-form-control text-input"
+                                id="PhoneNumber"
+                                name="phoneNumber"
+                                value={this.state.phoneNumber}
+                                onChange={this.onHandleChange}
+                              />
+                              {phoneNumberValid !== '' ? <label className="alert-danger">{phoneNumberValid}</label> : null}
+                            </div>
+                          </form>
+                        </div>
+                        <div className="col-md-6 col-sm-12 cart-shopping-total">
+                          <table className="table">
+                            <thead>
+                              <tr>
+                                <th>
+                                  <ContextApi.Consumer>
+                                    {({ totalPrice }) => (
+                                      <div className="cart-sub-total" style={{ textAlign: 'center' }}>
+                                        Tổng tiền
+                                        <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <p className="cart-product-sub-total">{value}₫</p>} />
+                                      </div>
+                                    )}
+                                  </ContextApi.Consumer>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td >
+                                  <div style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+                                    <button onClick={this.onHandleClick} type="submit" className="btn btn-primary checkout-btn">Thanh toán ngay sau khi nhận hàng</button>
+                                  </div>
+                                  <br />
+                                  <Payment receiver={receiver} receiversAddress = {receiversAddress} phoneNumber ={phoneNumber}/>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                 */}
-                {/* <div className="col-md-4 col-sm-12 cart-shopping-total outer-right-xs">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>
-                          <div className="cart-sub-total">
-                            Subtotal<span className="inner-left-md">$600.00</span>
-                          </div>
-                          <div className="cart-grand-total">
-                            Grand Total<span className="inner-left-md">$600.00</span>
-                          </div>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <div className="cart-checkout-btn pull-right" style={{ textAlign: 'center' }}>
-                            <Payment />
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div> */}
               </div>
             </div>
           </div>
