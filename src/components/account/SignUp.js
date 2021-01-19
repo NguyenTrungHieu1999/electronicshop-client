@@ -55,6 +55,7 @@ class SignUp extends Component {
           confirmPassword: confirmPassword, email: email, gender: gender
         });
 
+        debugger
         if (res.isSuccessed) {
           alert("Đăng ký tài khoản thành công!");
         } else {

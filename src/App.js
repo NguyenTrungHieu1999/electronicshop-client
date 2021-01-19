@@ -13,6 +13,7 @@ import ShoppingCart from './components/carts/ShoppingCart';
 import Search from './components/products/Search';
 import FavoriteProduct from './components/favorites/FavoriteProduct';
 import Profile from './components/users/Profile';
+import Contact from './components/contact/Contact';
 function App() {
   return (
     <>
@@ -30,6 +31,7 @@ function App() {
             <Route path='/tim-kiem/:key' component={Search} />
             <Route path ='/yeu-thich' component={FavoriteProduct}/>
             <Route path='/thong-tin-tai-khoan' component={Profile}/>
+            <Route path='/lien-he' component={Contact} />
           </Switch>
           <Footer />
         </Router>

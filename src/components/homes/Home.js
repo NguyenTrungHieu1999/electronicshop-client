@@ -43,33 +43,33 @@ class Home extends Component {
               </div>
               <div className="col-xs-12 col-sm-12 col-md-12">
                 <section className="section new-arriavls ProductsByCondition">
-                  <h3 className="section-title">Thương hiệu nổi bật</h3>
+                  <h3 className="section-title">Thông tin nổi bật</h3>
                 </section>
                 <div className="wide-banners outer-bottom-xs">
                   <div className="row">
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner2.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/b1.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner2.jpg" alt="" /> </div>
-                      </div>
-                      {/* /.wide-banner */}
-                    </div>
-                    {/* /.col */}
-                    <div className="col-md-3">
-                      <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner2.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/b2.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>
                     {/* /.col */}
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner2.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/b3.jpg" alt="" /> </div>
+                      </div>
+                      {/* /.wide-banner */}
+                    </div>
+                    {/* /.col */}
+                    <div className="col-md-3">
+                      <div className="wide-banner cnt-strip">
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/b4.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>

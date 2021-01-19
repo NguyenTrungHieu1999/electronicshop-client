@@ -40,7 +40,7 @@ class ProductCate extends Component {
 
         this.setState({
           title: resCate.resultObj.name,
-          pageCount: Math.ceil(productsData.length / this.state.perPage),
+          pageCount: Math.ceil(postData.length / this.state.perPage),
           postData: postData
         })
       }
@@ -90,15 +90,7 @@ class ProductCate extends Component {
               <div className="col-xs-12 col-sm-12 col-md-9 rht-col">
                 <div id="category" className="category-carousel hidden-xs">
                   <div className="item">
-                    <div className="image"> <img src="assets/images/banners/cat-banner-1.jpg" alt="" className="img-responsive" /> </div>
-                    <div className="container-fluid">
-                      <div className="caption vertical-top text-left">
-                        <div className="big-text"> Big Sale </div>
-                        <div className="excerpt hidden-sm hidden-md"> Save up to 49% off </div>
-                        <div className="excerpt-normal hidden-sm hidden-md"> Lorem ipsum dolor sit amet, consectetur adipiscing elit </div>
-                        <div className="buy-btn"><a href="#" className="lnk btn btn-primary">Show Now</a></div>
-                      </div>
-                    </div>
+                    <div className="image"> <img src="/assets/images/sliders/02.jpg" alt="" className="img-responsive" /> </div>
                   </div>
                 </div>
               </div>
@@ -107,27 +99,27 @@ class ProductCate extends Component {
                   <div className="row">
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="assets/images/banners/home-banner2.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="assets/images/banners/b1.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="assets/images/banners/home-banner2.jpg" alt="" /> </div>
-                      </div>
-                      {/* /.wide-banner */}
-                    </div>
-                    {/* /.col */}
-                    <div className="col-md-3">
-                      <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="assets/images/banners/home-banner2.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="assets/images/banners/b2.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>
                     {/* /.col */}
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="assets/images/banners/home-banner2.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="assets/images/banners/b3.jpg" alt="" /> </div>
+                      </div>
+                      {/* /.wide-banner */}
+                    </div>
+                    {/* /.col */}
+                    <div className="col-md-3">
+                      <div className="wide-banner cnt-strip">
+                        <div className="image"> <img className="img-responsive" src="assets/images/banners/b4.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>

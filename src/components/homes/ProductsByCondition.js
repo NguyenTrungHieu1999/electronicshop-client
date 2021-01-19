@@ -56,8 +56,8 @@ class ProductsByCondition extends Component {
         )
 
         this.setState({
-          pageCount: Math.ceil(productData.length / this.state.perPage),
-          products: productData,
+          pageCount: Math.ceil(products.length / this.state.perPage),
+          products: products,
           postData: postData
         })
       }

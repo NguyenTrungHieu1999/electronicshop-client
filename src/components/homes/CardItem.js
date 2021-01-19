@@ -51,7 +51,11 @@ class CardItem extends Component {
                 }
               </div>
               <div className="product-info text-left">
-                <h3 className="name"><a style={{ color: 'steelblue' }} href={`/san-pham/${product.alias}&${product.id}`}>{product.name}</a></h3>
+                <h3 className="name" style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                  <a style={{ color: 'steelblue' }} href={`/san-pham/${product.alias}&${product.id}`}>
+                    {product.name}
+                  </a>
+                </h3>
                 <StarRatings
                   rating={this.state.rating}
                   starRatedColor="yellow"

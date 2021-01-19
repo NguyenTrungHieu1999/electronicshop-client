@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 
 class Navbar extends Component {
   render() {
@@ -15,12 +16,12 @@ class Navbar extends Component {
                 <div className="navbar-collapse collapse" id="mc-horizontal-menu-collapse">
                   <div className="nav-outer">
                     <ul className="nav navbar-nav">
-                      <li className="active dropdown"> <a href="">Trang chủ</a> </li>
-                      <li className="dropdown mega-menu">
+                      <li className="active dropdown"> <a href="/">Trang chủ</a> </li>
+                      {/* <li className="dropdown mega-menu">
                         <a href="" data-hover="dropdown" className="dropdown-toggle" data-toggle="dropdown">Giới thiệu</a>
-                      </li>
+                      </li> */}
                       <li className="dropdown mega-menu">
-                        <a href="" data-hover="dropdown" className="dropdown-toggle" data-toggle="dropdown">Liên hệ</a>
+                        <a href="" onClick={() => { this.props.history.push("/lien-he")}} data-hover="dropdown" className="dropdown-toggle" data-toggle="dropdown">Liên hệ</a>
                       </li>
                     </ul>
                     <div className="clearfix" />
@@ -35,4 +36,4 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+export default withRouter(Navbar);

@@ -39,6 +39,7 @@ class Profile extends Component {
     userApi
       .myProfile()
       .then(res => {
+        debugger
         if (res.data && res.data.isSuccessed) {
           this.setState({
             email: res.data.resultObj.email,
@@ -78,6 +79,7 @@ class Profile extends Component {
     userApi
       .updateProfile({ id, firstMiddleName, lastName, birthday, gender, phoneNumber, address, status: 0, userInRole: null })
       .then(res => {
+        debugger
         if (res.data && res.data.isSuccessed) {
           alert(res.data.resultObj);
           this.loadData();
