@@ -4,8 +4,8 @@ import paymentApi from '../../api/paymentApi';
 
 class Payment extends Component {
   render() {
-    const cartItems = JSON.parse(localStorage.getItem('cartItems'));
-    const totalPrice = localStorage.getItem('totalPrice');
+    const cartItems = JSON.parse(localStorage.getItem('cartItems'))||[];
+    const totalPrice = localStorage.getItem('totalPrice') || 0;
     const { receiver, receiversAddress, phoneNumber } = this.props;
     let orderDetailModel = [];
     if (cartItems && cartItems.length) {
@@ -19,7 +19,7 @@ class Payment extends Component {
     };
     return (
       <PayPalButton
-        amount={totalPrice / 20000}
+        amount= {totalPrice / 20000}
         // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
         onSuccess={(details, data) => {
           // OPTIONAL: Call your server to save the transaction

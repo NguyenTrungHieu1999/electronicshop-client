@@ -49,13 +49,13 @@ class Home extends Component {
                   <div className="row">
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner1.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner2.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner3.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner2.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>
@@ -69,7 +69,7 @@ class Home extends Component {
                     {/* /.col */}
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner3.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner2.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>

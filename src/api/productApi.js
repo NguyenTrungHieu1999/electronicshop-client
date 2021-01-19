@@ -20,7 +20,7 @@ const getProductById = async (productId) => {
   }
 }
 
-const getProductByCateId = async (cateId) => { 
+const getProductByCateId = async (cateId) => {
   try {
     let res = await axios.get(`${apiURL}/api/products/cateId=${cateId}`);
     return res.data;
@@ -29,4 +29,13 @@ const getProductByCateId = async (cateId) => {
   }
 }
 
-export { getAllProduct, getProductById, getProductByCateId };
+const filterProduct = async (keywork) => {
+  try {
+    let res = await axios.get(`${apiURL}/api/products/search?KeyWord=${keywork}`)
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { getAllProduct, getProductById, getProductByCateId, filterProduct };

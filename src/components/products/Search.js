@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
-import { getCategoryById } from '../../api/categoryApi';
-import { getProductByCateId } from '../../api/productApi';
+import { filterProduct } from '../../api/productApi';
 import CardItem from '../homes/CardItem';
 import LeftMenu from '../homes/LeftMenu';
 
-class ProductCate extends Component {
+class Search extends Component {
 
   constructor(props) {
     super(props);
@@ -21,13 +20,12 @@ class ProductCate extends Component {
   }
 
   async receivedData() {
-    const id = this.props.match.params.id;
+    const keyword = this.props.match.params.key;
 
     try {
-      const resCate = await getCategoryById(id);
-      const resProducts = await getProductByCateId(id);
+      const resProducts = await filterProduct(keyword);
 
-      if (resCate && resCate.isSuccessed && resProducts && resProducts.isSuccessed) {
+      if (resProducts && resProducts.isSuccessed) {
         const productsData = resProducts.resultObj;
 
         const slice = productsData.slice(this.state.offset, this.state.offset + this.state.perPage);
@@ -39,7 +37,6 @@ class ProductCate extends Component {
         )
 
         this.setState({
-          title: resCate.resultObj.name,
           pageCount: Math.ceil(productsData.length / this.state.perPage),
           postData: postData
         })
@@ -68,7 +65,6 @@ class ProductCate extends Component {
   }
 
   render() {
-    document.title = this.state.title;
     let { postData } = this.state;
 
     return (
@@ -78,7 +74,7 @@ class ProductCate extends Component {
             <div className="breadcrumb-inner">
               <ul className="list-inline list-unstyled">
                 <a href="/" className="disable">Trang chủ /</a>
-                <li className="active">{this.state.title}</li>
+                <li className="active">Tìm kiếm</li>
               </ul>
             </div>
           </div>
@@ -90,7 +86,7 @@ class ProductCate extends Component {
               <div className="col-xs-12 col-sm-12 col-md-9 rht-col">
                 <div id="category" className="category-carousel hidden-xs">
                   <div className="item">
-                    <div className="image"> <img src="assets/images/banners/cat-banner-1.jpg" alt="" className="img-responsive" /> </div>
+                    <div className="image"> <img src="/assets/images/banners/cat-banner-1.jpg" alt="" className="img-responsive" /> </div>
                     <div className="container-fluid">
                       <div className="caption vertical-top text-left">
                         <div className="big-text"> Big Sale </div>
@@ -107,27 +103,27 @@ class ProductCate extends Component {
                   <div className="row">
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="assets/images/banners/home-banner2.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner1.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="assets/images/banners/home-banner2.jpg" alt="" /> </div>
-                      </div>
-                      {/* /.wide-banner */}
-                    </div>
-                    {/* /.col */}
-                    <div className="col-md-3">
-                      <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="assets/images/banners/home-banner2.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner3.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>
                     {/* /.col */}
                     <div className="col-md-3">
                       <div className="wide-banner cnt-strip">
-                        <div className="image"> <img className="img-responsive" src="assets/images/banners/home-banner2.jpg" alt="" /> </div>
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner2.jpg" alt="" /> </div>
+                      </div>
+                      {/* /.wide-banner */}
+                    </div>
+                    {/* /.col */}
+                    <div className="col-md-3">
+                      <div className="wide-banner cnt-strip">
+                        <div className="image"> <img className="img-responsive" src="/assets/images/banners/home-banner3.jpg" alt="" /> </div>
                       </div>
                       {/* /.wide-banner */}
                     </div>
@@ -143,7 +139,7 @@ class ProductCate extends Component {
                   <div className="col col-sm-6 col-md-3 col-lg-3 col-xs-6">
                     <div className="filter-tabs">
                       <ul id="filter-tabs" className="nav nav-tabs nav-tab-box nav-tab-fa-icon">
-                        <li className="active"> <a data-toggle="tab" href="#grid-container"><h3 className="section-title">{this.state.title}</h3></a> </li>
+                        <li className="active"> <a data-toggle="tab" href="#grid-container"><h3 className="section-title">Tìm kiếm cho từ khóa: {this.props.match.params.key}</h3></a> </li>
                       </ul>
                     </div>
                   </div>
@@ -174,7 +170,6 @@ class ProductCate extends Component {
                           subContainerClassName={"pages pagination"}
                           activeClassName={"active"} />
                       </div>
-                      {/* /.tab-pane */}
                     </>
                     : ""
                   }
@@ -188,4 +183,4 @@ class ProductCate extends Component {
   }
 }
 
-export default ProductCate;
+export default Search;

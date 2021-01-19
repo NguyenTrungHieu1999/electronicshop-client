@@ -9,7 +9,8 @@ const url = {
   categorylink: "/Categories",
   orderlink: "/Orders",
   orderdetaillink : "/OrderDetails",
-  reviewLink: "/Reviews"
+  reviewLink: "/Reviews",
+  commentlink: "/Comments"
 };
 
 const Token = Cookies.get("token");

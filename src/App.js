@@ -10,7 +10,9 @@ import ForgotPassword from './components/ForgotPassword/ForgotPassword';
 import Product from './components/products/Product';
 import { ContextProvider } from './contexts/Context';
 import ShoppingCart from './components/carts/ShoppingCart';
-
+import Search from './components/products/Search';
+import FavoriteProduct from './components/favorites/FavoriteProduct';
+import Profile from './components/users/Profile';
 function App() {
   return (
     <>
@@ -25,6 +27,9 @@ function App() {
             <Route path="/tao-moi-mat-khau/:email/:token+" component={ResetPassword} />
             <Route path='/san-pham/:alias&:id' component={Product} />
             <Route path='/gio-hang' component={ShoppingCart} />
+            <Route path='/tim-kiem/:key' component={Search} />
+            <Route path ='/yeu-thich' component={FavoriteProduct}/>
+            <Route path='/thong-tin-tai-khoan' component={Profile}/>
           </Switch>
           <Footer />
         </Router>

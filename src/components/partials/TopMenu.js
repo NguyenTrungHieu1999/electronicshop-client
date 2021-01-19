@@ -20,7 +20,6 @@ function TopMenu() {
     Cookies.remove('token');
     setisAuth(null);
     await signOut();
-    debugger
   }
 
   return (
@@ -32,8 +31,8 @@ function TopMenu() {
               ?
               <React.Fragment>
                 <ul className="list-unstyled">
-                  <li className="myaccount" style={style}><span>Xin chào, {name}</span></li>
-                  <li className="wishlist" style={style}><span>Yêu thích</span></li>
+                  <li className="myaccount" onClick={() => { history.push('thong-tin-tai-khoan') }} style={style}><span>Xin chào, {name}</span></li>
+                  <li className="wishlist" onClick={() => { history.push('/yeu-thich') }} style={style}><span>Yêu thích</span></li>
                   <li
                     className="check"
                     style={style}
@@ -46,6 +45,7 @@ function TopMenu() {
               :
               <React.Fragment>
                 <ul className="list-unstyled">
+                  <li onClick={() => { history.push('/yeu-thich') }} className="wishlist" style={style}><span>Yêu thích</span></li>
                   <li
                     className="login"
                     style={style}

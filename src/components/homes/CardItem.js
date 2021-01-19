@@ -2,8 +2,25 @@ import React, { Component } from 'react';
 import "./CardItem.css";
 import CurrencyFormat from 'react-currency-format';
 import { ContextApi } from '../../contexts/Context';
+import StarRatings from 'react-star-ratings';
+import { totalRate } from '../../api/reviewApi';
 
 class CardItem extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      rating: 0
+    }
+  }
+
+  async componentDidMount() {
+    const restotalRating = await totalRate(this.props.product.id);
+    this.setState({
+      rating: restotalRating.resultObj
+    })
+  }
+
   render() {
 
     const { product } = this.props;
@@ -35,6 +52,14 @@ class CardItem extends Component {
               </div>
               <div className="product-info text-left">
                 <h3 className="name"><a style={{ color: 'steelblue' }} href={`/san-pham/${product.alias}&${product.id}`}>{product.name}</a></h3>
+                <StarRatings
+                  rating={this.state.rating}
+                  starRatedColor="yellow"
+                  numberOfStars={5}
+                  starDimension="20px"
+                  starSpacing="5px"
+                  name='rating'
+                />
                 <div className="description" />
                 <div className="product-price">
                   <CurrencyFormat value={product.price} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <span style={{ color: 'red' }} className="price">{value}₫</span>} />
@@ -45,18 +70,30 @@ class CardItem extends Component {
                 <div className="action">
                   <ul className="list-unstyled">
                     <ContextApi.Consumer>
-                      {({ addToCart }) => (
-                        <li style={{cursor: 'pointer'}} className="lnk" onClick={() => addToCart(product, 1)}>
-                          <a
-                            className="add-to-cart"
-                            title="Thêm giỏ hàng"
+                      {({ addToCart, addToFavorite }) => (
+                        <React.Fragment>
+                          <li style={{ cursor: 'pointer' }} className="lnk" onClick={() => addToCart(product, 1)}>
+                            <a
+                              className="add-to-cart"
+                              title="Thêm giỏ hàng"
+                            >
+                              <i className="fa fa-shopping-cart" />
+                            </a>
+                          </li>
+                          <li
+                            style={{ cursor: 'pointer' }}
+                            className="lnk wishlist"
+                            onClick={() => { addToFavorite(product) }}
                           >
-                            <i className="fa fa-shopping-cart" />
-                          </a>
-                        </li>
+                            <a className="add-to-cart" title="Yêu thích">
+                              <i className="icon fa fa-heart" />
+                            </a>
+                          </li>
+                        </React.Fragment>
+
                       )}
                     </ContextApi.Consumer>
-                    <li className="lnk wishlist"> <a className="add-to-cart" href="" title="Yêu thích"> <i className="icon fa fa-heart" /> </a> </li>
+
                   </ul>
                 </div>
               </div>

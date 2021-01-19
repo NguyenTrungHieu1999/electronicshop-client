@@ -11,7 +11,8 @@ import { getReviewByProductId, totalRate } from '../../api/reviewApi';
 import createReviewApi from '../../api/createReviewApi';
 import Cookies from 'js-cookie';
 import Moment from 'moment';
-import { ContextApi, ContextProvider } from '../../contexts/Context';
+import { ContextApi } from '../../contexts/Context';
+import commentApi from '../../api/commentApi';
 
 class Product extends Component {
 
@@ -29,9 +30,9 @@ class Product extends Component {
       perPage: 5,
       currentPage: 0,
       review: '',
-      total: 1,
+      comment: '',
       allReviews: [],
-      validateAuth: ''
+      allComments: []
     }
 
     this.changeRating = this.changeRating.bind(this);
@@ -54,12 +55,21 @@ class Product extends Component {
         const resProducts = await getProductByCateId(resCate.resultObj.id);
         const restotalRating = await totalRate(id);
         const resReviewByProduct = await getReviewByProductId(id);
+        commentApi
+          .getAllCommentByProductId(id)
+          .then(res => {
+            if (res.data && res.data.isSuccessed) {
+              this.setState({
+                allComments: res.data.resultObj
+              })
+            }
+          })
         const slice = resProducts.resultObj.slice(this.state.offset, this.state.offset + this.state.perPage);
 
         let products = slice.map(product => {
           return (
             <React.Fragment key={product.id}>
-              <CardItem product={product} key={product.id} />
+              <CardItem product={product} />
             </React.Fragment>
           )
         })
@@ -75,7 +85,7 @@ class Product extends Component {
           cate: resCate.resultObj,
           pageCount: Math.ceil(resProducts.resultObj.length / this.state.perPage),
           ratingForProduct: restotalRating.resultObj,
-          allReviews: resReviewByProduct.resultObj
+          allReviews: resReviewByProduct.resultObj,
         })
       }
     } catch (error) {
@@ -108,32 +118,72 @@ class Product extends Component {
     })
   }
 
-  onHandleSubmit = (event) => {
+
+  onHandleSubmitReview = (event) => {
     event.preventDefault();
     const isAuth = Cookies.get('isAuth');
     const { ratingForReview, review } = this.state;
     if (review !== '') {
       if (isAuth === false || isAuth === undefined || isAuth === null) {
-        alert("Bạn phải đăng nhập hệ thống để thực hiện đánh giá.");
-      }
-      createReviewApi
-        .createReview({
-          productId: this.props.match.params.id,
-          rateStar: ratingForReview,
-          text: review
-        })
-        .then(res => {
-          if (res.data && res.data.isSuccessed) {
-            this.setState({
-              ratingForReview: 0,
-              review: ''
-            },
-              async () => {
-                await this.receivedData();
+        alert("Quý khách phải đăng nhập hệ thống để thực hiện đánh giá.");
+      } else {
+        if (ratingForReview !== 0) {
+          createReviewApi
+            .createReview({
+              productId: this.props.match.params.id,
+              rateStar: ratingForReview,
+              text: review
+            })
+            .then(res => {
+              if (res.data && res.data.isSuccessed) {
+                this.setState({
+                  ratingForReview: 0,
+                  review: ''
+                },
+                  async () => {
+                    await this.receivedData();
+                  }
+                );
               }
-            );
-          }
-        })
+            })
+        }
+        else {
+          alert("Quý khách cần chọn số sao đánh giá")
+        }
+      }
+    } else {
+      alert("Quý khách vui lòng nhập đánh giá.")
+    }
+  }
+
+  onHandleSubmitComment = (event) => {
+    event.preventDefault();
+    const isAuth = Cookies.get('isAuth');
+    const { comment } = this.state;
+    if (comment !== '') {
+      if (isAuth === false || isAuth === undefined || isAuth === null) {
+        alert("Quý khách phải đăng nhập hệ thống để thực hiện bình luận.")
+      }
+      else {
+        commentApi
+          .createComment({
+            productId: this.props.match.params.id,
+            text: comment
+          })
+          .then(res => {
+            if (res.data && res.data.isSuccessed) {
+              this.setState({
+                comment: ''
+              },
+                async () => {
+                  await this.receivedData();
+                }
+              )
+            }
+          })
+      }
+    } else {
+      alert("Quý khách vui lòng nhập bình luận.");
     }
   }
 
@@ -143,7 +193,8 @@ class Product extends Component {
 
   render() {
 
-    const { product, products, photos, cate, allReviews } = this.state;
+    const { product, products, photos, cate, allReviews, allComments } = this.state;
+    let hasItem = 0;
 
     return (
       <React.Fragment>
@@ -240,7 +291,8 @@ class Product extends Component {
                                   <StarRatings
                                     rating={this.state.ratingForProduct}
                                     starRatedColor="yellow"
-                                    // changeRating={this.changeRating}
+                                    starDimension="20px"
+                                    starSpacing="5px"
                                     numberOfStars={5}
                                     name='rating'
                                   />
@@ -279,38 +331,54 @@ class Product extends Component {
                             </div>
                             <div className="col-sm-6 col-xs-6">
                               <div className="favorite-button m-t-5">
-                                <a className="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Wishlist" href="#">
-                                  <i className="fa fa-heart" />
-                                </a>
+                                <ContextApi.Consumer>
+                                  {({ addToFavorite, favoriteItems }) => (
+                                    favoriteItems.map((item, index) => {
+                                      if (item.id === product.id) {
+                                        hasItem = 1;
+                                        return (
+                                          <a
+                                            className="add-to-cart"
+                                            style={{ cursor: 'pointer' }}
+                                            title="Xóa yêu thích"
+                                            data-placement="right"
+                                            onClick={() => { addToFavorite(product); hasItem = 0; }}>
+                                            <i className="icon fa fa-heart" />
+                                          </a>
+                                        )
+                                      }
+                                    })
+                                  )}
+                                </ContextApi.Consumer>
+                                <ContextApi.Consumer>
+                                  {({ addToFavorite }) => (
+                                    <React.Fragment>
+                                      {hasItem === 0 ?
+                                        <a
+                                          className="btn btn-primary"
+                                          style={{ cursor: 'pointer' }}
+                                          title="Yêu thích"
+                                          data-placement="right"
+                                          onClick={() => { addToFavorite(product) }}>
+                                          <i className="fa fa-heart" />
+                                        </a>
+                                        : ""
+                                      }
+                                    </React.Fragment>
+                                  )}
+                                </ContextApi.Consumer>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div className="quantity-container info-container">
                           <div className="row">
-                            <div className="qty">
-                              <span className="label">Số lượng :</span>
-                            </div>
-                            <div className="qty-count">
-                              <div className="cart-quantity">
-                                <div className="quant-input">
-                                  <input
-                                    type="number"
-                                    min={1}
-                                    max={product.inventory}
-                                    value={this.state.total}
-                                    name='total'
-                                    onChange={this.onHandleChange}
-                                  />
-                                </div>
-                              </div>
-                            </div>
                             <div className="add-btn">
                               <ContextApi.Consumer>
                                 {({ addToCart }) => (
                                   <button
                                     className="btn btn-primary"
-                                    onClick={() => addToCart(product, this.state.total)}
+                                    onClick={() => addToCart(product, 1)}
                                   >
                                     <i className="fa fa-shopping-cart inner-right-vs" />
                                     Thêm giỏ hàng
@@ -386,7 +454,7 @@ class Product extends Component {
                                 </div>
                                 <div className="review-form">
                                   <div className="form-container">
-                                    <form className="cnt-form" onSubmit={this.onHandleSubmit}>
+                                    <form className="cnt-form" onSubmit={this.onHandleSubmitReview}>
                                       <div className="row">
                                         <div className="col-md-12">
                                           <div className="form-group">
@@ -410,7 +478,6 @@ class Product extends Component {
                                 </div>
                               </div>
                             </div>
-
                           </div>
                           <div id="tags" className="tab-pane">
                             <div className="product-tab">
@@ -418,16 +485,23 @@ class Product extends Component {
                                 <h4 className="title">Bình luận của khách hàng</h4>
                                 <div className="reviews">
                                   <div className="review">
-                                    <React.Fragment>
-                                      <div className="review-title"><span className="summary">Nguyễn Trung Hiếu</span><span className="date"><i className="fa fa-calendar" /><span>1 days ago</span></span></div>
-                                      <div className="text">Sản phẩm dùng rất ổn</div>
-                                      <br />
-                                    </React.Fragment>
-                                    <React.Fragment>
-                                      <div className="review-title"><span className="summary">Nguyễn Trung Hiếu</span><span className="date"><i className="fa fa-calendar" /><span>1 days ago</span></span></div>
-                                      <div className="text">Sản phẩm dùng rất ổn</div>
-                                      <br />
-                                    </React.Fragment>
+                                    {allComments ? allComments.map((userComment) => {
+                                      return (
+                                        <React.Fragment key={userComment.id}>
+                                          <div className="review-title">
+                                            <span className="summary">{userComment.userName}</span>
+                                            <span className="date"><i className="fa fa-calendar" />
+                                              <span>{Moment(userComment.createDate).format('YYYY-MM-DD')}</span>
+                                            </span>
+                                          </div>
+                                          <div className="text">{userComment.text}</div>
+                                          <br />
+                                        </React.Fragment>
+                                      )
+                                    })
+                                      : ''
+                                    }
+
                                   </div>
                                 </div>
                               </div>
@@ -435,12 +509,19 @@ class Product extends Component {
                                 <h4 className="title">Viết bình luận của bạn.</h4>
                                 <div className="review-form">
                                   <div className="form-container">
-                                    <form className="cnt-form">
+                                    <form className="cnt-form" onSubmit={this.onHandleSubmitComment}>
                                       <div className="row">
                                         <div className="col-md-12">
                                           <div className="form-group">
                                             <label htmlFor="exampleInputReview">Bình luận <span className="astk">*</span></label>
-                                            <textarea className="form-control txt txt-review" id="exampleInputReview" rows={4} defaultValue={""} />
+                                            <textarea
+                                              className="form-control txt txt-review"
+                                              id="exampleInputReview"
+                                              rows={4}
+                                              name='comment'
+                                              value={this.state.comment}
+                                              onChange={this.onHandleChange}
+                                            />
                                           </div>
                                         </div>
                                       </div>

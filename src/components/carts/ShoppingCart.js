@@ -186,92 +186,100 @@ class ShoppingCart extends Component {
                     </table>
                   </div>
                 </div>
-                <div className="body-content">
-                  <div className="container">
-                    <div className="sign-in-page">
-                      <div className="row">
-                        <div className="col-md-6 col-sm-6 sign-in">
-                          <h4>Thêm địa chỉ giao hàng</h4>
-                          <p>Xin chào, Chào mừng quý khách đến với Electronic Shop.</p>
-                          <form className="register-form outer-top-xs">
-                            <div className="form-group">
-                              <label className="info-title" htmlFor="Address">Địa chỉ<span>*</span></label>
-                              <input
-                                required
-                                type="text"
-                                className="form-control unicase-form-control text-input"
-                                id="Address"
-                                name="receiversAddress"
-                                value={this.state.receiversAddress}
-                                onChange={this.onHandleChange}
-                              />
-                              {receiversAddressValid !== '' ? <label className="alert-danger">{receiversAddressValid}</label> : null}
-                            </div>
+                <ContextApi.Consumer>
+                  {({ totalPrice, cartItems }) => (
+                    cartItems.length > 0 &&
+                    <div className="body-content">
+                      <div className="container">
+                        <div className="sign-in-page">
+                          <div className="row">
+                            <div className="col-md-6 col-sm-6 sign-in">
+                              <h4>Thêm địa chỉ giao hàng</h4>
+                              <p>Xin chào, Chào mừng quý khách đến với Electronic Shop.</p>
+                              <form className="register-form outer-top-xs">
+                                <div className="form-group">
+                                  <label className="info-title" htmlFor="Address">Địa chỉ<span>*</span></label>
+                                  <input
+                                    required
+                                    type="text"
+                                    className="form-control unicase-form-control text-input"
+                                    id="Address"
+                                    name="receiversAddress"
+                                    value={this.state.receiversAddress}
+                                    onChange={this.onHandleChange}
+                                  />
+                                  {receiversAddressValid !== '' ? <label className="alert-danger">{receiversAddressValid}</label> : null}
+                                </div>
 
-                            <div className="form-group">
-                              <label className="info-title" htmlFor="Receiver">Người nhận <span>*</span></label>
-                              <input
-                                required
-                                type="text"
-                                className="form-control unicase-form-control text-input"
-                                id="Receiver"
-                                name="receiver"
-                                value={this.state.receiver}
-                                onChange={this.onHandleChange}
-                              />
-                              {receiverValid !== '' ? <label className="alert-danger">{receiverValid}</label> : null}
+                                <div className="form-group">
+                                  <label className="info-title" htmlFor="Receiver">Người nhận <span>*</span></label>
+                                  <input
+                                    required
+                                    type="text"
+                                    className="form-control unicase-form-control text-input"
+                                    id="Receiver"
+                                    name="receiver"
+                                    value={this.state.receiver}
+                                    onChange={this.onHandleChange}
+                                  />
+                                  {receiverValid !== '' ? <label className="alert-danger">{receiverValid}</label> : null}
+                                </div>
+                                <div className="form-group">
+                                  <label className="info-title" htmlFor="PhoneNumber">Số điện thoại <span>*</span></label>
+                                  <input
+                                    type="tel"
+                                    className="form-control unicase-form-control text-input"
+                                    id="PhoneNumber"
+                                    name="phoneNumber"
+                                    value={this.state.phoneNumber}
+                                    onChange={this.onHandleChange}
+                                  />
+                                  {phoneNumberValid !== '' ? <label className="alert-danger">{phoneNumberValid}</label> : null}
+                                </div>
+                              </form>
                             </div>
-                            <div className="form-group">
-                              <label className="info-title" htmlFor="PhoneNumber">Số điện thoại <span>*</span></label>
-                              <input
-                                type="tel"
-                                className="form-control unicase-form-control text-input"
-                                id="PhoneNumber"
-                                name="phoneNumber"
-                                value={this.state.phoneNumber}
-                                onChange={this.onHandleChange}
-                              />
-                              {phoneNumberValid !== '' ? <label className="alert-danger">{phoneNumberValid}</label> : null}
-                            </div>
-                          </form>
-                        </div>
-                        <div className="col-md-6 col-sm-12 cart-shopping-total">
-                          <table className="table">
-                            <thead>
-                              <tr>
-                                <th>
-                                  <ContextApi.Consumer>
-                                    {({ totalPrice }) => (
+                            <div className="col-md-6 col-sm-12 cart-shopping-total">
+                              <table className="table">
+                                <thead>
+                                  <tr>
+                                    <th>
+
                                       <div className="cart-sub-total" style={{ textAlign: 'center' }}>
                                         Tổng tiền
-                                        <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <p className="cart-product-sub-total">{value}₫</p>} />
+                                          <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <p className="cart-product-sub-total">{value}₫</p>} />
                                       </div>
-                                    )}
-                                  </ContextApi.Consumer>
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td >
-                                  <div style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
-                                    <button onClick={this.onHandleClick} type="submit" className="btn btn-primary checkout-btn">Thanh toán ngay sau khi nhận hàng</button>
-                                  </div>
-                                  <br />
-                                  <Payment receiver={receiver} receiversAddress = {receiversAddress} phoneNumber ={phoneNumber}/>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td >
+                                      <div style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+                                        <button onClick={this.onHandleClick} type="submit" className="btn btn-primary checkout-btn">Thanh toán ngay sau khi nhận hàng</button>
+                                      </div>
+                                      <br />
+                                      {receiver === '' || receiversAddress === '' || phoneNumber === '' || receiverValid !== '' || receiversAddressValid !== '' || phoneNumberValid !== ''
+                                        ? <div style={{ pointerEvents: 'none' }} onClick={() => alert("Quý khách vui lòng nhập đầy đủ thông tin thanh toán.")}>
+                                          <Payment receiver={receiver} receiversAddress={receiversAddress} phoneNumber={phoneNumber} />
+                                        </div>
+                                        : <Payment receiver={receiver} receiversAddress={receiversAddress} phoneNumber={phoneNumber} />
+                                      }
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  )}
+                </ContextApi.Consumer>
               </div>
             </div>
           </div>
         </div>
+
       </React.Fragment>
     );
   }

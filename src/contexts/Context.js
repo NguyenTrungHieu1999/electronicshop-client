@@ -7,19 +7,54 @@ export class ContextProvider extends Component {
     super(props);
     this.state = {
       cartItems: [],
-      totalPrice: 0
+      totalPrice: 0,
+      favoriteItems: []
     };
 
+    this.addToFavorite = this.addToFavorite.bind(this);
     this.addToCart = this.addToCart.bind(this);
     this.removeFromCart = this.removeFromCart.bind(this);
     this.removeItem = this.removeItem.bind(this);
     this.cleanCart = this.cleanCart.bind(this);
+    this.cleanFavorite = this.cleanFavorite.bind(this);
   }
 
   componentDidMount() {
     this.setState({
       cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
+      favoriteItems: JSON.parse(localStorage.getItem('favoriteItems')) || [],
       totalPrice: localStorage.getItem('totalPrice') || 0
+    })
+  }
+
+  addToFavorite(product) {
+    let favoriteItems = this.state.favoriteItems ? this.state.favoriteItems : [];
+    let hasItem = 0;
+    if (favoriteItems) {
+      favoriteItems.map((item, index) => {
+        if (item.id === product.id) {
+          hasItem = 1;
+          favoriteItems.splice(index, 1);
+          alert('Xóa yêu thích thành công.')
+        }
+      })
+      if (hasItem === 0) {
+        favoriteItems.push(product);
+        alert('Thêm yêu thích thành công.')
+      }
+
+      localStorage.setItem('favoriteItems', JSON.stringify(favoriteItems));
+    }
+
+    this.setState({
+      favoriteItems: favoriteItems
+    })
+  }
+
+  cleanFavorite() {
+    localStorage.removeItem('favoriteItems');
+    this.setState({
+      favoriteItems: []
     })
   }
 
@@ -76,7 +111,6 @@ export class ContextProvider extends Component {
         totalPrice += item.product.price * item.total;
       })
       console.log("Adding to Cart: ", cartItems);
-      // Cookies.set('cartItems', JSON.stringify(cartItems), { expires: 7 });
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
       localStorage.removeItem('totalPrice');
       localStorage.setItem('totalPrice', totalPrice);
@@ -127,10 +161,13 @@ export class ContextProvider extends Component {
         value={{
           cartItems: this.state.cartItems,
           totalPrice: this.state.totalPrice,
+          favoriteItems: this.state.favoriteItems,
           addToCart: this.addToCart,
           removeFromCart: this.removeFromCart,
           removeItem: this.removeItem,
-          cleanCart: this.cleanCart
+          cleanCart: this.cleanCart,
+          addToFavorite: this.addToFavorite,
+          cleanFavorite: this.cleanFavorite
         }}
       >
         {this.props.children}

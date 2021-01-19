@@ -9,6 +9,27 @@ import CurrencyFormat from 'react-currency-format';
 
 class Header extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      keyword: ''
+    }
+  }
+
+  onHandleChange = (event) => {
+    let target = event.target;
+    let name = target.name;
+    let value = target.value;
+
+    this.setState({
+      [name]: value
+    })
+  }
+
+  onHandleClick = (event) => {
+    event.preventDefault();
+    window.location.href = (`/tim-kiem/${this.state.keyword}`);
+  }
   render() {
     return (
       <header className="header-style-1">
@@ -40,8 +61,16 @@ class Header extends Component {
                       <input
                         className="search-field"
                         placeholder="Nhập từ khóa để tìm kiếm..."
-                        style={{ outline: 'none' }} />
+                        style={{ outline: 'none' }}
+                        value={this.state.keyword}
+                        name='keyword'
+                        onChange={this.onHandleChange}
+                        onKeyDown={(event) => {
+                          event.keyCode === 13 && event.preventDefault();
+                        }}
+                      />
                       <li
+                        onClick={this.onHandleClick}
                         className="search-button"
                         style={{ cursor: 'pointer' }}>
                       </li>

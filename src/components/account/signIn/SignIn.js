@@ -48,7 +48,6 @@ function SignIn() {
           .login({ email: signInModel.email, password: signInModel.password, rememberMe: signInModel.rememberMe })
           .then(res => {
             if (res.data.isSuccessed) {
-              debugger;
               Cookies.set('token', res.data.resultObj, {expires: 7 });
               Cookies.set('isAuth', 'true', {expires: 7 });
               window.location.href = '/';
