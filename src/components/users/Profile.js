@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import userApi from '../../api/userApi';
 import Cookies from 'js-cookie';
 import { validatePhoneNumber } from '../account/ValidationForm';
-import { userIdDecode } from '../../services/DecodeService';
+import { roleDecode, userIdDecode } from '../../services/DecodeService';
 import { forgotPassWord } from '../../api/authApi';
 class Profile extends Component {
   constructor(props) {
@@ -76,8 +76,16 @@ class Profile extends Component {
     event.preventDefault();
     const id = userIdDecode;
     const { email, userName, gender, firstMiddleName, lastName, address, birthday, phoneNumber } = this.state;
+
+    let userInRole = ''
+    if (roleDecode === 'Admin') {
+      userInRole = 'Admin';
+    } else if (roleDecode === 'Emp') {
+      userInRole = 'Emp';
+    }
+
     userApi
-      .updateProfile({ id, firstMiddleName, lastName, birthday, gender, phoneNumber, address, status: 0, userInRole: null })
+      .updateProfile({ id, firstMiddleName, lastName, birthday, gender, phoneNumber, address, status: 0, userInRole: userInRole })
       .then(res => {
         debugger
         if (res.data && res.data.isSuccessed) {
