@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Cookies from 'js-cookie';
 
 export const ContextApi = React.createContext();
 
@@ -81,7 +82,9 @@ export class ContextProvider extends Component {
         totalPrice += item.product.price * item.total;
       })
       console.log("Adding to Cart: ", cartItems);
-      // Cookies.set('cartItems', JSON.stringify(cartItems), { expires: 7 });
+      // Cookies.remove('cartItems1');
+      // Cookies.set('cartItems1', JSON.stringify(cartItems), { expires: 7 });
+      // console.log( "abc", Cookies.getJSON('cartItems1'));
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
       localStorage.removeItem('totalPrice');
       localStorage.setItem('totalPrice', totalPrice);
