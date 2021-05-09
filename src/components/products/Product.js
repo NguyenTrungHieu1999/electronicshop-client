@@ -69,7 +69,7 @@ class Product extends Component {
         let products = slice.map(product => {
           return (
             <React.Fragment key={product.id}>
-              <CardItem product={product} />
+              <CardItem product={product} classCSS="col-lg-15" />
             </React.Fragment>
           )
         })

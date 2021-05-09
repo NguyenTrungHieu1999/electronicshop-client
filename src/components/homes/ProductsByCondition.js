@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import ReactPaginate from 'react-paginate';
 import { getAllCategory } from '../../api/categoryApi';
 import { getAllProduct } from '../../api/productApi';
 import CardItem from './CardItem';
 import "./ProductsByCondition.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 
 class ProductsByCondition extends Component {
@@ -13,13 +15,8 @@ class ProductsByCondition extends Component {
 
     this.state = {
       products: [],
-      offset: 0,
-      perPage: 5,
-      currentPage: 0,
       postData: []
     };
-
-    this.handlePageClick = this.handlePageClick.bind(this);
   }
 
   async receivedData() {
@@ -47,16 +44,13 @@ class ProductsByCondition extends Component {
             }
           })
         });
-
-        const slice = products.slice(this.state.offset, this.state.offset + this.state.perPage);
-        const postData = slice.map(pd =>
+        const postData = products.map(pd =>
           <CardItem
             product={pd} key={pd.id}
           />
         )
 
         this.setState({
-          pageCount: Math.ceil(products.length / this.state.perPage),
           products: products,
           postData: postData
         })
@@ -65,21 +59,6 @@ class ProductsByCondition extends Component {
       console.log(error);
     }
   }
-
-  handlePageClick = (e) => {
-    const selectedPage = e.selected;
-    const offset = selectedPage * this.state.perPage;
-
-    this.setState({
-      currentPage: selectedPage,
-      offset: offset
-    },
-      async () => {
-        await this.receivedData()
-      }
-    );
-
-  };
 
   async componentDidMount() {
     await this.receivedData();
@@ -91,6 +70,17 @@ class ProductsByCondition extends Component {
     let { title } = this.props;
     let { postData } = this.state;
 
+    var settings = {
+      dots: true,
+      arrows: true,
+      infinite: true,
+      slidesToShow: 5,
+      slidesToScroll: 5,
+      autoplaySpeed: 5000,
+      autoplay: false,
+      speed: 1000
+    };
+
     return (
       <React.Fragment>
         <section className="section new-arriavls ProductsByCondition">
@@ -99,30 +89,17 @@ class ProductsByCondition extends Component {
             ? <>
               <div className="search-result-container ">
                 <div id="myTabContent" className="tab-content category-list">
-                  <div className="tab-pane active " id="grid-container">
+                  <div className="tab-pane active" >
                     <div className="category-product">
                       <div className="row">
-                        {postData}
+                        <Slider {...settings}>
+                          {postData}
+                        </Slider>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div style={{ display: 'flex' }}>
-                <ReactPaginate
-                  previousLabel={"<"}
-                  nextLabel={">"}
-                  breakLabel={"..."}
-                  breakClassName={"break-me"}
-                  pageCount={this.state.pageCount}
-                  marginPagesDisplayed={2}
-                  pageRangeDisplayed={5}
-                  onPageChange={this.handlePageClick}
-                  containerClassName={"pagination"}
-                  subContainerClassName={"pages pagination"}
-                  activeClassName={"active"} />
-              </div>
-
             </>
             : <h4>Không có sản phẩm</h4>
           }

@@ -35,6 +35,7 @@ class ProductCate extends Component {
         const postData = slice.map(pd =>
           <CardItem
             product={pd} key={pd.id}
+            classCSS="col-lg-15"
           />
         )
 
