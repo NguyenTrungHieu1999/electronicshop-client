@@ -27,7 +27,7 @@ class Header extends Component {
   }
 
   onHandleClick = (event) => {
-    event.preventDefault();
+//    event.preventDefault();
     window.location.href = (`/tim-kiem/${this.state.keyword}`);
   }
   render() {
@@ -66,7 +66,10 @@ class Header extends Component {
                         name='keyword'
                         onChange={this.onHandleChange}
                         onKeyDown={(event) => {
-                          event.keyCode === 13 && event.preventDefault();
+                          if (event.keyCode === 13) {
+                            event.preventDefault();
+                            this.onHandleClick();
+                          }
                         }}
                       />
                       <li

@@ -35,6 +35,7 @@ class ProductCate extends Component {
         const postData = slice.map(pd =>
           <CardItem
             product={pd} key={pd.id}
+            classCSS="col-lg-15"
           />
         )
 
@@ -77,7 +78,10 @@ class ProductCate extends Component {
           <div className="container">
             <div className="breadcrumb-inner">
               <ul className="list-inline list-unstyled">
-                <a href="/" className="disable">Trang chủ /</a>
+                <li
+                  onClick={() => this.props.history.push(`/`)}
+                  style={{ display: 'inline', cursor: 'pointer' }} className="active"
+                >Trang chủ</li>
                 <li className="active">{this.state.title}</li>
               </ul>
             </div>

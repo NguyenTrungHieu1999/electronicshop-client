@@ -23,10 +23,10 @@ class CardItem extends Component {
 
   render() {
 
-    const { product } = this.props;
+    const { product, classCSS } = this.props;
 
     return (
-      <div className="col-lg-15">
+      <div className = {classCSS}>
         <div className="item">
           <div className="products">
             <div className="product">

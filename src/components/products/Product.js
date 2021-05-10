@@ -13,7 +13,11 @@ import Cookies from 'js-cookie';
 import Moment from 'moment';
 import { ContextApi } from '../../contexts/Context';
 import commentApi from '../../api/commentApi';
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "./Product.css";
+import HotDeals from '../partials/leftmenus/HotDeals';
 class Product extends Component {
 
   constructor(props) {
@@ -69,14 +73,16 @@ class Product extends Component {
         let products = slice.map(product => {
           return (
             <React.Fragment key={product.id}>
-              <CardItem product={product} />
+              <CardItem product={product} classCSS="col-lg-15" />
             </React.Fragment>
           )
         })
 
-        let photos = resProduct.resultObj.productPhotos.map(photo => {
-          return photo.url;
-        })
+        let photos = [];
+
+        for(var i = 0; i < 4 ;i++){
+          photos.push(resProduct.resultObj?.productPhotos[i].url);
+        }
 
         this.setState({
           product: resProduct.resultObj,
@@ -195,14 +201,37 @@ class Product extends Component {
 
     const { product, products, photos, cate, allReviews, allComments } = this.state;
     let hasItem = 0;
-
+    const settings = {
+      customPaging: function (i) {
+        return (
+          <div className="single-product-gallery-thumbs gallery-thumbs">
+            <div>
+              <div className="item">
+                <a className="horizontal-thumb active">
+                  <img className="img-responsive" alt="" src={photos[i]} />
+                </a>
+              </div>
+            </div></div>
+        );
+      },
+      dots: true,
+      dotsClass: "slick-dots slick-thumb",
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: false
+    };
     return (
       <React.Fragment>
         <div className="breadcrumb">
           <div className="container">
             <div className="breadcrumb-inner">
               <ul className="list-inline list-unstyled">
-                <a href="/" className="disable">Trang chủ /</a>
+                <li
+                  onClick={() => this.props.history.push(`/`)}
+                  style={{ display: 'inline', cursor: 'pointer' }} className="active"
+                >Trang chủ</li>
                 <li
                   onClick={() => this.props.history.push(`/${cate.alias}&${cate.id}`)}
                   style={{ display: 'inline', cursor: 'pointer' }} className="active"
@@ -223,7 +252,7 @@ class Product extends Component {
                     <img src="/assets/images/banners/LHS-banner.jpg" alt="Image" />
                   </div>
                   {/* ============================================== Testimonials============================================== */}
-                  <Testimonials />
+                  <HotDeals />
                   {/* ============================================== Testimonials: END ============================================== */}
                 </div>
               </div>{/* /.sidebar */}
@@ -232,52 +261,15 @@ class Product extends Component {
                   <div className="row">
                     <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 gallery-holder">
                       <div className="product-item-holder size-big single-product-gallery small-gallery">
-                        <div id="owl-single-product">
-                          <div className="single-product-gallery-item" id="slide1">
-                            <a data-lightbox="image-1" data-title="Gallery" href={photos[0]}>
-                              <img className="img-responsive" alt="" src="assets/images/blank.gif" data-echo={photos[0]} />
-                            </a>
-                          </div>
-                          <div className="single-product-gallery-item" id="slide2">
-                            <a data-lightbox="image-1" data-title="Gallery" href={photos[1]}>
-                              <img className="img-responsive" alt="" src="assets/images/blank.gif" data-echo={photos[1]} />
-                            </a>
-                          </div>
-                          <div className="single-product-gallery-item" id="slide3">
-                            <a data-lightbox="image-1" data-title="Gallery" href={photos[2]}>
-                              <img className="img-responsive" alt="" src="assets/images/blank.gif" data-echo={photos[2]} />
-                            </a>
-                          </div>
-                          <div className="single-product-gallery-item" id="slide4">
-                            <a data-lightbox="image-1" data-title="Gallery" href={photos[3]}>
-                              <img className="img-responsive" alt="" src="assets/images/blank.gif" data-echo={photos[3]} />
-                            </a>
-                          </div>
-                        </div>
-                        <div className="single-product-gallery-thumbs gallery-thumbs">
-                          <div id="owl-single-product-thumbnails">
-                            <div className="item">
-                              <a className="horizontal-thumb active" data-target="#owl-single-product" data-slide={1} href="#slide1">
-                                <img className="img-responsive" alt="" src="assets/images/blank.gif" data-echo={photos[0]} />
+                        <Slider {...settings}>
+                          {photos?.map((photo, index) =>
+                            <div key={index} className="single-product-gallery-item">
+                              <a >
+                                <img className="img-responsive" alt="" src={photo} />
                               </a>
                             </div>
-                            <div className="item">
-                              <a className="horizontal-thumb active" data-target="#owl-single-product" data-slide={2} href="#slide2">
-                                <img className="img-responsive" alt="" src="assets/images/blank.gif" data-echo={photos[1]} />
-                              </a>
-                            </div>
-                            <div className="item">
-                              <a className="horizontal-thumb active" data-target="#owl-single-product" data-slide={3} href="#slide3">
-                                <img className="img-responsive" alt="" src="assets/images/blank.gif" data-echo={photos[2]} />
-                              </a>
-                            </div>
-                            <div className="item">
-                              <a className="horizontal-thumb active" data-target="#owl-single-product" data-slide={4} href="#slide4">
-                                <img className="img-responsive" alt="" src="assets/images/blank.gif" data-echo={photos[3]} />
-                              </a>
-                            </div>
-                          </div>{/* /#owl-single-product-thumbnails */}
-                        </div>{/* /.gallery-thumbs */}
+                          )}
+                        </Slider>
                       </div>
                     </div>
                     <div className="col-sm-12 col-md-8 col-lg-8 product-info-block">

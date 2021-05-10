@@ -10,7 +10,10 @@ class FavoriteProduct extends Component {
           <div className="container">
             <div className="breadcrumb-inner">
               <ul className="list-inline list-unstyled">
-                <li style={{ display: 'inline' }}><a href="/">Trang chủ</a></li>
+                <li
+                  onClick={() => this.props.history.push(`/`)}
+                  style={{ display: 'inline', cursor: 'pointer' }} className="active"
+                >Trang chủ</li>
                 <li className="active">Sản phẩm yêu thích</li>
               </ul>
             </div>

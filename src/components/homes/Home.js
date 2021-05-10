@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { getAllProductType } from '../../api/categoryApi';
-import Slider from '../partials/Slider';
+import Slider1 from '../partials/Slider1';
 import LeftMenu from './LeftMenu';
 import ProductsByCondition from './ProductsByCondition';
 
@@ -39,7 +39,7 @@ class Home extends Component {
             <div className="row">
               <LeftMenu />
               <div className="col-xs-12 col-sm-12 col-md-9 homebanner-holder">
-                <Slider />
+                <Slider1 />
               </div>
               <div className="col-xs-12 col-sm-12 col-md-12">
                 <section className="section new-arriavls ProductsByCondition">
