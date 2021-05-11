@@ -70,7 +70,7 @@ class ProductsByCondition extends Component {
     let { title } = this.props;
     let { postData } = this.state;
 
-    var settings = {
+    const settings = {
       dots: true,
       arrows: true,
       infinite: true,
@@ -83,7 +83,7 @@ class ProductsByCondition extends Component {
 
     return (
       <React.Fragment>
-        <section className="section new-arriavls ProductsByCondition">
+        <section className="section new-arriavls">
           <h3 className="section-title">{title}</h3>
           {postData.length > 0
             ? <>

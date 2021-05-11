@@ -148,7 +148,7 @@ class ProductCate extends Component {
               <div className="search-result-container ">
                 <div id="myTabContent" className="tab-content category-list">
                   {postData.length > 0 ?
-                    <>
+                    <React.Fragment>
                       <div className="tab-pane active ProductsByCondition" id="grid-container">
                         <div className="category-product">
                           <div className="row">
@@ -171,7 +171,7 @@ class ProductCate extends Component {
                           activeClassName={"active"} />
                       </div>
                       {/* /.tab-pane */}
-                    </>
+                    </React.Fragment>
                     : ""
                   }
                 </div>

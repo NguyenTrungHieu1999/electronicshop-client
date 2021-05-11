@@ -1,278 +1,87 @@
 import React, { Component } from 'react'
+import {getNewProducts} from "../../../api/productApi";
+import CurrencyFormat from 'react-currency-format';
+import StarRatings from 'react-star-ratings';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-export default class HotDeals extends Component {
+class HotDeals extends Component {
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      products: []
+    }
+  }
+
+  async componentDidMount() {
+    const resProducts = await getNewProducts();
+    try{
+      if(resProducts&&resProducts.isSuccessed){
+        await this.setState({products: resProducts.resultObj});
+      }
+    }catch{
+      console.log(resProducts.message);
+    }
+  }
+
   render() {
+    const {products} = this.state;
+    const settings = {
+      dots: false,
+      fade: true,
+      arrows: false,
+      infinite: true,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      speed: 1000,
+      autoplaySpeed: 3000,
+      autoplay: true,
+      className: 'slides',
+    };
     return (
-      <div className="sidebar-widget outer-bottom-small">
-        <h3 className="section-title">Special Offer</h3>
-        <div className="sidebar-widget-body outer-top-xs">
-          <div className="owl-carousel sidebar-carousel special-offer custom-carousel owl-theme outer-top-xs">
-            <div className="item">
-              <div className="products special-product">
-                <div className="product">
-                  <div className="product-micro">
-                    <div className="row product-micro-row">
-                      <div className="col col-xs-5">
-                        <div className="product-image">
-                          <div className="image"> <a href="#a"> <img src="assets/images/products/p5.jpg" alt="" /> </a> </div>
-                          {/* /.image */}
+        <React.Fragment>
+          <div className="sidebar-widget hot-deals outer-bottom-xs">
+            <h3 className="section-title">Sản phẩm mới</h3>
+            <div className="sidebar-carousel owl-theme outer-top-ss">
+              <Slider {...settings}>
+            {products&&products.map(product=>
+
+                  <div className="item">
+                    <div className="products">
+                      <div className="hot-deal-wrapper">
+                        <div className="image" style={{ width: "220px", height: "180px" }}>
+                          <a href={`/san-pham/${product.alias}&${product.id}`}>
+                            <img src={product.productPhotos?product.productPhotos[0].url:""} style={{ width: "100%", height: "60%" }} alt="" />
+                            <img src={product.productPhotos?product.productPhotos[1].url:""} style={{ width: "100%", height: "60%" }} alt="" className="hover-image" />
+                          </a>
                         </div>
-                        {/* /.product-image */}
+                        <div className="sale-offer-tag"><span>Mới</span></div>
                       </div>
-                      {/* /.col */}
-                      <div className="col col-xs-7">
-                        <div className="product-info">
-                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
-                          <div className="rating rateit-small" />
-                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
-                          {/* /.product-price */}
+                      <div className="product-info text-left m-t-20">
+                        <h3 className="name"><a href={`/san-pham/${product.alias}&${product.id}`}>{product.name}</a></h3>
+                        <div className="product-price">
+                          <CurrencyFormat value={product.price} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <span className="price">{value}₫</span>} />
                         </div>
                       </div>
-                      {/* /.col */}
+                      <div className="cart clearfix animate-effect">
+                        <div className="action">
+                          <div className="add-cart-button btn-group">
+                            <button className="btn btn-primary icon" data-toggle="dropdown" type="button"> <i className="fa fa-shopping-cart" /> </button>
+                            <button className="btn btn-primary cart-btn" type="button">Add to cart</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    {/* /.product-micro-row */}
                   </div>
-                  {/* /.product-micro */}
-                </div>
-                <div className="product">
-                  <div className="product-micro">
-                    <div className="row product-micro-row">
-                      <div className="col col-xs-5">
-                        <div className="product-image">
-                          <div className="image"> <a href="#a"> <img src="assets/images/products/p9.jpg" alt="" /> </a> </div>
-                          {/* /.image */}
-                        </div>
-                        {/* /.product-image */}
-                      </div>
-                      {/* /.col */}
-                      <div className="col col-xs-7">
-                        <div className="product-info">
-                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
-                          <div className="rating rateit-small" />
-                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
-                          {/* /.product-price */}
-                        </div>
-                      </div>
-                      {/* /.col */}
-                    </div>
-                    {/* /.product-micro-row */}
-                  </div>
-                  {/* /.product-micro */}
-                </div>
-                <div className="product">
-                  <div className="product-micro">
-                    <div className="row product-micro-row">
-                      <div className="col col-xs-5">
-                        <div className="product-image">
-                          <div className="image"> <a href="#a"> <img src="assets/images/products/p11.jpg" alt="" /> </a> </div>
-                          {/* /.image */}
-                        </div>
-                        {/* /.product-image */}
-                      </div>
-                      {/* /.col */}
-                      <div className="col col-xs-7">
-                        <div className="product-info">
-                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
-                          <div className="rating rateit-small" />
-                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
-                          {/* /.product-price */}
-                        </div>
-                      </div>
-                      {/* /.col */}
-                    </div>
-                    {/* /.product-micro-row */}
-                  </div>
-                  {/* /.product-micro */}
-                </div>
-                <div className="product">
-                  <div className="product-micro">
-                    <div className="row product-micro-row">
-                      <div className="col col-xs-5">
-                        <div className="product-image">
-                          <div className="image"> <a href="#a"> <img src="assets/images/products/p11.jpg" alt="" /> </a> </div>
-                          {/* /.image */}
-                        </div>
-                        {/* /.product-image */}
-                      </div>
-                      {/* /.col */}
-                      <div className="col col-xs-7">
-                        <div className="product-info">
-                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
-                          <div className="rating rateit-small" />
-                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
-                          {/* /.product-price */}
-                        </div>
-                      </div>
-                      {/* /.col */}
-                    </div>
-                    {/* /.product-micro-row */}
-                  </div>
-                  {/* /.product-micro */}
-                </div>
-              </div>
-            </div>
-            <div className="item">
-              <div className="products special-product">
-                <div className="product">
-                  <div className="product-micro">
-                    <div className="row product-micro-row">
-                      <div className="col col-xs-5">
-                        <div className="product-image">
-                          <div className="image"> <a href="#a"> <img src="assets/images/products/p15.jpg" alt="" /> </a> </div>
-                          {/* /.image */}
-                        </div>
-                        {/* /.product-image */}
-                      </div>
-                      {/* /.col */}
-                      <div className="col col-xs-7">
-                        <div className="product-info">
-                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
-                          <div className="rating rateit-small" />
-                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
-                          {/* /.product-price */}
-                        </div>
-                      </div>
-                      {/* /.col */}
-                    </div>
-                    {/* /.product-micro-row */}
-                  </div>
-                  {/* /.product-micro */}
-                </div>
-                <div className="product">
-                  <div className="product-micro">
-                    <div className="row product-micro-row">
-                      <div className="col col-xs-5">
-                        <div className="product-image">
-                          <div className="image"> <a href="#a"> <img src="assets/images/products/p13.jpg" alt="" /> </a> </div>
-                          {/* /.image */}
-                        </div>
-                        {/* /.product-image */}
-                      </div>
-                      {/* /.col */}
-                      <div className="col col-xs-7">
-                        <div className="product-info">
-                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
-                          <div className="rating rateit-small" />
-                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
-                          {/* /.product-price */}
-                        </div>
-                      </div>
-                      {/* /.col */}
-                    </div>
-                    {/* /.product-micro-row */}
-                  </div>
-                  {/* /.product-micro */}
-                </div>
-                <div className="product">
-                  <div className="product-micro">
-                    <div className="row product-micro-row">
-                      <div className="col col-xs-5">
-                        <div className="product-image">
-                          <div className="image"> <a href="#a"> <img src="assets/images/products/p12.jpg" alt="" /> </a> </div>
-                          {/* /.image */}
-                        </div>
-                        {/* /.product-image */}
-                      </div>
-                      {/* /.col */}
-                      <div className="col col-xs-7">
-                        <div className="product-info">
-                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
-                          <div className="rating rateit-small" />
-                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
-                          {/* /.product-price */}
-                        </div>
-                      </div>
-                      {/* /.col */}
-                    </div>
-                    {/* /.product-micro-row */}
-                  </div>
-                  {/* /.product-micro */}
-                </div>
-              </div>
-            </div>
-            <div className="item">
-              <div className="products special-product">
-                <div className="product">
-                  <div className="product-micro">
-                    <div className="row product-micro-row">
-                      <div className="col col-xs-5">
-                        <div className="product-image">
-                          <div className="image"> <a href="#a"> <img src="assets/images/products/p1.jpg" alt="" /> </a> </div>
-                          {/* /.image */}
-                        </div>
-                        {/* /.product-image */}
-                      </div>
-                      {/* /.col */}
-                      <div className="col col-xs-7">
-                        <div className="product-info">
-                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
-                          <div className="rating rateit-small" />
-                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
-                          {/* /.product-price */}
-                        </div>
-                      </div>
-                      {/* /.col */}
-                    </div>
-                    {/* /.product-micro-row */}
-                  </div>
-                  {/* /.product-micro */}
-                </div>
-                <div className="product">
-                  <div className="product-micro">
-                    <div className="row product-micro-row">
-                      <div className="col col-xs-5">
-                        <div className="product-image">
-                          <div className="image"> <a href="#a"> <img src="assets/images/products/p3.jpg" alt="" /> </a> </div>
-                          {/* /.image */}
-                        </div>
-                        {/* /.product-image */}
-                      </div>
-                      {/* /.col */}
-                      <div className="col col-xs-7">
-                        <div className="product-info">
-                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
-                          <div className="rating rateit-small" />
-                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
-                          {/* /.product-price */}
-                        </div>
-                      </div>
-                      {/* /.col */}
-                    </div>
-                    {/* /.product-micro-row */}
-                  </div>
-                  {/* /.product-micro */}
-                </div>
-                <div className="product">
-                  <div className="product-micro">
-                    <div className="row product-micro-row">
-                      <div className="col col-xs-5">
-                        <div className="product-image">
-                          <div className="image"> <a href="#a"> <img src="assets/images/products/p7.jpg" alt="" /> </a> </div>
-                          {/* /.image */}
-                        </div>
-                        {/* /.product-image */}
-                      </div>
-                      {/* /.col */}
-                      <div className="col col-xs-7">
-                        <div className="product-info">
-                          <h3 className="name"><a href="#a">Floral Print Shirt</a></h3>
-                          <div className="rating rateit-small" />
-                          <div className="product-price"> <span className="price"> $450.99 </span> </div>
-                          {/* /.product-price */}
-                        </div>
-                      </div>
-                      {/* /.col */}
-                    </div>
-                    {/* /.product-micro-row */}
-                  </div>
-                  {/* /.product-micro */}
-                </div>
-              </div>
+            )}
+              </Slider>
             </div>
           </div>
-        </div>
-        {/* /.sidebar-widget-body */}
-      </div>
+        </React.Fragment>
     )
   }
 }
+
+export default HotDeals;

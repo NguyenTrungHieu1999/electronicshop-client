@@ -29,13 +29,18 @@ const getProductByCateId = async (cateId) => {
   }
 }
 
-const filterProduct = async (keywork) => {
+const filterProduct = async (keyword) => {
   try {
-    let res = await axios.get(`${apiURL}/api/products/search?KeyWord=${keywork}`)
+    let res = await axios.get(`${apiURL}/api/products/search?KeyWord=${keyword}`)
     return res.data;
   } catch (error) {
     console.log(error);
   }
 }
 
-export { getAllProduct, getProductById, getProductByCateId, filterProduct };
+const getNewProducts = async () =>{
+  let res = await axios.get(`${apiURL}/api/products/get-new-products`)
+  return res.data;
+}
+
+export { getAllProduct, getProductById, getProductByCateId, filterProduct, getNewProducts };
