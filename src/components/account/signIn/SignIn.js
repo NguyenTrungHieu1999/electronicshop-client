@@ -4,6 +4,8 @@ import { validateEmail, validatePassword } from '../ValidationForm';
 import ExternalLogins from './ExternalLogins';
 import { useHistory } from 'react-router-dom';
 import loginservice_json from '../../../api/loginservice_json';
+import cartApi from '../../../api/cartApi';
+import axios from 'axios';
 
 function SignIn() {
 
@@ -43,21 +45,52 @@ function SignIn() {
     event.preventDefault();
 
     if (signInModel.emailValid === "" && signInModel.passValid === "") {
-      try {
-        loginservice_json
-          .login({ email: signInModel.email, password: signInModel.password, rememberMe: signInModel.rememberMe })
-          .then(res => {
-            if (res.data.isSuccessed) {
-              Cookies.set('token', res.data.resultObj, {expires: 7 });
-              Cookies.set('isAuth', 'true', {expires: 7 });
-              window.location.href = '/';
-            } else {
-              alert(res.data.message);
+      loginservice_json
+        .login({ email: signInModel.email, password: signInModel.password, rememberMe: signInModel.rememberMe })
+        .then(res => {
+          if (res.data.isSuccessed) {
+            Cookies.set('token', res.data.resultObj, { expires: 7 });
+            Cookies.set('isAuth', 'true', { expires: 7 });
+            // cartModels.length && cartApi.createCarts({ cartModels: cartModels });
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            let cartModels = []
+            cartItems.length && cartItems.map(item => {
+              cartModels.push({
+                productId: item.product.id,
+                quantity: item.total
+              })
+            });
+            const headers = {
+              'Accept': 'application/json; charset=utf-8',
+              'Content-Type': 'application/json;charset=UTF-8',
+              'Authorization': `Bearer ${Cookies.get('token')}`
             }
-          })
-      } catch (error) {
-        console.log(error);
-      }
+            if(cartModels.length > 0) {
+              axios.post('https://localhost:5001/api/Carts/create', { cartModels }, { headers })
+                .then(response => { window.location.href = '/'; console.log(response.data)})
+                .catch(err => console.log(err));
+            }else{
+              axios.get('https://localhost:5001/api/Carts/getAll', { headers }).then(res1 => {
+                let totalPrice = 0;
+                let cartItems1 = [];
+                res1.data && res1.data.resultObj.map(item => {
+                  totalPrice += item.product.price * item.quantity;
+                  cartItems1.push({
+                    product: item.product,
+                    total: item.quantity
+                  })
+                });
+
+                localStorage.setItem('cartItems', JSON.stringify(cartItems1));
+                localStorage.removeItem('totalPrice');
+                localStorage.setItem('totalPrice', totalPrice);
+                window.location.href = '/';
+              });
+            }
+          } else {
+            alert(res.data.message);
+          }
+        });
     }
   }
 

@@ -7,7 +7,7 @@ export default function Slider1() {
   const settings = {
     dots: true,
     fade: true,
-    arrows: false,
+    arrows: true,
     infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,

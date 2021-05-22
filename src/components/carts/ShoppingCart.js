@@ -4,13 +4,14 @@ import CurrencyFormat from 'react-currency-format';
 import Payment from './Payment';
 import { validatePhoneNumber, validateUserName } from '../account/ValidationForm';
 import paymentApi from '../../api/paymentApi';
+import { getAllProduct } from "../../api/productApi";
 
 class ShoppingCart extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      cartItems: [],
+      products: [],
       receiver: '',
       receiversAddress: '',
       phoneNumber: '',
@@ -18,6 +19,58 @@ class ShoppingCart extends Component {
       receiversAddressValid: '',
       phoneNumberValid: ''
     }
+  }
+
+  async componentDidMount() {
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    let resProducts = await getAllProduct();
+
+    let productsCart = [];
+    cartItems && cartItems.map(item => {
+      resProducts && resProducts.resultObj && resProducts.resultObj.map(product => {
+        if (product.id === item.product.id) {
+          productsCart.push({
+            product: product,
+            total: item.total
+          });
+        }
+      })
+    })
+
+    this.setState({
+      products: productsCart
+    })
+  }
+
+  setToTalCart = (product, value) => {
+    let { products } = this.state;
+    let productsCart = { ...products };
+
+    products.map((item, index) => {
+      if (item.product.id === product.id) {
+        if (value > 0 && item.total < product.inventory) {
+          item.total = item.total + value;
+        }
+        if (value < 0) {
+          item.total = item.total + value;
+        }
+        if (item.total < 1) {
+          products.splice(index, 1);
+        }else{
+          productsCart[index] = item;
+        }
+      }
+    })
+
+    this.setState({
+      product: productsCart
+    })
+  }
+
+  cleanShoppingCart = () => {
+    this.setState({
+      products: []
+    })
   }
 
   onHandleChange = (event) => {
@@ -50,15 +103,21 @@ class ShoppingCart extends Component {
           productId: item.product.id,
           quantity: item.total,
           price: item.product.price
-        })
+        });
       })
     }
     if (receiver === '' || receiversAddress === '' || phoneNumber === '') {
       alert("Quý khách vui lòng điền đầy đủ thông tin.");
-    }
-    else {
+    } else {
       paymentApi
-        .checkout({ paid: false, receiver: receiver, receiversAddress: receiversAddress, phoneNumber: phoneNumber, totalMoney: totalPrice, orderDetails: orderDetailModel })
+        .checkout({
+          paid: false,
+          receiver: receiver,
+          receiversAddress: receiversAddress,
+          phoneNumber: phoneNumber,
+          totalMoney: totalPrice,
+          orderDetails: orderDetailModel
+        })
         .then(res => {
           if (res.data.isSuccessed) {
             localStorage.removeItem('cartItems');
@@ -70,8 +129,17 @@ class ShoppingCart extends Component {
         .catch(error => console.log(error));
     }
   }
+
   render() {
-    const { receiver, receiversAddress, phoneNumber, receiverValid, receiversAddressValid, phoneNumberValid } = this.state;
+    const {
+      products,
+      receiver,
+      receiversAddress,
+      phoneNumber,
+      receiverValid,
+      receiversAddressValid,
+      phoneNumberValid
+    } = this.state;
     return (
       <React.Fragment>
         <div className="breadcrumb">
@@ -81,7 +149,8 @@ class ShoppingCart extends Component {
                 <li
                   onClick={() => this.props.history.push(`/`)}
                   style={{ display: 'inline', cursor: 'pointer' }} className="active"
-                >Trang chủ</li>
+                >Trang chủ
+                </li>
                 <li className="active">Giỏ hàng</li>
               </ul>
             </div>
@@ -106,8 +175,8 @@ class ShoppingCart extends Component {
                       </thead>
                       <tbody>
                         <ContextApi.Consumer>
-                          {({ cartItems, addToCart, removeFromCart, removeItem }) => (
-                            cartItems && cartItems.map(item => {
+                          {({ addToCart, removeFromCart, removeItem }) => (
+                            products && products.map(item => {
                               return (
                                 <React.Fragment key={item.product.id}>
                                   <tr>
@@ -125,12 +194,9 @@ class ShoppingCart extends Component {
                                       </h4>
                                       <div className="row">
                                         <div className="col-sm-12">
-                                          (Hiển thị đánh giá)
-                                        </div>
-                                        <div className="col-sm-12">
                                           <div className="reviews">
                                             (còn {item.product.inventory} sản phẩm)
-                                          </div>
+                                        </div>
                                         </div>
                                       </div>
                                     </td>
@@ -138,7 +204,12 @@ class ShoppingCart extends Component {
                                       <div className="quant-input">
                                         <div className="arrows">
                                           <div
-                                            onClick={() => addToCart(item.product, 1)}
+                                            onClick={
+                                              () => {
+                                                this.setToTalCart(item.product, 1);
+                                                addToCart(item.product, 1)
+                                              }
+                                            }
                                             className="arrow plus gradient">
                                             <span className="ir">
                                               <i className="icon fa fa-sort-asc" />
@@ -146,7 +217,10 @@ class ShoppingCart extends Component {
                                           </div>
                                           <div
                                             className="arrow minus gradient"
-                                            onClick={() => removeFromCart(item.product, 1)}>
+                                            onClick={() => {
+                                              this.setToTalCart(item.product, -1)
+                                              removeFromCart(item.product, 1)
+                                            }}>
                                             <span className="ir">
                                               <i className="icon fa fa-sort-desc" />
                                             </span>
@@ -154,9 +228,17 @@ class ShoppingCart extends Component {
                                         </div>
                                         <input type="text" value={item.total} />
                                       </div>
+                                      {item.total > 10 || item.total >= item.product.inventory ?
+                                        <label className="alert-warning">Số lượng sản phẩm đạt giới hạn</label> : null}
                                     </td>
-                                    <CurrencyFormat value={item.product.price} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <td className="cart-product-sub-total">{value}₫</td>} />
-                                    <CurrencyFormat value={item.product.price * item.total} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <td className="cart-product-grand-total">{value}₫</td>} />
+                                    <CurrencyFormat value={item.product.price} displayType={'text'}
+                                      thousandSeparator={true} prefix={''} renderText={value =>
+                                        <td className="cart-product-sub-total">{value}₫</td>}
+                                    />
+                                    <CurrencyFormat value={item.product.price * item.total} displayType={'text'}
+                                      thousandSeparator={true} prefix={''} renderText={value =>
+                                        <td className="cart-product-grand-total">{value}₫</td>}
+                                    />
                                     <td className="romove-item"><span onClick={() => removeItem(item.product)} title="Xóa" className="icon"><i className="fa fa-trash-o"></i></span></td>
                                   </tr>
                                 </React.Fragment>
@@ -170,12 +252,17 @@ class ShoppingCart extends Component {
                           <td colSpan={7}>
                             <div className="shopping-cart-btn">
                               <span>
-                                <button onClick={() => window.location.href = ('/')} className="btn btn-upper btn-info">Tiếp tục mua hàng</button>&emsp;
+                                <button onClick={() => window.location.href = ('/')} className="btn btn-upper btn-info">Tiếp tục mua hàng</button>
+                                &emsp;
                                 <ContextApi.Consumer>
                                   {({ cleanCart }) => (
                                     <button
                                       className="btn btn-upper btn-danger pull-right"
-                                      onClick={() => cleanCart()}
+                                      onClick={() => {
+                                          this.cleanShoppingCart();
+                                          cleanCart();
+                                        }
+                                      }
                                     >
                                       Xóa toàn bộ giỏ hàng
                                     </button>
@@ -190,8 +277,8 @@ class ShoppingCart extends Component {
                   </div>
                 </div>
                 <ContextApi.Consumer>
-                  {({ totalPrice, cartItems }) => (
-                    cartItems.length > 0 &&
+                  {({ totalPrice }) => (
+                    products.length > 0 &&
                     <div className="body-content">
                       <div className="container">
                         <div className="sign-in-page">
@@ -199,6 +286,7 @@ class ShoppingCart extends Component {
                             <div className="col-md-6 col-sm-6 sign-in">
                               <h4>Thêm địa chỉ giao hàng</h4>
                               <p>Xin chào, Chào mừng quý khách đến với Electronic Shop.</p>
+                              <p>Quý khách vui lòng nhập đầy đủ thông tin bên dưới để tiến hành thanh toán!</p>
                               <form className="register-form outer-top-xs">
                                 <div className="form-group">
                                   <label className="info-title" htmlFor="Address">Địa chỉ<span>*</span></label>
@@ -211,7 +299,8 @@ class ShoppingCart extends Component {
                                     value={this.state.receiversAddress}
                                     onChange={this.onHandleChange}
                                   />
-                                  {receiversAddressValid !== '' ? <label className="alert-danger">{receiversAddressValid}</label> : null}
+                                  {receiversAddressValid !== '' ?
+                                    <label className="alert-danger">{receiversAddressValid}</label> : null}
                                 </div>
 
                                 <div className="form-group">
@@ -225,10 +314,12 @@ class ShoppingCart extends Component {
                                     value={this.state.receiver}
                                     onChange={this.onHandleChange}
                                   />
-                                  {receiverValid !== '' ? <label className="alert-danger">{receiverValid}</label> : null}
+                                  {receiverValid !== '' ?
+                                    <label className="alert-danger">{receiverValid}</label> : null}
                                 </div>
                                 <div className="form-group">
-                                  <label className="info-title" htmlFor="PhoneNumber">Số điện thoại <span>*</span></label>
+                                  <label className="info-title" htmlFor="PhoneNumber">Số điện
+                                    thoại <span>*</span></label>
                                   <input
                                     type="tel"
                                     className="form-control unicase-form-control text-input"
@@ -237,7 +328,8 @@ class ShoppingCart extends Component {
                                     value={this.state.phoneNumber}
                                     onChange={this.onHandleChange}
                                   />
-                                  {phoneNumberValid !== '' ? <label className="alert-danger">{phoneNumberValid}</label> : null}
+                                  {phoneNumberValid !== '' ?
+                                    <label className="alert-danger">{phoneNumberValid}</label> : null}
                                 </div>
                               </form>
                             </div>
@@ -246,26 +338,32 @@ class ShoppingCart extends Component {
                                 <thead>
                                   <tr>
                                     <th>
-
                                       <div className="cart-sub-total" style={{ textAlign: 'center' }}>
                                         Tổng tiền
-                                          <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <p className="cart-product-sub-total">{value}₫</p>} />
+                                      <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true}
+                                          prefix={''} renderText={value => <p
+                                            className="cart-product-sub-total">{value}₫</p>} />
                                       </div>
                                     </th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td >
-                                      <div style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
-                                        <button onClick={this.onHandleClick} type="submit" className="btn btn-primary checkout-btn">Thanh toán ngay sau khi nhận hàng</button>
-                                      </div>
-                                      <br />
+                                    <td>
                                       {receiver === '' || receiversAddress === '' || phoneNumber === '' || receiverValid !== '' || receiversAddressValid !== '' || phoneNumberValid !== ''
-                                        ? <div style={{ pointerEvents: 'none' }} onClick={() => alert("Quý khách vui lòng nhập đầy đủ thông tin thanh toán.")}>
-                                          <Payment receiver={receiver} receiversAddress={receiversAddress} phoneNumber={phoneNumber} />
-                                        </div>
-                                        : <Payment receiver={receiver} receiversAddress={receiversAddress} phoneNumber={phoneNumber} />
+                                        ? ""
+                                        :
+                                        <React.Fragment>
+                                          <div style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+                                            <button onClick={this.onHandleClick} type="submit"
+                                              className="btn btn-primary checkout-btn">Thanh toán ngay sau khi nhận
+                                              hàng
+                                          </button>
+                                          </div>
+                                          <br />
+                                          <Payment receiver={receiver} receiversAddress={receiversAddress}
+                                            phoneNumber={phoneNumber} />
+                                        </React.Fragment>
                                       }
                                     </td>
                                   </tr>

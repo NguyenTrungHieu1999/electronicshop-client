@@ -27,7 +27,6 @@ class Header extends Component {
   }
 
   onHandleClick = (event) => {
-//    event.preventDefault();
     window.location.href = (`/tim-kiem/${this.state.keyword}`);
   }
   render() {

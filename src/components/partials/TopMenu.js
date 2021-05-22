@@ -18,8 +18,10 @@ function TopMenu() {
   const signOutHandle = async () => {
     Cookies.remove('isAuth');
     Cookies.remove('token');
+    localStorage.clear();
     setisAuth(null);
     await signOut();
+    window.location.href = ('/');
   }
 
   return (

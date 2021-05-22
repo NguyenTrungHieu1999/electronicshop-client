@@ -1,4 +1,6 @@
+import Cookies from "js-cookie";
 import React, { Component } from "react";
+import cartApi from "../api/cartApi";
 
 export const ContextApi = React.createContext();
 
@@ -8,7 +10,7 @@ export class ContextProvider extends Component {
     this.state = {
       cartItems: [],
       totalPrice: 0,
-      favoriteItems: []
+      favoriteItems: [],
     };
 
     this.addToFavorite = this.addToFavorite.bind(this);
@@ -20,6 +22,26 @@ export class ContextProvider extends Component {
   }
 
   componentDidMount() {
+    // const cookiesAuth = Cookies.get('isAuth');
+
+    // if (cookiesAuth) {
+    //   cartApi.getAllCarts().then(res => {
+    //     let totalPrice = 0;
+    //     let cartItems = [];
+    //     res.data && res.data.resultObj.map(item => {
+    //       totalPrice += item.product.price * item.quantity;
+    //       cartItems.push({
+    //         product: item.product,
+    //         total: item.quantity
+    //       })
+    //     });
+
+    //     localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    //     localStorage.removeItem('totalPrice');
+    //     localStorage.setItem('totalPrice', totalPrice);
+    //   });
+    // }
+
     this.setState({
       cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
       favoriteItems: JSON.parse(localStorage.getItem('favoriteItems')) || [],
@@ -66,11 +88,13 @@ export class ContextProvider extends Component {
       cartItems.map((item, index) => {
         if (item.product.id === product.id) {
           hasItem = 1;
-          item.total += total;
-          cartItems[index] = item;
+          if (item.total < 10 && item.total < product.inventory) {
+            item.total += total;
+            cartItems[index] = item;
+          }
         }
       });
-      if (hasItem === 0) {
+      if (hasItem === 0 && product.inventory > 0) {
         cartItems.push({
           product: product,
           total: total
@@ -80,7 +104,7 @@ export class ContextProvider extends Component {
       cartItems.map(item => {
         totalPrice += item.product.price * item.total;
       })
-      console.log("Adding to Cart: ", cartItems);
+
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
       localStorage.removeItem('totalPrice');
       localStorage.setItem('totalPrice', totalPrice);
@@ -109,7 +133,7 @@ export class ContextProvider extends Component {
       cartItems.map(item => {
         totalPrice += item.product.price * item.total;
       })
-      console.log("Adding to Cart: ", cartItems);
+
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
       localStorage.removeItem('totalPrice');
       localStorage.setItem('totalPrice', totalPrice);
@@ -160,6 +184,7 @@ export class ContextProvider extends Component {
           cartItems: this.state.cartItems,
           totalPrice: this.state.totalPrice,
           favoriteItems: this.state.favoriteItems,
+          products: this.state.products,
           addToCart: this.addToCart,
           removeFromCart: this.removeFromCart,
           removeItem: this.removeItem,

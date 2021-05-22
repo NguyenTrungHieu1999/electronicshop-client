@@ -262,13 +262,10 @@ class Product extends Component {
                   <div className="home-banner outer-top-n outer-bottom-xs">
                     <img src="/assets/images/banners/LHS-banner.jpg" alt="Image"/>
                   </div>
-                  {/* ============================================== Testimonials============================================== */}
                   <HotDeals/>
                   <Testimonials/>
-                  {/* ============================================== Testimonials: END ============================================== */}
                 </div>
               </div>
-              {/* /.sidebar */}
               <div className="col-xs-12 col-sm-12 col-md-9 rht-col">
                 <div className="detail-block">
                   <div className="row">
@@ -319,8 +316,7 @@ class Product extends Component {
                               </div>
                               <div className="pull-left">
                                 <div className="stock-box">
-                                                                    <span
-                                                                      className="value">{product.inventory >= 0 ? `Còn ${product.inventory} sản phẩm` : "Hết hàng"}</span>
+                                  <span className="value">{product.inventory >= 0 ? `Còn ${product.inventory} sản phẩm` : "Hết hàng"}</span>
                                 </div>
                               </div>
                             </div>
@@ -333,13 +329,11 @@ class Product extends Component {
                           <div className="row">
                             <div className="col-sm-6 col-xs-6">
                               <div className="price-box">
-                                <CurrencyFormat value={product.price}
-                                                displayType={'text'}
-                                                thousandSeparator={true} prefix={''}
-                                                renderText={value => <span
-                                                  className="price">{value} VNĐ</span>}/>
-                                {/* <span className="price">{product.price}</span> */}
-                                {/* <span className="price-strike">$900.00</span> */}
+                                <CurrencyFormat
+                                  value={product.price}
+                                  displayType={'text'}
+                                  thousandSeparator={true} prefix={''}
+                                  renderText={value => <span className="price">{value} VNĐ</span>}/>
                               </div>
                             </div>
                             <div className="col-sm-6 col-xs-6">
@@ -393,14 +387,47 @@ class Product extends Component {
                           <div className="row">
                             <div className="add-btn">
                               <ContextApi.Consumer>
-                                {({addToCart}) => (
-                                  <button
-                                    className="btn btn-primary"
-                                    onClick={() => addToCart(product, 1)}
-                                  >
-                                    <i className="fa fa-shopping-cart inner-right-vs"/>
-                                    Thêm giỏ hàng
-                                  </button>
+                                {({cartItems, addToCart}) => (
+                                  <React.Fragment>
+                                    {cartItems.length === 0
+                                      ? <button
+                                        id="addToCart"
+                                        className="btn btn-primary"
+                                        onClick={() => addToCart(product, 1)}
+                                      >
+                                        <i className="fa fa-shopping-cart inner-right-vs"/>
+                                        Thêm giỏ hàng
+                                      </button>
+                                      : <React.Fragment>
+                                        {cartItems.map(item=>{
+                                          if(item.product.id===product.id){
+                                            if(item.total>0){
+                                              return(
+                                                <button
+                                                  id="addToCart"
+                                                  className="btn btn-info"
+                                                  disabled={true}
+                                                >
+                                                  <i className="fa fa-shopping-cart inner-right-vs"/>
+                                                  Đã thêm vào giỏ hàng
+                                                </button>
+                                              )
+                                            }
+                                            else{
+                                              return <button
+                                                id="addToCart"
+                                                className="btn btn-primary"
+                                                onClick={() => addToCart(product, 1)}
+                                              >
+                                                <i className="fa fa-shopping-cart inner-right-vs"/>
+                                                Thêm giỏ hàng
+                                              </button>
+                                            }
+                                          }
+                                        })}
+                                      </React.Fragment>
+                                    }
+                                  </React.Fragment>
                                 )}
                               </ContextApi.Consumer>
                             </div>
@@ -438,8 +465,7 @@ class Product extends Component {
                                         return (
                                           <React.Fragment key={userReview.id}>
                                             <div className="review-title">
-                                                                                            <span
-                                                                                              className="summary">{userReview.userName}</span><span
+                                              <span className="summary">{userReview.userName}</span><span
                                               className="date"><i
                                               className="fa fa-calendar"/><span>{Moment(userReview.createDate).format('YYYY-MM-DD')}</span></span>
                                             </div>
@@ -500,9 +526,7 @@ class Product extends Component {
                                         </div>
                                       </div>
                                       <div className="action text-right">
-                                        <button type='submit'
-                                                className="btn btn-primary btn-upper">Gửi
-                                        </button>
+                                        <button type='submit' className="btn btn-primary btn-upper">Gửi</button>
                                       </div>
                                     </form>
                                   </div>
@@ -520,8 +544,7 @@ class Product extends Component {
                                         return (
                                           <React.Fragment key={userComment.id}>
                                             <div className="review-title">
-                                                                                            <span
-                                                                                              className="summary">{userComment.userName}</span>
+                                              <span className="summary">{userComment.userName}</span>
                                               <span className="date"><i
                                                 className="fa fa-calendar"/>
                                               <span>{Moment(userComment.createDate).format('YYYY-MM-DD')}</span>
@@ -535,7 +558,6 @@ class Product extends Component {
                                       })
                                       : ''
                                     }
-
                                   </div>
                                 </div>
                               </div>
@@ -616,7 +638,6 @@ class Product extends Component {
                               </div>
                             </div>
                           </section>
-
                         </div>
                       </div>
                     </div>

@@ -14,17 +14,12 @@ class Home extends Component {
   }
 
   async componentDidMount() {
-    try {
-      const type = await getAllProductType();
-
-      if (type && type.isSuccessed) {
-
-        this.setState({
-          productType: type.resultObj
-        })
-      }
-    } catch (error) {
-
+    const type = await getAllProductType();
+    if (type && type.isSuccessed) {
+      
+      this.setState({
+        productType: type.resultObj
+      })
     }
   }
 
