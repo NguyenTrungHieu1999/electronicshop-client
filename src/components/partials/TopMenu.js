@@ -47,7 +47,6 @@ function TopMenu() {
               :
               <React.Fragment>
                 <ul className="list-unstyled">
-                  <li onClick={() => { history.push('/yeu-thich') }} className="wishlist" style={style}><span>Yêu thích</span></li>
                   <li
                     className="login"
                     style={style}

@@ -11,7 +11,8 @@ const url = {
   orderdetaillink : "/OrderDetails",
   reviewLink: "/Reviews",
   commentlink: "/Comments",
-  cartlink: "/Carts"
+  cartlink: "/Carts",
+  favoritelink: "/Favorites"
 };
 
 const Token = Cookies.get("token");

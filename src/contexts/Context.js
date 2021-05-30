@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import React, { Component } from "react";
 import cartApi from "../api/cartApi";
+import favoriteApi from "../api/favoriteApi";
 
 export const ContextApi = React.createContext();
 
@@ -22,68 +23,57 @@ export class ContextProvider extends Component {
   }
 
   componentDidMount() {
-    // const cookiesAuth = Cookies.get('isAuth');
-
-    // if (cookiesAuth) {
-    //   cartApi.getAllCarts().then(res => {
-    //     let totalPrice = 0;
-    //     let cartItems = [];
-    //     res.data && res.data.resultObj.map(item => {
-    //       totalPrice += item.product.price * item.quantity;
-    //       cartItems.push({
-    //         product: item.product,
-    //         total: item.quantity
-    //       })
-    //     });
-
-    //     localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    //     localStorage.removeItem('totalPrice');
-    //     localStorage.setItem('totalPrice', totalPrice);
-    //   });
-    // }
-
+    favoriteApi.getAllFavorites()
+      .then(res => {
+        this.setState({
+          favoriteItems: res.data.resultObj
+        })
+      })
+      .catch(err => console.log(err));
     this.setState({
       cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
-      favoriteItems: JSON.parse(localStorage.getItem('favoriteItems')) || [],
+      // favoriteItems: JSON.parse(localStorage.getItem('favoriteItems')) || [],
       totalPrice: localStorage.getItem('totalPrice') || 0
     })
   }
 
   addToFavorite(product) {
-    let favoriteItems = this.state.favoriteItems ? this.state.favoriteItems : [];
-    let hasItem = 0;
-    if (favoriteItems) {
-      favoriteItems.map((item, index) => {
-        if (item.id === product.id) {
-          hasItem = 1;
-          favoriteItems.splice(index, 1);
-          alert('Xóa yêu thích thành công.')
-        }
-      })
-      if (hasItem === 0) {
-        favoriteItems.push(product);
-        alert('Thêm yêu thích thành công.')
-      }
-
-      localStorage.setItem('favoriteItems', JSON.stringify(favoriteItems));
+    if (Cookies.get('isAuth')) {
+      favoriteApi.addRemoveFavorites({ productId: product.id })
+        .then(res => {
+          if (res.data.resultObj === 10) {
+            alert("Thêm yêu thích thành công");
+          } else {
+            alert("Xóa yêu thích thành công");
+          }
+          debugger;
+          favoriteApi.getAllFavorites()
+            .then(res1 => {
+              this.setState({
+                favoriteItems: res1.data.resultObj
+              })
+            }).catch(err1 => console.log(err1));
+        }).catch(err => console.log(err));
+    } else {
+      window.location.href = '/tai-khoan';
     }
-
-    this.setState({
-      favoriteItems: favoriteItems
-    })
   }
 
   cleanFavorite() {
-    localStorage.removeItem('favoriteItems');
-    this.setState({
-      favoriteItems: []
-    })
+    favoriteApi.cleanFavorites()
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          favoriteItems: []
+        })
+      }).catch(err => console.log(err));
   }
 
   addToCart(product, total) {
     let cartItems = this.state.cartItems ? this.state.cartItems : [];
     let totalPrice = 0;
     let hasItem = 0;
+    const isAuth = Cookies.get('isAuth');
     if (cartItems) {
       cartItems.map((item, index) => {
         if (item.product.id === product.id) {
@@ -91,10 +81,20 @@ export class ContextProvider extends Component {
           if (item.total < 10 && item.total < product.inventory) {
             item.total += total;
             cartItems[index] = item;
+            if (isAuth) {
+              cartApi.updateCarts({ productId: product.id, total: 1 })
+                .then(res => console.log(res.data.resultObj))
+                .catch(err => console.log(err));
+            }
           }
         }
       });
       if (hasItem === 0 && product.inventory > 0) {
+        if (isAuth) {
+          cartApi.addCarts({ productId: product.id, quantity: 1 })
+            .then(res => console.log(res.data.resultObj))
+            .catch(err => console.log(err));
+        }
         cartItems.push({
           product: product,
           total: total
@@ -118,15 +118,22 @@ export class ContextProvider extends Component {
   removeFromCart(product, total) {
     let cartItems = this.state.cartItems ? this.state.cartItems : [];
     let totalPrice = 0;
-
+    const isAuth = Cookies.get('isAuth');
     if (cartItems) {
       cartItems.map((item, index) => {
         if (item.product.id === product.id) {
           item.total -= total;
+
           if (item.total < 1) {
             cartItems.splice(index, 1);
           } else {
             cartItems[index] = item;
+          }
+
+          if (isAuth) {
+            cartApi.updateCarts({ productId: product.id, total: -1 })
+              .then(res => console.log(res.data.resultObj))
+              .catch(err => console.log(err));
           }
         }
       });
@@ -147,16 +154,21 @@ export class ContextProvider extends Component {
   removeItem(product) {
     let cartItems = this.state.cartItems ? this.state.cartItems : [];
     let totalPrice = 0;
+    const isAuth = Cookies.get('isAuth');
     if (cartItems) {
       cartItems.map((item, index) => {
         if (item.product.id === product.id) {
+          if (isAuth) {
+            cartApi.updateCarts({ productId: product.id, total: -item.total })
+              .then(res => console.log(res.data.resultObj))
+              .catch(err => console.log(err));
+          }
           cartItems.splice(index, 1);
         }
       });
       cartItems.map(item => {
         totalPrice += item.product.price * item.total;
       })
-      console.log("Adding to Cart: ", cartItems);
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
       localStorage.removeItem('totalPrice');
       localStorage.setItem('totalPrice', totalPrice);
@@ -171,6 +183,11 @@ export class ContextProvider extends Component {
   cleanCart() {
     localStorage.removeItem('cartItems');
     localStorage.removeItem('totalPrice');
+    if (Cookies.get('isAuth')) {
+      cartApi.cleanCarts()
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err));
+    }
     this.setState({
       cartItems: [],
       totalPrice: 0

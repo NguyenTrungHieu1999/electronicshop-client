@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { ContextApi } from '../../contexts/Context';
 import CurrencyFormat from 'react-currency-format';
-
 class FavoriteProduct extends Component {
   render() {
     return (

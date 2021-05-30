@@ -3,6 +3,7 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import GoogleLogin from "react-google-login";
 import Cookies from 'js-cookie';
 import loginservice_json from '../../../api/loginservice_json';
+import axios from 'axios';
 
 
 export default function ExternalLogins() {
@@ -67,14 +68,48 @@ export default function ExternalLogins() {
       .externalLogins(model)
       .then(res => {
         if (res.data.isSuccessed) {
-          Cookies.set('token', res.data.resultObj, {expires:7 });
+          Cookies.set('token', res.data.resultObj, { expires: 7 });
+          Cookies.set('isAuth', 'true', { expires: 7 });
+          let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+          let cartModels = []
+          cartItems.length && cartItems.map(item => {
+            cartModels.push({
+              productId: item.product.id,
+              quantity: item.total
+            })
+          });
+          const headers = {
+            'Accept': 'application/json; charset=utf-8',
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Authorization': `Bearer ${Cookies.get('token')}`
+          }
+          if (cartModels.length > 0) {
+            axios.post('https://localhost:5001/api/Carts/create', { cartModels }, { headers })
+              .then(response => { window.location.href = '/'; console.log(response.data) })
+              .catch(err => console.log(err));
+          } else {
+            axios.get('https://localhost:5001/api/Carts/getAll', { headers }).then(res1 => {
+              let totalPrice = 0;
+              let cartItems1 = [];
+              res1.data && res1.data.resultObj.map(item => {
+                totalPrice += item.product.price * item.quantity;
+                cartItems1.push({
+                  product: item.product,
+                  total: item.quantity
+                })
+              });
 
-          Cookies.set('isAuth', 'true', {expires: 7 });
-
-          window.location.href = '/';
+              localStorage.setItem('cartItems', JSON.stringify(cartItems1));
+              localStorage.removeItem('totalPrice');
+              localStorage.setItem('totalPrice', totalPrice);
+              window.location.href = '/';
+            });
+          }
+        } else {
+          alert(res.data.message);
         }
       })
-      .catch(error => alert("Không thể kết nối với máy chủ."));
+      .catch(() => alert("Không thể kết nối với máy chủ."));
   }
 
   return (

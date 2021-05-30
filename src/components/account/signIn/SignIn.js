@@ -4,7 +4,6 @@ import { validateEmail, validatePassword } from '../ValidationForm';
 import ExternalLogins from './ExternalLogins';
 import { useHistory } from 'react-router-dom';
 import loginservice_json from '../../../api/loginservice_json';
-import cartApi from '../../../api/cartApi';
 import axios from 'axios';
 
 function SignIn() {
@@ -53,13 +52,15 @@ function SignIn() {
             Cookies.set('isAuth', 'true', { expires: 7 });
             // cartModels.length && cartApi.createCarts({ cartModels: cartModels });
             let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-            let cartModels = []
+        
+            let cartModels = [];
             cartItems.length && cartItems.map(item => {
               cartModels.push({
                 productId: item.product.id,
                 quantity: item.total
               })
             });
+
             const headers = {
               'Accept': 'application/json; charset=utf-8',
               'Content-Type': 'application/json;charset=UTF-8',
