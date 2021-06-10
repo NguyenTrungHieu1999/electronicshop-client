@@ -1,16 +1,14 @@
 import React, {Component} from 'react'
 import {getNewProducts} from "../../../api/productApi";
 import CurrencyFormat from 'react-currency-format';
-import StarRatings from 'react-star-ratings';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import {ContextApi} from "../../../contexts/Context";
 
 class HotDeals extends Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.state = {
       products: []
     }
@@ -68,7 +66,7 @@ class HotDeals extends Component {
                                         renderText={value => <span className="price">{value}₫</span>}/>
                       </div>
                     </div>
-                    <div className="cart clearfix animate-effect">
+                    {/* <div className="cart clearfix animate-effect">
                       <div className="action">
                         <div className="add-cart-button btn-group">
                           <ContextApi.Consumer>
@@ -84,7 +82,7 @@ class HotDeals extends Component {
                           </ContextApi.Consumer>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               )}

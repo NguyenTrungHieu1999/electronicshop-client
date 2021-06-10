@@ -44,7 +44,6 @@ class ShoppingCart extends Component {
 
   setToTalCart = (product, value) => {
     let { products } = this.state;
-    let productsCart = { ...products };
 
     products.map((item, index) => {
       if (item.product.id === product.id) {
@@ -56,14 +55,25 @@ class ShoppingCart extends Component {
         }
         if (item.total < 1) {
           products.splice(index, 1);
-        }else{
-          productsCart[index] = item;
+        } else {
+          products[index] = item;
         }
       }
     })
-
     this.setState({
-      product: productsCart
+      products: products
+    })
+  }
+
+  removeItemCart = (product) => {
+    let { products } = this.state;
+    products.map((item, index) => {
+      if (item.product.id === product.id) {
+        products.splice(index, 1);
+      }
+    })
+    this.setState({
+      products: products
     })
   }
 
@@ -228,7 +238,7 @@ class ShoppingCart extends Component {
                                         </div>
                                         <input type="text" value={item.total} />
                                       </div>
-                                      {item.total > 10 || item.total >= item.product.inventory ?
+                                      {item.total >= 10 || item.total >= item.product.inventory ?
                                         <label className="alert-warning">Số lượng sản phẩm đạt giới hạn</label> : null}
                                     </td>
                                     <CurrencyFormat value={item.product.price} displayType={'text'}
@@ -239,7 +249,15 @@ class ShoppingCart extends Component {
                                       thousandSeparator={true} prefix={''} renderText={value =>
                                         <td className="cart-product-grand-total">{value}₫</td>}
                                     />
-                                    <td className="romove-item"><span onClick={() => removeItem(item.product)} title="Xóa" className="icon"><i className="fa fa-trash-o"></i></span></td>
+                                    <td className="romove-item">
+                                      <span
+                                        onClick={() => {
+                                          this.removeItemCart(item.product);
+                                          removeItem(item.product)
+                                        }} title="Xóa" className="icon">
+                                        <i className="fa fa-trash-o"></i>
+                                      </span>
+                                    </td>
                                   </tr>
                                 </React.Fragment>
                               )
@@ -259,9 +277,9 @@ class ShoppingCart extends Component {
                                     <button
                                       className="btn btn-upper btn-danger pull-right"
                                       onClick={() => {
-                                          this.cleanShoppingCart();
-                                          cleanCart();
-                                        }
+                                        this.cleanShoppingCart();
+                                        cleanCart();
+                                      }
                                       }
                                     >
                                       Xóa toàn bộ giỏ hàng

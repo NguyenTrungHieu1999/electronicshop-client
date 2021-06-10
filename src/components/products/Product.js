@@ -1,16 +1,16 @@
-import React, {Component} from 'react';
-import {getProductByCateId, getProductById} from '../../api/productApi';
+import React, { Component } from 'react';
+import { getProductByCateId, getProductById } from '../../api/productApi';
 import parse from 'html-react-parser';
 import CurrencyFormat from 'react-currency-format';
 import StarRatings from 'react-star-ratings';
-import {getCategoryById} from '../../api/categoryApi';
+import { getCategoryById } from '../../api/categoryApi';
 import CardItem from '../homes/CardItem';
 import ReactPaginate from 'react-paginate';
-import {getReviewByProductId, totalRate} from '../../api/reviewApi';
+import { getReviewByProductId, totalRate } from '../../api/reviewApi';
 import createReviewApi from '../../api/createReviewApi';
 import Cookies from 'js-cookie';
 import Moment from 'moment';
-import {ContextApi} from '../../contexts/Context';
+import { ContextApi } from '../../contexts/Context';
 import commentApi from '../../api/commentApi';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -18,6 +18,8 @@ import "slick-carousel/slick/slick-theme.css";
 import "./Product.css";
 import HotDeals from '../partials/leftmenus/HotDeals';
 import Testimonials from "../partials/leftmenus/Testimonials";
+import { userIdDecode } from '../../services/DecodeService';
+import paymentApi from '../../api/paymentApi';
 
 class Product extends Component {
 
@@ -37,7 +39,8 @@ class Product extends Component {
       review: '',
       comment: '',
       allReviews: [],
-      allComments: []
+      allComments: [],
+      canReviews: false
     }
 
     this.changeRating = this.changeRating.bind(this);
@@ -52,7 +55,6 @@ class Product extends Component {
 
   async receivedData() {
     const id = this.props.match.params.id;
-
     try {
       const resProduct = await getProductById(id);
       if (resProduct && resProduct.isSuccessed) {
@@ -74,7 +76,7 @@ class Product extends Component {
         let products = slice.map(product => {
           return (
             <React.Fragment key={product.id}>
-              <CardItem product={product} classCSS="col-lg-15"/>
+              <CardItem product={product} classCSS="col-lg-15" />
             </React.Fragment>
           )
         })
@@ -85,6 +87,13 @@ class Product extends Component {
           photos.push(resProduct.resultObj?.productPhotos[i].url);
         }
 
+        paymentApi.haveOrder(id)
+          .then(res => {
+            debugger
+            this.setState({
+              canReviews: res.data.resultObj
+            })
+          }).catch(err => console.log(err));
         this.setState({
           product: resProduct.resultObj,
           products: products,
@@ -105,9 +114,9 @@ class Product extends Component {
     const offset = selectedPage * this.state.perPage;
 
     this.setState({
-        currentPage: selectedPage,
-        offset: offset
-      },
+      currentPage: selectedPage,
+      offset: offset
+    },
       async () => {
         await this.receivedData()
       }
@@ -129,7 +138,7 @@ class Product extends Component {
   onHandleSubmitReview = (event) => {
     event.preventDefault();
     const isAuth = Cookies.get('isAuth');
-    const {ratingForReview, review} = this.state;
+    const { ratingForReview, review } = this.state;
     if (review !== '') {
       if (isAuth === false || isAuth === undefined || isAuth === null) {
         alert("Quý khách phải đăng nhập hệ thống để thực hiện đánh giá.");
@@ -144,9 +153,9 @@ class Product extends Component {
             .then(res => {
               if (res.data && res.data.isSuccessed) {
                 this.setState({
-                    ratingForReview: 0,
-                    review: ''
-                  },
+                  ratingForReview: 0,
+                  review: ''
+                },
                   async () => {
                     await this.receivedData();
                   }
@@ -165,7 +174,7 @@ class Product extends Component {
   onHandleSubmitComment = (event) => {
     event.preventDefault();
     const isAuth = Cookies.get('isAuth');
-    const {comment} = this.state;
+    const { comment } = this.state;
     if (comment !== '') {
       if (isAuth === false || isAuth === undefined || isAuth === null) {
         alert("Quý khách phải đăng nhập hệ thống để thực hiện bình luận.")
@@ -178,8 +187,8 @@ class Product extends Component {
           .then(res => {
             if (res.data && res.data.isSuccessed) {
               this.setState({
-                  comment: ''
-                },
+                comment: ''
+              },
                 async () => {
                   await this.receivedData();
                 }
@@ -198,8 +207,9 @@ class Product extends Component {
 
   render() {
 
-    const {product, products, photos, cate, allReviews, allComments} = this.state;
+    const { product, products, photos, cate, allReviews, allComments, canReviews } = this.state;
     let hasItem = 0;
+    let hasCart = 0;
     const settings = {
       customPaging: function (i) {
         return (
@@ -212,7 +222,7 @@ class Product extends Component {
                       <div>
                         <div className="item">
                           <a className="horizontal-thumb active">
-                            <img className="img-responsive" alt="" src={photos[i]}/>
+                            <img className="img-responsive" alt="" src={photos[i]} />
                           </a>
                         </div>
                       </div>
@@ -240,12 +250,12 @@ class Product extends Component {
               <ul className="list-inline list-unstyled">
                 <li
                   onClick={() => this.props.history.push(`/`)}
-                  style={{display: 'inline', cursor: 'pointer'}} className="active"
+                  style={{ display: 'inline', cursor: 'pointer' }} className="active"
                 >Trang chủ
                 </li>
                 <li
                   onClick={() => this.props.history.push(`/${cate.alias}&${cate.id}`)}
-                  style={{display: 'inline', cursor: 'pointer'}} className="active"
+                  style={{ display: 'inline', cursor: 'pointer' }} className="active"
                 >
                   {cate.name}
                 </li>
@@ -260,10 +270,10 @@ class Product extends Component {
               <div className="col-xs-12 col-sm-12 col-md-3 sidebar">
                 <div className="sidebar-module-container">
                   <div className="home-banner outer-top-n outer-bottom-xs">
-                    <img src="/assets/images/banners/LHS-banner.jpg" alt="Image"/>
+                    <img src="/assets/images/banners/LHS-banner.jpg" alt="Image" />
                   </div>
-                  <HotDeals/>
-                  <Testimonials/>
+                  <HotDeals />
+                  <Testimonials />
                 </div>
               </div>
               <div className="col-xs-12 col-sm-12 col-md-9 rht-col">
@@ -277,7 +287,7 @@ class Product extends Component {
                             <div>
                               <div key={index} className="single-product-gallery-item">
                                 <a>
-                                  <img className="img-responsive" alt="" src={photo}/>
+                                  <img className="img-responsive" alt="" src={photo} />
                                 </a>
                               </div>
                             </div>
@@ -333,27 +343,27 @@ class Product extends Component {
                                   value={product.price}
                                   displayType={'text'}
                                   thousandSeparator={true} prefix={''}
-                                  renderText={value => <span className="price">{value} VNĐ</span>}/>
+                                  renderText={value => <span className="price">{value} VNĐ</span>} />
                               </div>
                             </div>
                             <div className="col-sm-6 col-xs-6">
                               <div className="favorite-button m-t-5">
                                 <ContextApi.Consumer>
-                                  {({addToFavorite, favoriteItems}) => (
+                                  {({ addToFavorite, favoriteItems }) => (
                                     favoriteItems.map((item) => {
                                       if (item.id === product.id) {
                                         hasItem = 1;
                                         return (
                                           <a
                                             className="add-to-cart"
-                                            style={{cursor: 'pointer'}}
+                                            style={{ cursor: 'pointer' }}
                                             title="Xóa yêu thích"
                                             data-placement="right"
                                             onClick={() => {
                                               addToFavorite(product);
                                               hasItem = 0;
                                             }}>
-                                            <i className="icon fa fa-heart"/>
+                                            <i className="icon fa fa-heart" />
                                           </a>
                                         )
                                       }
@@ -361,18 +371,18 @@ class Product extends Component {
                                   )}
                                 </ContextApi.Consumer>
                                 <ContextApi.Consumer>
-                                  {({addToFavorite}) => (
+                                  {({ addToFavorite }) => (
                                     <React.Fragment>
                                       {hasItem === 0 ?
                                         <a
                                           className="btn btn-primary"
-                                          style={{cursor: 'pointer'}}
+                                          style={{ cursor: 'pointer' }}
                                           title="Yêu thích"
                                           data-placement="right"
                                           onClick={() => {
                                             addToFavorite(product)
                                           }}>
-                                          <i className="fa fa-heart"/>
+                                          <i className="fa fa-heart" />
                                         </a>
                                         : ""
                                       }
@@ -387,7 +397,7 @@ class Product extends Component {
                           <div className="row">
                             <div className="add-btn">
                               <ContextApi.Consumer>
-                                {({cartItems, addToCart}) => (
+                                {({ cartItems, addToCart }) => (
                                   <React.Fragment>
                                     {cartItems.length === 0
                                       ? <button
@@ -395,36 +405,35 @@ class Product extends Component {
                                         className="btn btn-primary"
                                         onClick={() => addToCart(product, 1)}
                                       >
-                                        <i className="fa fa-shopping-cart inner-right-vs"/>
+                                        <i className="fa fa-shopping-cart inner-right-vs" />
                                         Thêm giỏ hàng
                                       </button>
                                       : <React.Fragment>
-                                        {cartItems.map(item=>{
-                                          if(item.product.id===product.id){
-                                            if(item.total>0){
-                                              return(
-                                                <button
-                                                  id="addToCart"
-                                                  className="btn btn-info"
-                                                  disabled={true}
-                                                >
-                                                  <i className="fa fa-shopping-cart inner-right-vs"/>
-                                                  Đã thêm vào giỏ hàng
-                                                </button>
-                                              )
-                                            }
-                                            else{
-                                              return <button
+                                        {cartItems.map(item => {
+                                          if (item.product.id === product.id) {
+                                            hasCart = 1;
+                                            return (
+                                              <button
                                                 id="addToCart"
-                                                className="btn btn-primary"
-                                                onClick={() => addToCart(product, 1)}
+                                                className="btn btn-info"
+                                                disabled={true}
                                               >
-                                                <i className="fa fa-shopping-cart inner-right-vs"/>
-                                                Thêm giỏ hàng
+                                                <i className="fa fa-shopping-cart inner-right-vs" />
+                                                  Đã thêm vào giỏ hàng
                                               </button>
-                                            }
+                                            )
                                           }
-                                        })}
+                                        }
+                                        )}
+                                        {hasCart === 0 &&
+                                          <button
+                                            id="addToCart"
+                                            className="btn btn-primary"
+                                            onClick={() => addToCart(product, 1)}
+                                          >
+                                            <i className="fa fa-shopping-cart inner-right-vs" />
+                                                Thêm giỏ hàng
+                                              </button>}
                                       </React.Fragment>
                                     }
                                   </React.Fragment>
@@ -466,8 +475,8 @@ class Product extends Component {
                                           <React.Fragment key={userReview.id}>
                                             <div className="review-title">
                                               <span className="summary">{userReview.userName}</span><span
-                                              className="date"><i
-                                              className="fa fa-calendar"/><span>{Moment(userReview.createDate).format('YYYY-MM-DD')}</span></span>
+                                                className="date"><i
+                                                  className="fa fa-calendar" /><span>{Moment(userReview.createDate).format('YYYY-MM-DD')}</span></span>
                                             </div>
                                             <div>
                                               <StarRatings
@@ -481,7 +490,7 @@ class Product extends Component {
                                             </div>
                                             <div
                                               className="text">{userReview.text}</div>
-                                            <br/>
+                                            <br />
                                           </React.Fragment>
                                         )
                                       })
@@ -490,7 +499,7 @@ class Product extends Component {
                                   </div>
                                 </div>
                               </div>
-                              <div className="product-add-review">
+                              {canReviews === true && <div className="product-add-review">
                                 <h4 className="title">Viết đánh giá của bạn.</h4>
                                 <div className="review-table">
                                   <div className="table-responsive">
@@ -506,7 +515,7 @@ class Product extends Component {
                                 <div className="review-form">
                                   <div className="form-container">
                                     <form className="cnt-form"
-                                          onSubmit={this.onHandleSubmitReview}>
+                                      onSubmit={this.onHandleSubmitReview}>
                                       <div className="row">
                                         <div className="col-md-12">
                                           <div className="form-group">
@@ -532,6 +541,7 @@ class Product extends Component {
                                   </div>
                                 </div>
                               </div>
+                              }
                             </div>
                           </div>
                           <div id="tags" className="tab-pane">
@@ -541,21 +551,21 @@ class Product extends Component {
                                 <div className="reviews">
                                   <div className="review">
                                     {allComments ? allComments.map((userComment) => {
-                                        return (
-                                          <React.Fragment key={userComment.id}>
-                                            <div className="review-title">
-                                              <span className="summary">{userComment.userName}</span>
-                                              <span className="date"><i
-                                                className="fa fa-calendar"/>
+                                      return (
+                                        <React.Fragment key={userComment.id}>
+                                          <div className="review-title">
+                                            <span className="summary">{userComment.userName}</span>
+                                            <span className="date"><i
+                                              className="fa fa-calendar" />
                                               <span>{Moment(userComment.createDate).format('YYYY-MM-DD')}</span>
                                             </span>
-                                            </div>
-                                            <div
-                                              className="text">{userComment.text}</div>
-                                            <br/>
-                                          </React.Fragment>
-                                        )
-                                      })
+                                          </div>
+                                          <div
+                                            className="text">{userComment.text}</div>
+                                          <br />
+                                        </React.Fragment>
+                                      )
+                                    })
                                       : ''
                                     }
                                   </div>
@@ -566,7 +576,7 @@ class Product extends Component {
                                 <div className="review-form">
                                   <div className="form-container">
                                     <form className="cnt-form"
-                                          onSubmit={this.onHandleSubmitComment}>
+                                      onSubmit={this.onHandleSubmitComment}>
                                       <div className="row">
                                         <div className="col-md-12">
                                           <div className="form-group">
@@ -610,10 +620,10 @@ class Product extends Component {
                         <div className="row">
                           <section className="ProductsByCondition">
                             <h3 className="section-title">Sản phẩm tương tự</h3>
-                            <hr/>
+                            <hr />
                             <div className="search-result-container ">
                               <div id="myTabContent"
-                                   className="tab-content category-list">
+                                className="tab-content category-list">
                                 <div className="tab-pane active " id="grid-container">
                                   <div className="category-product">
                                     <div className="row">
@@ -621,7 +631,7 @@ class Product extends Component {
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{display: 'flex'}}>
+                                <div style={{ display: 'flex' }}>
                                   <ReactPaginate
                                     previousLabel={"<"}
                                     nextLabel={">"}
@@ -633,7 +643,7 @@ class Product extends Component {
                                     onPageChange={this.handlePageClick}
                                     containerClassName={"pagination"}
                                     subContainerClassName={"pages pagination"}
-                                    activeClassName={"active"}/>
+                                    activeClassName={"active"} />
                                 </div>
                               </div>
                             </div>
@@ -644,7 +654,7 @@ class Product extends Component {
                   </div>
                 </div>
               </section>
-              <div className="clearfix"/>
+              <div className="clearfix" />
             </div>
           </div>
         </div>

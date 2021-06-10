@@ -70,6 +70,7 @@ export class ContextProvider extends Component {
   }
 
   addToCart(product, total) {
+    debugger;
     let cartItems = this.state.cartItems ? this.state.cartItems : [];
     let totalPrice = 0;
     let hasItem = 0;
@@ -86,6 +87,8 @@ export class ContextProvider extends Component {
                 .then(res => console.log(res.data.resultObj))
                 .catch(err => console.log(err));
             }
+          }else{
+            alert("Sản phẩm đã đạt giới hạn")
           }
         }
       });
