@@ -13,7 +13,9 @@ class Header extends Component {
     super(props);
     this.state = {
       keyword: ''
-    }
+    };
+
+    this.isEmptyOrSpaces = this.isEmptyOrSpaces.bind(this);
   }
 
   onHandleChange = (event) => {
@@ -26,8 +28,15 @@ class Header extends Component {
     })
   }
 
+  isEmptyOrSpaces(str) {
+    return str === null || str.match(/^ *$/) !== null;
+  }
+
   onHandleClick = (event) => {
-    window.location.href = (`/tim-kiem/${this.state.keyword}`);
+    var str = this.state.keyword;
+    if (!this.isEmptyOrSpaces(str)) {
+      window.location.href = (`/tim-kiem/${str}`);
+    }
   }
   render() {
     return (

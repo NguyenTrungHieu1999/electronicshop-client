@@ -175,7 +175,7 @@ class Search extends Component {
                           activeClassName={"active"} />
                       </div>
                     </>
-                    : ""
+                    : "Không tìm thấy sản phẩm"
                   }
                 </div>
               </div>

@@ -28,7 +28,7 @@ class Payment extends Component {
             return null;
           } else {
             return paymentApi
-              .checkout({ paid: false, receiver: receiver, receiversAddress: receiversAddress, phoneNumber: phoneNumber, totalMoney: totalPrice, orderDetails: orderDetailModel })
+              .checkout({ paid: true, receiver: receiver, receiversAddress: receiversAddress, phoneNumber: phoneNumber, totalMoney: totalPrice, orderDetails: orderDetailModel })
               .then(res => {
                 if (res.data.isSuccessed) {
                   localStorage.removeItem('cartItems');
