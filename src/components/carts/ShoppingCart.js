@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ContextApi } from '../../contexts/Context';
 import CurrencyFormat from 'react-currency-format';
 import Payment from './Payment';
-import { validatePhoneNumber, validateUserName } from '../account/ValidationForm';
+import { validateEmail, validatePhoneNumber, validateUserName } from '../account/ValidationForm';
 import paymentApi from '../../api/paymentApi';
 import { getAllProduct } from "../../api/productApi";
 
@@ -15,9 +15,11 @@ class ShoppingCart extends Component {
       receiver: '',
       receiversAddress: '',
       phoneNumber: '',
+      email: '',
       receiverValid: '',
       receiversAddressValid: '',
-      phoneNumberValid: ''
+      phoneNumberValid: '',
+      emailValid: ''
     }
   }
 
@@ -98,6 +100,8 @@ class ShoppingCart extends Component {
       this.setState({ receiversAddressValid: validateUserName(value) });
     } else if (name === 'phoneNumber') {
       this.setState({ phoneNumberValid: validatePhoneNumber(value) });
+    }else if (name === 'email'){
+      this.setState({emailValid: validateEmail(value)});
     }
   }
 
@@ -105,7 +109,7 @@ class ShoppingCart extends Component {
     event.preventDefault();
     const cartItems = JSON.parse(localStorage.getItem('cartItems'));
     const totalPrice = localStorage.getItem('totalPrice');
-    const { receiver, receiversAddress, phoneNumber } = this.state;
+    const { receiver, receiversAddress, phoneNumber, email } = this.state;
     let orderDetailModel = [];
     if (cartItems && cartItems.length) {
       cartItems.map(item => {
@@ -116,7 +120,7 @@ class ShoppingCart extends Component {
         });
       })
     }
-    if (receiver === '' || receiversAddress === '' || phoneNumber === '') {
+    if (receiver === '' || receiversAddress === '' || phoneNumber === ''||email === '') {
       alert("Quý khách vui lòng điền đầy đủ thông tin.");
     } else {
       paymentApi
@@ -125,6 +129,7 @@ class ShoppingCart extends Component {
           receiver: receiver,
           receiversAddress: receiversAddress,
           phoneNumber: phoneNumber,
+          email: email,
           totalMoney: totalPrice,
           orderDetails: orderDetailModel
         })
@@ -146,9 +151,11 @@ class ShoppingCart extends Component {
       receiver,
       receiversAddress,
       phoneNumber,
+      email,
       receiverValid,
       receiversAddressValid,
-      phoneNumberValid
+      phoneNumberValid,
+      emailValid
     } = this.state;
     return (
       <React.Fragment>
@@ -349,6 +356,19 @@ class ShoppingCart extends Component {
                                   {phoneNumberValid !== '' ?
                                     <label className="alert-danger">{phoneNumberValid}</label> : null}
                                 </div>
+                                <div className="form-group">
+                                  <label className="info-title" htmlFor="Email">Email<span>*</span></label>
+                                  <input
+                                    type="tel"
+                                    className="form-control unicase-form-control text-input"
+                                    id="Email"
+                                    name="email"
+                                    value={this.state.email}
+                                    onChange={this.onHandleChange}
+                                  />
+                                  {emailValid !== '' ?
+                                    <label className="alert-danger">{emailValid}</label> : null}
+                                </div>
                               </form>
                             </div>
                             <div className="col-md-6 col-sm-12 cart-shopping-total">
@@ -368,7 +388,7 @@ class ShoppingCart extends Component {
                                 <tbody>
                                   <tr>
                                     <td>
-                                      {receiver === '' || receiversAddress === '' || phoneNumber === '' || receiverValid !== '' || receiversAddressValid !== '' || phoneNumberValid !== ''
+                                      {receiver === '' || receiversAddress === '' || phoneNumber === '' || email === '' || receiverValid !== '' || receiversAddressValid !== '' || phoneNumberValid !== '' || emailValid !== ''
                                         ? ""
                                         :
                                         <React.Fragment>
@@ -380,7 +400,7 @@ class ShoppingCart extends Component {
                                           </div>
                                           <br />
                                           <Payment receiver={receiver} receiversAddress={receiversAddress}
-                                            phoneNumber={phoneNumber} />
+                                            phoneNumber={phoneNumber} email = {email}/>
                                         </React.Fragment>
                                       }
                                     </td>

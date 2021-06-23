@@ -6,7 +6,7 @@ class Payment extends Component {
   render() {
     const cartItems = JSON.parse(localStorage.getItem('cartItems'))||[];
     const totalPrice = localStorage.getItem('totalPrice') || 0;
-    const { receiver, receiversAddress, phoneNumber } = this.props;
+    const { receiver, receiversAddress, phoneNumber, email } = this.props;
     let orderDetailModel = [];
     if (cartItems && cartItems.length) {
       cartItems.map(item => {
@@ -23,12 +23,12 @@ class Payment extends Component {
         // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
         onSuccess={(details, data) => {
           // OPTIONAL: Call your server to save the transaction
-          if (receiver === '' || receiversAddress === '' || phoneNumber === '') {
+          if (receiver === '' || receiversAddress === '' || phoneNumber === '' || email === '') {
             alert("Quý khách vui lòng điền đầy đủ thông tin.");
             return null;
           } else {
             return paymentApi
-              .checkout({ paid: true, receiver: receiver, receiversAddress: receiversAddress, phoneNumber: phoneNumber, totalMoney: totalPrice, orderDetails: orderDetailModel })
+              .checkout({ paid: true, receiver: receiver, receiversAddress: receiversAddress, phoneNumber: phoneNumber, email: email, totalMoney: totalPrice, orderDetails: orderDetailModel })
               .then(res => {
                 if (res.data.isSuccessed) {
                   localStorage.removeItem('cartItems');
