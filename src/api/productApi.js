@@ -29,7 +29,7 @@ const getProductByCateId = async (cateId) => {
   }
 }
 
-const filterProduct = async (keyword) => {
+const searchProduct = async (keyword) => {
   try {
     let res = await axios.get(`${apiURL}/api/products/search?KeyWord=${keyword}`)
     return res.data;
@@ -38,9 +38,18 @@ const filterProduct = async (keyword) => {
   }
 }
 
-const getNewProducts = async () =>{
+const filterProduct = async (sorted, price) => {
+  try {
+    let res = await axios.get(`${apiURL}/api/Products/filter?Sorted=${sorted}&Price=${price}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const getNewProducts = async () => {
   let res = await axios.get(`${apiURL}/api/products/get-new-products`)
   return res.data;
 }
 
-export { getAllProduct, getProductById, getProductByCateId, filterProduct, getNewProducts };
+export { getAllProduct, getProductById, getProductByCateId, searchProduct, getNewProducts, filterProduct };

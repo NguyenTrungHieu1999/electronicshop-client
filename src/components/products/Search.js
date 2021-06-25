@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
-import { filterProduct } from '../../api/productApi';
+import { searchProduct } from '../../api/productApi';
 import CardItem from '../homes/CardItem';
 import LeftMenu from '../homes/LeftMenu';
 
@@ -23,7 +23,7 @@ class Search extends Component {
     const keyword = this.props.match.params.key;
 
     try {
-      const resProducts = await filterProduct(keyword);
+      const resProducts = await searchProduct(keyword);
 
       if (resProducts && resProducts.isSuccessed) {
         const productsData = resProducts.resultObj;

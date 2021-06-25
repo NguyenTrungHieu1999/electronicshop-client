@@ -73,7 +73,7 @@ class ProductsByCondition extends Component {
     const settings = {
       dots: true,
       arrows: true,
-      infinite: true,
+      infinite: false,
       slidesToShow: 5,
       slidesToScroll: 5,
       autoplaySpeed: 5000,
@@ -83,10 +83,10 @@ class ProductsByCondition extends Component {
 
     return (
       <React.Fragment>
-        <section className="section new-arriavls">
-          <h3 className="section-title">{title}</h3>
-          {postData.length > 0
-            ? <>
+        {postData.length > 0
+          ? <>
+            <section className="section new-arriavls">
+              <h3 className="section-title">{title}</h3>
               <div className="search-result-container ">
                 <div id="myTabContent" className="tab-content category-list">
                   <div className="tab-pane active" >
@@ -100,10 +100,10 @@ class ProductsByCondition extends Component {
                   </div>
                 </div>
               </div>
-            </>
-            : <h4>Không có sản phẩm</h4>
-          }
-        </section >
+            </section >
+          </>
+          : ""
+        }
       </React.Fragment>
     );
   }

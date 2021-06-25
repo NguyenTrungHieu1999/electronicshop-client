@@ -4,6 +4,7 @@ import { getCategoryById } from '../../api/categoryApi';
 import { getProductByCateId } from '../../api/productApi';
 import CardItem from '../homes/CardItem';
 import LeftMenu from '../homes/LeftMenu';
+import "../homes/ProductsByCondition.css";
 
 class ProductCate extends Component {
 
@@ -156,7 +157,7 @@ class ProductCate extends Component {
                           </div>
                         </div>
                       </div>
-                      <div style={{ display: 'flex' }}>
+                      <div style={{ display: 'flex' }} className="ProductsByCondition">
                         <ReactPaginate
                           previousLabel={"<"}
                           nextLabel={">"}
