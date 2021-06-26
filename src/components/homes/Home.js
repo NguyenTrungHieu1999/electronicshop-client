@@ -166,6 +166,7 @@ class Home extends Component {
                             </div>
                           </div>
                         </div>
+                        &emsp;
                         <div className="fld inline">
                           <div className="dropdown dropdown-small dropdown-med dropdown-white inline">
                             <div className="form-group">
@@ -175,7 +176,7 @@ class Home extends Component {
                                 value={this.state.price}
                                 onChange={this.onHandleChange}>
                                 <option value={0}>Mặc định</option>
-                                <option value={1}>Giá &lt;10000000đ</option>
+                                <option value={1}>Giá &lt;10000000</option>
                                 <option value={2}>10000000đ&lt;= Giá &lt;20000000đ</option>
                                 <option value={3}>20000000đ&lt;= Giá &lt;40000000đ</option>
                                 <option value={4}>40000000đ&lt;= Giá</option>
