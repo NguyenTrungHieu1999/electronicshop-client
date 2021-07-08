@@ -5,6 +5,8 @@ import Logo from '../../logo.png';
 import { ContextApi } from '../../contexts/Context';
 import { withRouter } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
+import { validateString } from '../account/ValidationForm';
+import cartApi from '../../api/cartApi';
 
 
 class Header extends Component {
@@ -12,7 +14,8 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      keyword: ''
+      keyword: '',
+      keywordValid: ''
     };
 
     this.isEmptyOrSpaces = this.isEmptyOrSpaces.bind(this);
@@ -25,7 +28,11 @@ class Header extends Component {
 
     this.setState({
       [name]: value
-    })
+    });
+
+    if (name === 'keyword') {
+      this.setState({ keywordValid: validateString(value) });
+    }
   }
 
   isEmptyOrSpaces(str) {
@@ -35,10 +42,30 @@ class Header extends Component {
   onHandleClick = (event) => {
     var str = this.state.keyword;
     if (!this.isEmptyOrSpaces(str)) {
-      window.location.href = (`/tim-kiem/${str}`);
+      if (this.state.keywordValid !== '') {
+        alert(this.state.keywordValid);
+      } else {
+        window.location.href = (`/tim-kiem?key=${str}`);
+      }
     }
   }
   render() {
+    cartApi.getAllCarts().then(res => {
+      let totalPrice = 0;
+      let cartItems = [];
+      res.data && res.data.resultObj.map(item => {
+        totalPrice += item.product.price * item.quantity;
+        cartItems.push({
+          product: item.product,
+          total: item.quantity
+        })
+      });
+
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      localStorage.removeItem('totalPrice');
+      localStorage.setItem('totalPrice', totalPrice);
+    });
+
     return (
       <header className="header-style-1">
         {/* ============================================== TOP MENU ============================================== */}
@@ -63,7 +90,7 @@ class Header extends Component {
                   <form>
                     <div className="control-group">
                       <ul className="categories-filter animate-dropdown">
-                        <li className="dropdown"> <a href='' className="dropdown-toggle" data-toggle="dropdown">Tìm kiếm<b className="caret" /></a>
+                        <li> <a href=''>Tìm kiếm</a>
                         </li>
                       </ul>
                       <input
@@ -83,7 +110,7 @@ class Header extends Component {
                       <li
                         onClick={this.onHandleClick}
                         className="search-button"
-                        style={{ cursor: 'pointer' }}>
+                        style={{ cursor: 'pointer', height:'57px' }}>
                       </li>
                     </div>
                   </form>
@@ -100,7 +127,7 @@ class Header extends Component {
                       <span className="dropdown-toggle lnk-cart" data-toggle="dropdown">
                         <div className="items-cart-inner">
                           <div className="basket">
-                            <div className="basket-item-count"><span className="count">{cartItems ? cartItems.length : 0}</span></div>
+                            <div className="basket-item-count"><span className="count">{cartItems.length}</span></div>
                             <div className="total-price-basket">
                               <span className="lbl">Tổng tiền</span>
                               <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true} prefix={''} renderText={value => <span className="price-before-discount">{value}₫</span>} />

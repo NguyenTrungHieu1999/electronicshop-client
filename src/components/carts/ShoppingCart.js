@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { ContextApi } from '../../contexts/Context';
 import CurrencyFormat from 'react-currency-format';
 import Payment from './Payment';
-import { validateEmail, validatePhoneNumber, validateUserName } from '../account/ValidationForm';
+import { validateEmail, validatePhoneNumber, validateString, validateUserName } from '../account/ValidationForm';
 import paymentApi from '../../api/paymentApi';
 import { getAllProduct } from "../../api/productApi";
+import cartApi from '../../api/cartApi';
+import Cookies from 'js-cookie';
 
 class ShoppingCart extends Component {
 
@@ -16,15 +18,36 @@ class ShoppingCart extends Component {
       receiversAddress: '',
       phoneNumber: '',
       email: '',
+      note: '',
       receiverValid: '',
       receiversAddressValid: '',
       phoneNumberValid: '',
-      emailValid: ''
+      emailValid: '',
+      noteValid: ''
     }
   }
 
   async componentDidMount() {
-    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    let cartItems = [];
+
+    if (Cookies.get('isAuth')) {
+      cartApi.getAllCarts().then(res => {
+        let totalPrice = 0;
+        res.data && res.data.resultObj.map(item => {
+          totalPrice += item.product.price * item.quantity;
+          cartItems.push({
+            product: item.product,
+            total: item.quantity
+          })
+        });
+
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        localStorage.removeItem('totalPrice');
+        localStorage.setItem('totalPrice', totalPrice);
+      });
+    } else {
+      cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    }
     let resProducts = await getAllProduct();
 
     let productsCart = [];
@@ -36,7 +59,7 @@ class ShoppingCart extends Component {
             total: item.total
           });
         }
-      })
+      });
     })
 
     this.setState({
@@ -100,8 +123,10 @@ class ShoppingCart extends Component {
       this.setState({ receiversAddressValid: validateUserName(value) });
     } else if (name === 'phoneNumber') {
       this.setState({ phoneNumberValid: validatePhoneNumber(value) });
-    }else if (name === 'email'){
-      this.setState({emailValid: validateEmail(value)});
+    } else if (name === 'email') {
+      this.setState({ emailValid: validateEmail(value) });
+    } else if (name === 'note') {
+      this.setState({ noteValid: validateString(value) });
     }
   }
 
@@ -109,7 +134,7 @@ class ShoppingCart extends Component {
     event.preventDefault();
     const cartItems = JSON.parse(localStorage.getItem('cartItems'));
     const totalPrice = localStorage.getItem('totalPrice');
-    const { receiver, receiversAddress, phoneNumber, email } = this.state;
+    const { receiver, receiversAddress, phoneNumber, email, note } = this.state;
     let orderDetailModel = [];
     if (cartItems && cartItems.length) {
       cartItems.map(item => {
@@ -120,7 +145,7 @@ class ShoppingCart extends Component {
         });
       })
     }
-    if (receiver === '' || receiversAddress === '' || phoneNumber === ''||email === '') {
+    if (receiver === '' || receiversAddress === '' || phoneNumber === '' || email === '') {
       alert("Quý khách vui lòng điền đầy đủ thông tin.");
     } else {
       paymentApi
@@ -131,14 +156,17 @@ class ShoppingCart extends Component {
           phoneNumber: phoneNumber,
           email: email,
           totalMoney: totalPrice,
+          note: note,
           orderDetails: orderDetailModel
         })
         .then(res => {
           if (res.data.isSuccessed) {
             localStorage.removeItem('cartItems');
             localStorage.removeItem('totalPrice');
-            alert(res.data.resultObj);
+            alert("Thêm đơn hàng thành công!");
             window.location.href = ('/');
+          } else {
+            alert(res.data.message);
           }
         })
         .catch(error => console.log(error));
@@ -152,10 +180,12 @@ class ShoppingCart extends Component {
       receiversAddress,
       phoneNumber,
       email,
+      note,
       receiverValid,
       receiversAddressValid,
       phoneNumberValid,
-      emailValid
+      emailValid,
+      noteValid
     } = this.state;
     return (
       <React.Fragment>
@@ -213,7 +243,7 @@ class ShoppingCart extends Component {
                                         <div className="col-sm-12">
                                           <div className="reviews">
                                             (còn {item.product.inventory} sản phẩm)
-                                        </div>
+                                          </div>
                                         </div>
                                       </div>
                                     </td>
@@ -369,6 +399,19 @@ class ShoppingCart extends Component {
                                   {emailValid !== '' ?
                                     <label className="alert-danger">{emailValid}</label> : null}
                                 </div>
+                                <div className="form-group">
+                                  <label className="info-title" htmlFor="Note">Ghi chú<span></span></label>
+                                  <input
+                                    type="tel"
+                                    className="form-control unicase-form-control text-input"
+                                    id="Note"
+                                    name="note"
+                                    value={this.state.note}
+                                    onChange={this.onHandleChange}
+                                  />
+                                  {noteValid !== '' ?
+                                    <label className="alert-danger">{noteValid}</label> : null}
+                                </div>
                               </form>
                             </div>
                             <div className="col-md-6 col-sm-12 cart-shopping-total">
@@ -378,7 +421,7 @@ class ShoppingCart extends Component {
                                     <th>
                                       <div className="cart-sub-total" style={{ textAlign: 'center' }}>
                                         Tổng tiền
-                                      <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true}
+                                        <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true}
                                           prefix={''} renderText={value => <p
                                             className="cart-product-sub-total">{value}₫</p>} />
                                       </div>
@@ -396,11 +439,11 @@ class ShoppingCart extends Component {
                                             <button onClick={this.onHandleClick} type="submit"
                                               className="btn btn-primary checkout-btn">Thanh toán ngay sau khi nhận
                                               hàng
-                                          </button>
+                                            </button>
                                           </div>
                                           <br />
-                                          <Payment receiver={receiver} receiversAddress={receiversAddress}
-                                            phoneNumber={phoneNumber} email = {email}/>
+                                          {Cookies.get('isAuth') && <Payment receiver={receiver} receiversAddress={receiversAddress}
+                                            phoneNumber={phoneNumber} email={email} note={note} />}
                                         </React.Fragment>
                                       }
                                     </td>

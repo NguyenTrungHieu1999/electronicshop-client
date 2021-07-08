@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { signOut } from '../../api/authApi';
-import { nameDecode } from '../../services/DecodeService'
+import { nameDecode } from '../../services/DecodeService';
+import "./TopMenu.css";
 
 function TopMenu() {
 
   const history = useHistory();
-  const style = { color: 'white', cursor: 'pointer' };
-
+  const style = {cursor: 'pointer'};
   const cookiesAuth = Cookies.get('isAuth');
 
   const [isAuth, setisAuth] = useState(cookiesAuth)
@@ -18,7 +18,9 @@ function TopMenu() {
   const signOutHandle = async () => {
     Cookies.remove('isAuth');
     Cookies.remove('token');
-    localStorage.clear();
+    localStorage.setItem('cartItems', JSON.stringify([]));
+    localStorage.removeItem('totalPrice');
+    localStorage.setItem('totalPrice', 0);
     setisAuth(null);
     await signOut();
     window.location.href = ('/');
@@ -28,8 +30,27 @@ function TopMenu() {
     <div className="top-bar animate-dropdown">
       <div className="container">
         <div className="header-top-inner">
+
           <div className="cnt-account">
             {isAuth
+              ?
+              <div className="dropdown">
+                <button onClick={() => { history.push('thong-tin-tai-khoan') }} className="dropbtn">Xin chào, {name}</button>
+                <div className="dropdown-content">
+                  <li onClick={() => { history.push('thong-tin-tai-khoan') }}>Tài khoản của tôi</li>
+                  <li onClick={() => { history.push('/don-hang') }}>Đơn mua</li>
+                  <li onClick={() => { history.push('/yeu-thich') }}>Yêu thích</li>
+                  <li onClick={signOutHandle}>Đăng xuất</li>
+                </div>
+              </div>
+              : <div className="dropdown">
+                <button onClick={() => { history.push(`/tai-khoan`); }} className="dropbtn">Đăng nhập</button>
+              </div>
+            }
+
+
+
+            {/* {isAuth
               ?
               <React.Fragment>
                 <ul className="list-unstyled">
@@ -43,6 +64,7 @@ function TopMenu() {
                     <span>Đăng xuất</span>
                   </li>
                 </ul>
+                
               </React.Fragment>
               :
               <React.Fragment>
@@ -56,7 +78,7 @@ function TopMenu() {
                   </li>
                 </ul>
               </React.Fragment>
-            }
+            } */}
           </div>
           <div className="clearfix" />
         </div>

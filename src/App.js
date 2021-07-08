@@ -14,6 +14,7 @@ import Search from './components/products/Search';
 import FavoriteProduct from './components/favorites/FavoriteProduct';
 import Profile from './components/users/Profile';
 import Contact from './components/contact/Contact';
+import Orders from './components/orders/Order';
 function App() {
   return (
     <>
@@ -28,10 +29,11 @@ function App() {
             <Route path="/tao-moi-mat-khau/:email/:token+" component={ResetPassword} />
             <Route path='/san-pham/:alias&:id' component={Product} />
             <Route path='/gio-hang' component={ShoppingCart} />
-            <Route path='/tim-kiem/:key' component={Search} />
+            <Route path='/tim-kiem' component={Search} />
             <Route path ='/yeu-thich' component={FavoriteProduct}/>
             <Route path='/thong-tin-tai-khoan' component={Profile}/>
             <Route path='/lien-he' component={Contact} />
+            <Route path='/don-hang' component={Orders}/>
           </Switch>
           <Footer />
         </Router>

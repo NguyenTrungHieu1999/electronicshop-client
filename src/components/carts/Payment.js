@@ -4,9 +4,9 @@ import paymentApi from '../../api/paymentApi';
 
 class Payment extends Component {
   render() {
-    const cartItems = JSON.parse(localStorage.getItem('cartItems'))||[];
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
     const totalPrice = localStorage.getItem('totalPrice') || 0;
-    const { receiver, receiversAddress, phoneNumber, email } = this.props;
+    const { receiver, receiversAddress, phoneNumber, email, note } = this.props;
     let orderDetailModel = [];
     if (cartItems && cartItems.length) {
       cartItems.map(item => {
@@ -19,7 +19,7 @@ class Payment extends Component {
     };
     return (
       <PayPalButton
-        amount= {totalPrice / 20000}
+        amount={totalPrice / 20000}
         // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
         onSuccess={(details, data) => {
           // OPTIONAL: Call your server to save the transaction
@@ -28,12 +28,12 @@ class Payment extends Component {
             return null;
           } else {
             return paymentApi
-              .checkout({ paid: true, receiver: receiver, receiversAddress: receiversAddress, phoneNumber: phoneNumber, email: email, totalMoney: totalPrice, orderDetails: orderDetailModel })
+              .checkout({ paid: true, receiver: receiver, receiversAddress: receiversAddress, phoneNumber: phoneNumber, email: email, totalMoney: totalPrice, note: note, orderDetails: orderDetailModel })
               .then(res => {
                 if (res.data.isSuccessed) {
                   localStorage.removeItem('cartItems');
                   localStorage.removeItem('totalPrice');
-                  alert(res.data.resultObj);
+                  alert("Thêm đơn hàng thành công!");
                   window.location.href = ('/');
                 }
               })

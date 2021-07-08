@@ -44,7 +44,7 @@ class Profile extends Component {
           this.setState({
             email: res.data.resultObj.email,
             userName: res.data.resultObj.userName,
-            gender: res.data.resultObj.render,
+            gender: res.data.resultObj.gender,
             firstMiddleName: res.data.resultObj.firstMiddleName,
             lastName: res.data.resultObj.lastName,
             address: res.data.resultObj.address,
@@ -192,7 +192,7 @@ class Profile extends Component {
                             className="form-control unicase-form-control text-input"
                             id="birthday"
                             name="birthday"
-                            value={birthday}
+                            value={birthday || null}
                             onChange={this.onHandleChange}
                           />
                         </div>

@@ -52,22 +52,53 @@ class Categories extends Component {
             {productTypes.map(type => {
               return (
                 <React.Fragment key={type.id}>
-                  <li key={type.id} className="dropdown menu-item"> <a href="#a" className="dropdown-toggle" data-toggle="dropdown"><i className="icon fa fa-empire" aria-hidden="true" />{type.name}</a>
-                    <ul className="dropdown-menu mega-menu">
+                  <li key={type.id} className="dropdown menu-item"> <a href="" className="dropdown-toggle" data-toggle="dropdown"><i className="icon fa fa-empire" aria-hidden="true" />{type.name}</a>
+                    <ul className="dropdown-menu mega-menu" style={{ minWidth: '100%' }}>
                       <li className="yamm-content">
                         <div className="row">
                           {rootCates.map(root => {
                             return (
                               <React.Fragment key={root.id}>
                                 {root.productTypeId === type.id &&
+                                  <div>
+                                    <li
+                                      className="dropdown-header"
+                                      style={{ cursor: 'pointer' }}
+                                      onClick={() => window.location.href = (`/${root.alias}&${root.id}`)}
+                                    >
+                                    <strong>{root.name}</strong>
+                                    </li>
+                                    {
+                                      categories.map(cate => {
+                                        return (
+                                          <React.Fragment key={cate.id}>
+                                            {cate.rootId === root.id &&
+                                              <React.Fragment key={cate.id}>
+                                                <li
+                                                  style={{ cursor: 'pointer' }}
+                                                  key={cate.id}
+                                                  onClick={() => window.location.href = (`/${cate.alias}&${cate.id}`)}
+                                                >
+                                                  <a href={`/${cate.alias}&${cate.id}`}>{cate.name}</a>
+                                                </li>
+                                              </React.Fragment>
+                                            }
+                                          </React.Fragment>
+                                        )
+                                      })
+                                    }
+                                    <li className="divider" />
+                                  </div>
+                                }
+                                {/* {root.productTypeId === type.id &&
                                   <React.Fragment key={root.id}>
-                                    <div className="col-sm-12 col-md-3" key={root.id}>
+                                    <div className="col-sm-12" key={root.id}>
                                       <ul className="links list-unstyled">
                                         <li
                                           style={{ cursor: 'pointer' }}
-                                          onClick ={() => window.location.href = (`/${root.alias}&${root.id}`) }
+                                          onClick={() => window.location.href = (`/${root.alias}&${root.id}`)}
                                         >
-                                        <strong key={root.id}>{root.name}</strong>
+                                          <strong key={root.id}>{root.name}</strong>
                                         </li>
                                         {
                                           categories.map(cate => {
@@ -91,7 +122,7 @@ class Categories extends Component {
                                       </ul>
                                     </div>
                                   </React.Fragment>
-                                }
+                                } */}
                               </React.Fragment>
                             )
                           })}

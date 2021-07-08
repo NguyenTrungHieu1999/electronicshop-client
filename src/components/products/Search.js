@@ -13,6 +13,7 @@ class Search extends Component {
       offset: 0,
       perPage: 20,
       currentPage: 0,
+      keyword: '',
       postData: []
     };
 
@@ -20,7 +21,9 @@ class Search extends Component {
   }
 
   async receivedData() {
-    const keyword = this.props.match.params.key;
+    const search = this.props.location.search;
+    const keyword = new URLSearchParams(search).get("key");
+    debugger;
 
     try {
       const resProducts = await searchProduct(keyword);
@@ -39,7 +42,8 @@ class Search extends Component {
 
         this.setState({
           pageCount: Math.ceil(productsData.length / this.state.perPage),
-          postData: postData
+          postData: postData,
+          keyword: keyword
         })
       }
     } catch (error) {
@@ -143,7 +147,7 @@ class Search extends Component {
                   <div className="col col-sm-6 col-md-3 col-lg-3 col-xs-6">
                     <div className="filter-tabs">
                       <ul id="filter-tabs" className="nav nav-tabs nav-tab-box nav-tab-fa-icon">
-                        <li className="active"> <a data-toggle="tab" href="#grid-container"><h3 className="section-title">Tìm kiếm cho từ khóa: {this.props.match.params.key}</h3></a> </li>
+                        <li className="active"> <a data-toggle="tab" href="#grid-container"><h3 className="section-title">Tìm kiếm cho từ khóa: "{this.state.keyword}"</h3></a> </li>
                       </ul>
                     </div>
                   </div>

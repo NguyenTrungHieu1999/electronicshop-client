@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/animate.min.css">
     <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/rateit.css">
     <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/index.css">
+
     
     <!-- Icons/Glyphs -->
     <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/font-awesome.css">
@@ -50,8 +52,10 @@
     <title>Electronic Shop</title>
   </head>
   <body className="cnt-home">
+    <a id="button"></a>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -75,6 +79,22 @@
 <script src="%PUBLIC_URL%/assets/js/bootstrap-select.min.js"></script>
 <script src="%PUBLIC_URL%/assets/js/wow.min.js"></script>
 <script src="%PUBLIC_URL%/assets/js/scripts.js"></script>
+<script>
+  var btn = $('#button');
+
+    $(window).scroll(function () {
+      if ($(window).scrollTop() > 300) {
+        btn.addClass('show');
+      } else {
+        btn.removeClass('show');
+      }
+    });
+
+    btn.on('click', function (e) {
+      e.preventDefault();
+      $('html, body').animate({ scrollTop: 0 }, '300');
+    });
+</script>
 <script>
   window.fbAsyncInit = function () {
     FB.init({

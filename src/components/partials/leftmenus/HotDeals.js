@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {getNewProducts} from "../../../api/productApi";
+import React, { Component } from 'react'
+import { getNewProducts } from "../../../api/productApi";
 import CurrencyFormat from 'react-currency-format';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -18,7 +18,7 @@ class HotDeals extends Component {
     const resProducts = await getNewProducts();
     try {
       if (resProducts && resProducts.isSuccessed) {
-        await this.setState({products: resProducts.resultObj});
+        this.setState({ products: resProducts.resultObj });
       }
     } catch {
       console.log(resProducts.message);
@@ -26,7 +26,7 @@ class HotDeals extends Component {
   }
 
   render() {
-    const {products} = this.state;
+    const { products } = this.state;
     const settings = {
       dots: false,
       fade: true,
@@ -46,15 +46,15 @@ class HotDeals extends Component {
           <div className="sidebar-carousel owl-theme outer-top-ss">
             <Slider {...settings}>
               {products && products.map(product =>
-                <div className="item">
+                <div className="item" key={product.id}>
                   <div className="products">
                     <div className="hot-deal-wrapper">
-                      <div className="image" style={{width: "220px", height: "180px"}}>
+                      <div className="image" style={{ width: "220px", height: "180px" }}>
                         <a href={`/san-pham/${product.alias}&${product.id}`}>
                           <img src={product.productPhotos ? product.productPhotos[0].url : ""}
-                               style={{width: "100%", height: "60%"}} alt=""/>
+                            style={{ width: "100%", height: "60%" }} alt="" />
                           <img src={product.productPhotos ? product.productPhotos[1].url : ""}
-                               style={{width: "100%", height: "60%"}} alt="" className="hover-image"/>
+                            style={{ width: "100%", height: "60%" }} alt="" className="hover-image" />
                         </a>
                       </div>
                       <div className="sale-offer-tag"><span>Mới</span></div>
@@ -63,7 +63,7 @@ class HotDeals extends Component {
                       <h3 className="name"><a href={`/san-pham/${product.alias}&${product.id}`}>{product.name}</a></h3>
                       <div className="product-price">
                         <CurrencyFormat value={product.price} displayType={'text'} thousandSeparator={true} prefix={''}
-                                        renderText={value => <span className="price">{value}₫</span>}/>
+                          renderText={value => <span className="price">{value}₫</span>} />
                       </div>
                     </div>
                     {/* <div className="cart clearfix animate-effect">

@@ -12,6 +12,8 @@ class ProductCate extends Component {
     super(props);
     this.state = {
       title: '',
+      rootTitle: '',
+      rootCate: [],
       offset: 0,
       perPage: 20,
       currentPage: 0,
@@ -30,7 +32,6 @@ class ProductCate extends Component {
 
       if (resCate && resCate.isSuccessed && resProducts && resProducts.isSuccessed) {
         const productsData = resProducts.resultObj;
-
         const slice = productsData.slice(this.state.offset, this.state.offset + this.state.perPage);
 
         const postData = slice.map(pd =>
@@ -40,8 +41,19 @@ class ProductCate extends Component {
           />
         )
 
+        let rootTitle = "";
+        let rootCate = [];
+        if (resCate.resultObj.rootId !== null) {
+          const resRootCate = await getCategoryById(resCate.resultObj.rootId);
+          rootTitle = resRootCate.resultObj.name;
+          rootCate = resRootCate.resultObj;
+        }
+
+        debugger;
         this.setState({
           title: resCate.resultObj.name,
+          rootCate: rootCate,
+          rootTitle: rootTitle,
           pageCount: Math.ceil(postData.length / this.state.perPage),
           postData: postData
         })
@@ -70,8 +82,7 @@ class ProductCate extends Component {
   }
 
   render() {
-    document.title = this.state.title;
-    let { postData } = this.state;
+    let { postData, rootCate, rootTitle, title } = this.state;
 
     return (
       <React.Fragment>
@@ -83,7 +94,16 @@ class ProductCate extends Component {
                   onClick={() => this.props.history.push(`/`)}
                   style={{ display: 'inline', cursor: 'pointer' }} className="active"
                 >Trang chủ</li>
-                <li className="active">{this.state.title}</li>
+                {rootTitle === ""
+                  ? <li className="active">{title}</li>
+                  : <React.Fragment>
+                    <li
+                      onClick={() => this.props.history.push(`/${rootCate.alias}&${rootCate.id}`)}
+                      style={{ display: 'inline', cursor: 'pointer' }} className="active"
+                    >{rootTitle}</li>
+                    <li className="active">{title}</li>
+                  </React.Fragment>
+                }
               </ul>
             </div>
           </div>

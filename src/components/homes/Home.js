@@ -7,6 +7,7 @@ import CardItem from './CardItem';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import cartApi from '../../api/cartApi';
 
 class Home extends Component {
 
@@ -32,7 +33,7 @@ class Home extends Component {
         products: products.resultObj,
         cates: cates.resultObj
       })
-    }
+    };
     await this.receivedData();
   }
 
@@ -63,7 +64,6 @@ class Home extends Component {
       });
     });
 
-    debugger;
     this.setState({
       showDatas: data
     });
@@ -100,8 +100,62 @@ class Home extends Component {
       slidesToScroll: 5,
       autoplaySpeed: 5000,
       autoplay: false,
-      speed: 1000
+      speed: 1000,
+      initialSlide: 0,
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 5,
+            slidesToScroll: 5,
+            infinite: true,
+            dots: true
+          }
+        },
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            initialSlide: 3,
+            dots: false
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 2,
+            dots: false
+          }
+        },
+        {
+          breakpoint: 350,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            dots: false,
+            initialSlide: 1
+          }
+        }
+      ]
     };
+    cartApi.getAllCarts().then(res => {
+      let totalPrice = 0;
+      let cartItems = [];
+      res.data && res.data.resultObj.map(item => {
+        totalPrice += item.product.price * item.quantity;
+        cartItems.push({
+          product: item.product,
+          total: item.quantity
+        })
+      });
+
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      localStorage.removeItem('totalPrice');
+      localStorage.setItem('totalPrice', totalPrice);
+    });
+
     return (
       <div>
         <div className="body-content outer-top-vs" id="top-banner-and-menu">
@@ -176,10 +230,10 @@ class Home extends Component {
                                 value={this.state.price}
                                 onChange={this.onHandleChange}>
                                 <option value={0}>Mặc định</option>
-                                <option value={1}>Giá &lt;10000000</option>
-                                <option value={2}>10000000đ&lt;= Giá &lt;20000000đ</option>
-                                <option value={3}>20000000đ&lt;= Giá &lt;40000000đ</option>
-                                <option value={4}>40000000đ&lt;= Giá</option>
+                                <option value={1}>Nhỏ hơn 10.000.000đ</option>
+                                <option value={2}>Từ 10.000.000đ đến nhỏ hơn 20.000.000đ</option>
+                                <option value={3}>Từ 20.000.000đ đến nhỏ hơn 40.000.000đ</option>
+                                <option value={4}>Lớn hơn 40.000.000đ</option>
                               </select>
                             </div>
                           </div>
@@ -194,9 +248,9 @@ class Home extends Component {
               <React.Fragment>
                 {showDatas.length > 0
                   ? <React.Fragment>
-                    {showDatas.map(data => {
+                    {showDatas.map((data, index) => {
                       return (
-                        <React.Fragment>
+                        <React.Fragment key={index}>
                           {data && data.postData.length > 0
                             ? <section className="section new-arriavls">
                               <h3 className="section-title">{data.typeName}</h3>

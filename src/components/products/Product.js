@@ -20,6 +20,7 @@ import HotDeals from '../partials/leftmenus/HotDeals';
 import Testimonials from "../partials/leftmenus/Testimonials";
 import { userIdDecode } from '../../services/DecodeService';
 import paymentApi from '../../api/paymentApi';
+import { validateString } from '../account/ValidationForm';
 
 class Product extends Component {
 
@@ -38,6 +39,8 @@ class Product extends Component {
       currentPage: 0,
       review: '',
       comment: '',
+      reviewValid: '',
+      commentValid: '',
       allReviews: [],
       allComments: [],
       canReviews: false
@@ -89,7 +92,6 @@ class Product extends Component {
 
         paymentApi.haveOrder(id)
           .then(res => {
-            debugger
             this.setState({
               canReviews: res.data.resultObj
             })
@@ -131,19 +133,24 @@ class Product extends Component {
     console.log("Value: ", value);
     this.setState({
       [name]: value
-    })
+    });
+    if (name === "comment") {
+      this.setState({ commentValid: validateString(value) });
+    } else if (name === "review") {
+      this.setState({ reviewValid: validateString(value) });
+    }
   }
 
 
   onHandleSubmitReview = (event) => {
     event.preventDefault();
     const isAuth = Cookies.get('isAuth');
-    const { ratingForReview, review } = this.state;
+    const { ratingForReview, review, reviewValid } = this.state;
     if (review !== '') {
       if (isAuth === false || isAuth === undefined || isAuth === null) {
         alert("Quý khách phải đăng nhập hệ thống để thực hiện đánh giá.");
       } else {
-        if (ratingForReview !== 0) {
+        if (ratingForReview !== 0 && reviewValid === "") {
           createReviewApi
             .createReview({
               productId: this.props.match.params.id,
@@ -174,27 +181,29 @@ class Product extends Component {
   onHandleSubmitComment = (event) => {
     event.preventDefault();
     const isAuth = Cookies.get('isAuth');
-    const { comment } = this.state;
+    const { comment, commentValid } = this.state;
     if (comment !== '') {
       if (isAuth === false || isAuth === undefined || isAuth === null) {
         alert("Quý khách phải đăng nhập hệ thống để thực hiện bình luận.")
       } else {
-        commentApi
-          .createComment({
-            productId: this.props.match.params.id,
-            text: comment
-          })
-          .then(res => {
-            if (res.data && res.data.isSuccessed) {
-              this.setState({
-                comment: ''
-              },
-                async () => {
-                  await this.receivedData();
-                }
-              )
-            }
-          })
+        if (commentValid === "") {
+          commentApi
+            .createComment({
+              productId: this.props.match.params.id,
+              text: comment
+            })
+            .then(res => {
+              if (res.data && res.data.isSuccessed) {
+                this.setState({
+                  comment: ''
+                },
+                  async () => {
+                    await this.receivedData();
+                  }
+                )
+              }
+            })
+        }
       }
     } else {
       alert("Quý khách vui lòng nhập bình luận.");
@@ -207,13 +216,13 @@ class Product extends Component {
 
   render() {
 
-    const { product, products, photos, cate, allReviews, allComments, canReviews } = this.state;
+    const { product, products, photos, cate, allReviews, allComments, canReviews, commentValid, reviewValid } = this.state;
     let hasItem = 0;
     let hasCart = 0;
     const settings = {
       customPaging: function (i) {
         return (
-          <div className="col-xs-12 col-sm-12 col-md-9 rht-col">
+          <div key={i} className="col-xs-12 col-sm-12 col-md-9 rht-col">
             <div className="detail-block">
               <div className="row">
                 <div className="gallery-holder">
@@ -273,7 +282,7 @@ class Product extends Component {
                     <img src="/assets/images/banners/LHS-banner.jpg" alt="Image" />
                   </div>
                   <HotDeals />
-                  <Testimonials />
+                  {/* <Testimonials /> */}
                 </div>
               </div>
               <div className="col-xs-12 col-sm-12 col-md-9 rht-col">
@@ -284,8 +293,8 @@ class Product extends Component {
                         className="product-item-holder size-big single-product-gallery small-gallery">
                         <Slider {...settings}>
                           {photos?.map((photo, index) =>
-                            <div>
-                              <div key={index} className="single-product-gallery-item">
+                            <div key={index}>
+                              <div className="single-product-gallery-item">
                                 <a>
                                   <img className="img-responsive" alt="" src={photo} />
                                 </a>
@@ -355,6 +364,7 @@ class Product extends Component {
                                         hasItem = 1;
                                         return (
                                           <a
+                                            key = {item.id}
                                             className="add-to-cart"
                                             style={{ cursor: 'pointer' }}
                                             title="Xóa yêu thích"
@@ -417,9 +427,10 @@ class Product extends Component {
                                                 id="addToCart"
                                                 className="btn btn-info"
                                                 disabled={true}
+                                                key = {item.id}
                                               >
                                                 <i className="fa fa-shopping-cart inner-right-vs" />
-                                                  Đã thêm vào giỏ hàng
+                                                Đã thêm vào giỏ hàng
                                               </button>
                                             )
                                           }
@@ -432,8 +443,8 @@ class Product extends Component {
                                             onClick={() => addToCart(product, 1)}
                                           >
                                             <i className="fa fa-shopping-cart inner-right-vs" />
-                                                Thêm giỏ hàng
-                                              </button>}
+                                            Thêm giỏ hàng
+                                          </button>}
                                       </React.Fragment>
                                     }
                                   </React.Fragment>
@@ -531,6 +542,7 @@ class Product extends Component {
                                               value={this.state.review}
                                               onChange={this.onHandleChange}
                                             />
+                                            {reviewValid !== '' && <label className="alert-danger">{reviewValid}</label>}
                                           </div>
                                         </div>
                                       </div>
@@ -592,6 +604,7 @@ class Product extends Component {
                                               value={this.state.comment}
                                               onChange={this.onHandleChange}
                                             />
+                                            {commentValid !== '' && <label className="alert-danger">{commentValid}</label>}
                                           </div>
                                         </div>
                                       </div>

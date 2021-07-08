@@ -10,7 +10,7 @@ export class ContextProvider extends Component {
     super(props);
     this.state = {
       cartItems: [],
-      totalPrice: 0,
+      totalPrice: localStorage.getItem('totalPrice') || 0,
       favoriteItems: [],
     };
 
@@ -23,18 +23,42 @@ export class ContextProvider extends Component {
   }
 
   componentDidMount() {
-    favoriteApi.getAllFavorites()
-      .then(res => {
-        this.setState({
-          favoriteItems: res.data.resultObj
+    if (Cookies.get('isAuth')) {
+      favoriteApi.getAllFavorites()
+        .then(res => {
+          cartApi.getAllCarts().then(res1 => {
+            let totalPrice = 0;
+            let cartItems = [];
+            res1.data && res1.data.resultObj.map(item => {
+              totalPrice += item.product.price * item.quantity;
+              cartItems.push({
+                product: item.product,
+                total: item.quantity
+              })
+            });
+            this.setState({
+              cartItems: cartItems,
+              totalPrice: totalPrice,
+              favoriteItems: res.data.resultObj
+            })
+          });
         })
+        .catch(err => console.log(err));
+    }else{
+      this.setState({
+        cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
+        totalPrice: localStorage.getItem('totalPrice') || 0
       })
-      .catch(err => console.log(err));
-    this.setState({
-      cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
-      // favoriteItems: JSON.parse(localStorage.getItem('favoriteItems')) || [],
-      totalPrice: localStorage.getItem('totalPrice') || 0
-    })
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.totalPrice != this.state.totalPrice) {
+      this.setState({
+        cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
+        totalPrice: localStorage.getItem('totalPrice') || 0
+      })
+    }
   }
 
   addToFavorite(product) {
@@ -87,7 +111,7 @@ export class ContextProvider extends Component {
                 .then(res => console.log(res.data.resultObj))
                 .catch(err => console.log(err));
             }
-          }else{
+          } else {
             alert("Sản phẩm đã đạt giới hạn")
           }
         }
@@ -146,7 +170,7 @@ export class ContextProvider extends Component {
 
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
       localStorage.removeItem('totalPrice');
-      localStorage.setItem('totalPrice', totalPrice);
+      localStorage.setItem('totalPrice', totalPrice)
     }
     this.setState({
       cartItems: cartItems,

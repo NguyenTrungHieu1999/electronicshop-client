@@ -63,7 +63,7 @@ export default function ExternalLogins() {
   const sendRequest = (model) => {
 
     console.log(model);
-
+    debugger;
     loginservice_json
       .externalLogins(model)
       .then(res => {
@@ -109,7 +109,7 @@ export default function ExternalLogins() {
           alert(res.data.message);
         }
       })
-      .catch(() => alert("Không thể kết nối với máy chủ."));
+      .catch((err) => alert(err));
   }
 
   return (
