@@ -191,6 +191,7 @@ class Orders extends Component {
   }
 
   render() {
+    document.title = "Đơn mua";
     const { showData } = this.state;
     return (
       <React.Fragment>
@@ -199,7 +200,7 @@ class Orders extends Component {
             <div className="breadcrumb-inner">
               <ul className="list-inline list-unstyled">
                 <li
-                  onClick={() => this.props.history.push(`/`)}
+                  onClick={() => window.location.href = (`/`)}
                   style={{ display: 'inline', cursor: 'pointer' }} className="active"
                 >Trang chủ</li>
                 <li className="active">Đơn hàng</li>

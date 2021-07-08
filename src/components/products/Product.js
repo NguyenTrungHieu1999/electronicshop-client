@@ -17,8 +17,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Product.css";
 import HotDeals from '../partials/leftmenus/HotDeals';
-import Testimonials from "../partials/leftmenus/Testimonials";
-import { userIdDecode } from '../../services/DecodeService';
 import paymentApi from '../../api/paymentApi';
 import { validateString } from '../account/ValidationForm';
 
@@ -215,7 +213,7 @@ class Product extends Component {
   }
 
   render() {
-
+    document.title = "Chi tiết sản phẩm";
     const { product, products, photos, cate, allReviews, allComments, canReviews, commentValid, reviewValid } = this.state;
     let hasItem = 0;
     let hasCart = 0;
@@ -258,12 +256,12 @@ class Product extends Component {
             <div className="breadcrumb-inner">
               <ul className="list-inline list-unstyled">
                 <li
-                  onClick={() => this.props.history.push(`/`)}
+                  onClick={() => window.location.href = (`/`)}
                   style={{ display: 'inline', cursor: 'pointer' }} className="active"
                 >Trang chủ
                 </li>
                 <li
-                  onClick={() => this.props.history.push(`/${cate.alias}&${cate.id}`)}
+                  onClick={() => window.location.href = (`/${cate.alias}&${cate.id}`)}
                   style={{ display: 'inline', cursor: 'pointer' }} className="active"
                 >
                   {cate.name}
@@ -364,7 +362,7 @@ class Product extends Component {
                                         hasItem = 1;
                                         return (
                                           <a
-                                            key = {item.id}
+                                            key={item.id}
                                             className="add-to-cart"
                                             style={{ cursor: 'pointer' }}
                                             title="Xóa yêu thích"
@@ -427,7 +425,7 @@ class Product extends Component {
                                                 id="addToCart"
                                                 className="btn btn-info"
                                                 disabled={true}
-                                                key = {item.id}
+                                                key={item.id}
                                               >
                                                 <i className="fa fa-shopping-cart inner-right-vs" />
                                                 Đã thêm vào giỏ hàng

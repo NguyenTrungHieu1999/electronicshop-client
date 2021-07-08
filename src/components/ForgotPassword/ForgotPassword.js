@@ -40,6 +40,7 @@ class ForgotPassword extends Component {
   }
 
   render() {
+    document.title = "Thay đổi mật khẩu";
     const { email, emailValid } = this.state;
     return (
       <>
@@ -73,11 +74,11 @@ class ForgotPassword extends Component {
                   </div>
                   <div className="card-footer" style={{ textAlign: 'center' }}>
                     <button className="btn btn-success" type="submit">Gửi</button>
-                  &nbsp;&nbsp;
-                  <button
+                    &nbsp;&nbsp;
+                    <button
                       className="btn btn-danger"
                       type="button"
-                      onClick={() => this.props.history.push('/tai-khoan')}
+                      onClick={() => window.location.href = ('/tai-khoan')}
                     >Thoát</button>
                   </div>
                 </form>

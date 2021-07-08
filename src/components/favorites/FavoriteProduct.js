@@ -3,6 +3,7 @@ import { ContextApi } from '../../contexts/Context';
 import CurrencyFormat from 'react-currency-format';
 class FavoriteProduct extends Component {
   render() {
+    document.title = "Yêu thích"
     return (
       <React.Fragment>
         <div className="breadcrumb">
@@ -10,7 +11,7 @@ class FavoriteProduct extends Component {
             <div className="breadcrumb-inner">
               <ul className="list-inline list-unstyled">
                 <li
-                  onClick={() => this.props.history.push(`/`)}
+                  onClick={() => window.location.href = (`/`)}
                   style={{ display: 'inline', cursor: 'pointer' }} className="active"
                 >Trang chủ</li>
                 <li className="active">Sản phẩm yêu thích</li>

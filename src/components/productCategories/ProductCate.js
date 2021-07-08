@@ -82,8 +82,8 @@ class ProductCate extends Component {
   }
 
   render() {
+    document.title = "Danh mục sản phẩm";
     let { postData, rootCate, rootTitle, title } = this.state;
-
     return (
       <React.Fragment>
         <div className="breadcrumb">
@@ -91,14 +91,14 @@ class ProductCate extends Component {
             <div className="breadcrumb-inner">
               <ul className="list-inline list-unstyled">
                 <li
-                  onClick={() => this.props.history.push(`/`)}
+                  onClick={() => window.location.href = (`/`)}
                   style={{ display: 'inline', cursor: 'pointer' }} className="active"
                 >Trang chủ</li>
                 {rootTitle === ""
                   ? <li className="active">{title}</li>
                   : <React.Fragment>
                     <li
-                      onClick={() => this.props.history.push(`/${rootCate.alias}&${rootCate.id}`)}
+                      onClick={() => window.location.href = (`/${rootCate.alias}&${rootCate.id}`)}
                       style={{ display: 'inline', cursor: 'pointer' }} className="active"
                     >{rootTitle}</li>
                     <li className="active">{title}</li>

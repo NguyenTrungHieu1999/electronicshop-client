@@ -53,7 +53,7 @@ export class ContextProvider extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.totalPrice != this.state.totalPrice) {
+    if (prevState.totalPrice !== this.state.totalPrice) {
       this.setState({
         cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
         totalPrice: localStorage.getItem('totalPrice') || 0

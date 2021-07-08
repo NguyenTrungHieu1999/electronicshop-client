@@ -113,6 +113,15 @@ class Home extends Component {
           }
         },
         {
+          breakpoint: 770,
+          settings: {
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            initialSlide: 4,
+            dots: false
+          }
+        },
+        {
           breakpoint: 600,
           settings: {
             slidesToShow: 3,

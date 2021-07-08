@@ -43,7 +43,7 @@ class ResetPassword extends Component {
         const res = await resetPassword({ token, email, password, confirmPassword });
         if (res && res.isSuccessed) {
           alert(res.resultObj);
-          this.props.history.push('tai-khoan');
+          window.location.href = ('tai-khoan');
         }
         else {
           alert(res.message);
@@ -55,7 +55,7 @@ class ResetPassword extends Component {
     }
   }
   render() {
-
+    document.title = "Tạo mật khẩu mới";
     const { password, confirmPassword, passwordValid, confirmPasswordValid } = this.state;
     return (
       <>
@@ -64,11 +64,10 @@ class ResetPassword extends Component {
             <div className="col-lg-12 col-md-12">
               <div className="forgot">
                 <h2>Tạo mới mật khẩu của bạn?</h2>
-                <p>Tạo mới mật khẩu của bạn trong 3 bước đơn giản. Điều này sẽ giúp bạn bảo mật mật khẩu của mình!</p>
+                <p>Tạo mới mật khẩu của bạn trong 2 bước đơn giản. Điều này sẽ giúp bạn bảo mật mật khẩu của mình!</p>
                 <ol className="list-unstyled">
-                  <li><span className="text-primary text-medium">1. </span>Nhập địa chỉ email của bạn dưới đây.</li>
-                  <li><span className="text-primary text-medium">2. </span>Nhập mật khẩu mới.</li>
-                  <li><span className="text-primary text-medium">3. </span>Xác nhận lại mật khẩu.</li>
+                  <li><span className="text-primary text-medium">1. </span>Nhập mật khẩu mới.</li>
+                  <li><span className="text-primary text-medium">2. </span>Xác nhận lại mật khẩu.</li>
                 </ol>
                 <form className="card mt-4" onSubmit={this.onHandleSubmit}>
                   <div className="card-body">
@@ -100,9 +99,9 @@ class ResetPassword extends Component {
                   </div>
                   <div className="card-footer" style={{ textAlign: 'center' }}>
                     <button className="btn btn-success" type="submit">Lưu</button>
-                  &nbsp;&nbsp;
-                  <a className="btn btn-danger"
-                      onClick={() => { this.props.history.push('/tai-khoan') }}
+                    &nbsp;&nbsp;
+                    <a className="btn btn-danger"
+                      onClick={() => { window.location.href = ('/tai-khoan') }}
                     >Thoát</a>
                   </div>
                 </form>

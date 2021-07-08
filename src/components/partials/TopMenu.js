@@ -8,7 +8,7 @@ import "./TopMenu.css";
 function TopMenu() {
 
   const history = useHistory();
-  const style = {cursor: 'pointer'};
+  const style = { cursor: 'pointer' };
   const cookiesAuth = Cookies.get('isAuth');
 
   const [isAuth, setisAuth] = useState(cookiesAuth)
@@ -35,16 +35,16 @@ function TopMenu() {
             {isAuth
               ?
               <div className="dropdown">
-                <button onClick={() => { history.push('thong-tin-tai-khoan') }} className="dropbtn">Xin chào, {name}</button>
+                <button onClick={() => { window.location.href = ('thong-tin-tai-khoan') }} className="dropbtn">Xin chào, {name}</button>
                 <div className="dropdown-content">
-                  <li onClick={() => { history.push('thong-tin-tai-khoan') }}>Tài khoản của tôi</li>
-                  <li onClick={() => { history.push('/don-hang') }}>Đơn mua</li>
-                  <li onClick={() => { history.push('/yeu-thich') }}>Yêu thích</li>
+                  <li onClick={() => { window.location.href = ('thong-tin-tai-khoan') }}>Tài khoản của tôi</li>
+                  <li onClick={() => { window.location.href = ('/don-hang') }}>Đơn mua</li>
+                  <li onClick={() => { window.location.href = ('/yeu-thich') }}>Yêu thích</li>
                   <li onClick={signOutHandle}>Đăng xuất</li>
                 </div>
               </div>
               : <div className="dropdown">
-                <button onClick={() => { history.push(`/tai-khoan`); }} className="dropbtn">Đăng nhập</button>
+                <button onClick={() => { window.location.href = (`/tai-khoan`); }} className="dropbtn">Đăng nhập</button>
               </div>
             }
 

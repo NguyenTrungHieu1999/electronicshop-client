@@ -5,8 +5,8 @@ import Logo from '../../logo.png';
 import { ContextApi } from '../../contexts/Context';
 import { withRouter } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
-import { validateString } from '../account/ValidationForm';
 import cartApi from '../../api/cartApi';
+import { validateString } from '../account/ValidationForm';
 
 
 class Header extends Component {
@@ -90,7 +90,7 @@ class Header extends Component {
                   <form>
                     <div className="control-group">
                       <ul className="categories-filter animate-dropdown">
-                        <li> <a href=''>Tìm kiếm</a>
+                        <li> <a>Tìm kiếm</a>
                         </li>
                       </ul>
                       <input
@@ -110,7 +110,7 @@ class Header extends Component {
                       <li
                         onClick={this.onHandleClick}
                         className="search-button"
-                        style={{ cursor: 'pointer', height:'57px' }}>
+                        style={{ cursor: 'pointer', height: '57px' }}>
                       </li>
                     </div>
                   </form>
@@ -121,7 +121,7 @@ class Header extends Component {
                 {/* ============================================================= SHOPPING CART DROPDOWN ============================================================= */}
                 {<ContextApi.Consumer>
                   {({ cartItems, totalPrice }) => (
-                    <div onClick={() => this.props.history.push('/gio-hang')}
+                    <div onClick={() => window.location.href = ('/gio-hang')}
                       style={{ cursor: 'pointer' }}
                       className="dropdown dropdown-cart">
                       <span className="dropdown-toggle lnk-cart" data-toggle="dropdown">

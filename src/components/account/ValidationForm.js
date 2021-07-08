@@ -21,7 +21,9 @@ const validateEmail = (email) => {
 }
 
 const validateUserName = (userName) => {
-  if (userName === "") {
+  const pattern = /^ *$/
+  const check = pattern.exec(userName);
+  if (check !== null) {
     return `Không được bỏ trống.`;
   }
 
@@ -45,13 +47,23 @@ const validatePhoneNumber = (phone) => {
   return `Quý khách vui lòng nhập số điện thoại gồm 10 chữ số.`;
 }
 
+const validateDate = (date) => {
+  debugger;
+  const pattern = /^\d{4}[\-\/\s]?((((0[13578])|(1[02]))[\-\/\s]?(([0-2][0-9])|(3[01])))|(((0[469])|(11))[\-\/\s]?(([0-2][0-9])|(30)))|(02[\-\/\s]?[0-2][0-9]))$/
+  const check = pattern.exec(date);
+  if (check != null) {
+    return "";
+  }
+  return "Nhập ngày với định dạng yyyy-mm-dd";
+}
+
 const validateString = (str) => {
-  const pattern = /^[^`~!/@#$%^&*_+={}\[\]|\\:;“’<,>.?๐฿]*$/g
+  const pattern = /^[^`~#$%^&={}\[\]|\\<>๐฿]*$/g
   const check = pattern.exec(str)
-  if(check!==null){
+  if (check !== null) {
     return "";
   }
   return `Vui lòng không nhập các ký tự đặc biệt`;
 }
 
-export { validatePassword, validateEmail, validateUserName, validateConfirmPassword, validatePhoneNumber, validateString };
+export { validatePassword, validateEmail, validateUserName, validateConfirmPassword, validatePhoneNumber, validateDate, validateString };

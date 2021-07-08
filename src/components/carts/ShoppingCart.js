@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ContextApi } from '../../contexts/Context';
 import CurrencyFormat from 'react-currency-format';
 import Payment from './Payment';
-import { validateEmail, validatePhoneNumber, validateString, validateUserName } from '../account/ValidationForm';
+import { validateEmail, validatePhoneNumber, validateUserName } from '../account/ValidationForm';
 import paymentApi from '../../api/paymentApi';
 import { getAllProduct } from "../../api/productApi";
 import cartApi from '../../api/cartApi';
@@ -22,8 +22,7 @@ class ShoppingCart extends Component {
       receiverValid: '',
       receiversAddressValid: '',
       phoneNumberValid: '',
-      emailValid: '',
-      noteValid: ''
+      emailValid: ''
     }
   }
 
@@ -118,15 +117,17 @@ class ShoppingCart extends Component {
     });
 
     if (name === 'receiver') {
-      this.setState({ receiverValid: validateUserName(value) });
+      this.setState({
+        receiverValid: validateUserName(value)
+      })
     } else if (name === 'receiversAddress') {
-      this.setState({ receiversAddressValid: validateUserName(value) });
+      this.setState({
+        receiversAddressValid: validateUserName(value)
+      })
     } else if (name === 'phoneNumber') {
       this.setState({ phoneNumberValid: validatePhoneNumber(value) });
     } else if (name === 'email') {
       this.setState({ emailValid: validateEmail(value) });
-    } else if (name === 'note') {
-      this.setState({ noteValid: validateString(value) });
     }
   }
 
@@ -185,7 +186,6 @@ class ShoppingCart extends Component {
       receiversAddressValid,
       phoneNumberValid,
       emailValid,
-      noteValid
     } = this.state;
     return (
       <React.Fragment>
@@ -194,7 +194,7 @@ class ShoppingCart extends Component {
             <div className="breadcrumb-inner">
               <ul className="list-inline list-unstyled">
                 <li
-                  onClick={() => this.props.history.push(`/`)}
+                  onClick={() => window.location.href = (`/`)}
                   style={{ display: 'inline', cursor: 'pointer' }} className="active"
                 >Trang chủ
                 </li>
@@ -409,8 +409,6 @@ class ShoppingCart extends Component {
                                     value={this.state.note}
                                     onChange={this.onHandleChange}
                                   />
-                                  {noteValid !== '' ?
-                                    <label className="alert-danger">{noteValid}</label> : null}
                                 </div>
                               </form>
                             </div>

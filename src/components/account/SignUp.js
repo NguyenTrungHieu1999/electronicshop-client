@@ -31,7 +31,9 @@ class SignUp extends Component {
     if (name === 'email') {
       this.setState({ emailValid: validateEmail(value) });
     } else if (name === 'userName') {
-      this.setState({ userNameValid: validateUserName(value) });
+      this.setState({
+        userNameValid: validateUserName(value)
+      })
     } else if (name === 'password') {
       this.setState({ passwordValid: validatePassword(value) });
     } else if (name === 'confirmPassword') {
@@ -54,8 +56,6 @@ class SignUp extends Component {
           userName: userName, password: password,
           confirmPassword: confirmPassword, email: email, gender: gender
         });
-
-        debugger
         if (res.isSuccessed) {
           alert("Đăng ký tài khoản thành công!");
         } else {
@@ -143,7 +143,7 @@ class SignUp extends Component {
 
         </form>
       </div>
-    
+
     );
   }
 }
