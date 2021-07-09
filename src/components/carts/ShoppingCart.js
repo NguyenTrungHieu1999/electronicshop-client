@@ -71,7 +71,7 @@ class ShoppingCart extends Component {
 
     products.map((item, index) => {
       if (item.product.id === product.id) {
-        if (value > 0 && item.total < product.inventory) {
+        if (value > 0 && item.total < product.inventory && item.total < 2) {
           item.total = item.total + value;
         }
         if (value < 0) {
@@ -164,6 +164,9 @@ class ShoppingCart extends Component {
           if (res.data.isSuccessed) {
             localStorage.removeItem('cartItems');
             localStorage.removeItem('totalPrice');
+            cartApi.cleanCarts()
+              .then(res => console.log(res.data))
+              .catch(err => console.log(err));
             alert("Thêm đơn hàng thành công!");
             window.location.href = ('/');
           } else {
@@ -275,8 +278,8 @@ class ShoppingCart extends Component {
                                         </div>
                                         <input type="text" value={item.total} />
                                       </div>
-                                      {item.total >= 10 || item.total >= item.product.inventory ?
-                                        <label className="alert-warning">Số lượng sản phẩm đạt giới hạn</label> : null}
+                                      {item.total >= 2 || item.total >= item.product.inventory ?
+                                        <label className="alert-warning">Số lượng sản phẩm đạt giới hạn được phép mua</label> : null}
                                     </td>
                                     <CurrencyFormat value={item.product.price} displayType={'text'}
                                       thousandSeparator={true} prefix={''} renderText={value =>

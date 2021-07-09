@@ -44,7 +44,7 @@ export class ContextProvider extends Component {
           });
         })
         .catch(err => console.log(err));
-    }else{
+    } else {
       this.setState({
         cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
         totalPrice: localStorage.getItem('totalPrice') || 0
@@ -94,52 +94,61 @@ export class ContextProvider extends Component {
   }
 
   addToCart(product, total) {
-    debugger;
     let cartItems = this.state.cartItems ? this.state.cartItems : [];
+    let quantity = 0;
     let totalPrice = 0;
     let hasItem = 0;
     const isAuth = Cookies.get('isAuth');
-    if (cartItems) {
-      cartItems.map((item, index) => {
-        if (item.product.id === product.id) {
-          hasItem = 1;
-          if (item.total < 10 && item.total < product.inventory) {
-            item.total += total;
-            cartItems[index] = item;
-            if (isAuth) {
-              cartApi.updateCarts({ productId: product.id, total: 1 })
-                .then(res => console.log(res.data.resultObj))
-                .catch(err => console.log(err));
+
+    cartItems.map(item => {
+      quantity += item.total;
+    })
+
+    if (quantity >= 10) {
+      alert("Giỏ hàng đã đạt giới hạn cho phép mua");
+    } else {
+      if (cartItems) {
+        cartItems.map((item, index) => {
+          if (item.product.id === product.id) {
+            hasItem = 1;
+            if (item.total < 2 && item.total < product.inventory) {
+              item.total += total;
+              cartItems[index] = item;
+              if (isAuth) {
+                cartApi.updateCarts({ productId: product.id, total: 1 })
+                  .then(res => console.log(res.data.resultObj))
+                  .catch(err => console.log(err));
+              }
+            } else {
+              alert("Sản phẩm đã đạt giới hạn")
             }
-          } else {
-            alert("Sản phẩm đã đạt giới hạn")
           }
-        }
-      });
-      if (hasItem === 0 && product.inventory > 0) {
-        if (isAuth) {
-          cartApi.addCarts({ productId: product.id, quantity: 1 })
-            .then(res => console.log(res.data.resultObj))
-            .catch(err => console.log(err));
-        }
-        cartItems.push({
-          product: product,
-          total: total
         });
+        if (hasItem === 0 && product.inventory > 0) {
+          if (isAuth) {
+            cartApi.addCarts({ productId: product.id, quantity: 1 })
+              .then(res => console.log(res.data.resultObj))
+              .catch(err => console.log(err));
+          }
+          cartItems.push({
+            product: product,
+            total: total
+          });
+        }
+
+        cartItems.map(item => {
+          totalPrice += item.product.price * item.total;
+        })
+
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        localStorage.removeItem('totalPrice');
+        localStorage.setItem('totalPrice', totalPrice);
       }
-
-      cartItems.map(item => {
-        totalPrice += item.product.price * item.total;
-      })
-
-      localStorage.setItem('cartItems', JSON.stringify(cartItems));
-      localStorage.removeItem('totalPrice');
-      localStorage.setItem('totalPrice', totalPrice);
+      this.setState({
+        cartItems: cartItems,
+        totalPrice: totalPrice
+      });
     }
-    this.setState({
-      cartItems: cartItems,
-      totalPrice: totalPrice
-    });
   }
 
   removeFromCart(product, total) {

@@ -20,7 +20,7 @@ class Orders extends Component {
   }
 
   clickCancle(orderId) {
-    orderApi.cancleMyOrder(orderId)
+    orderApi.cancelMyOrder(orderId)
       .then(res => {
         if (res.data.isSuccessed) {
           this.receivedData();
@@ -63,6 +63,7 @@ class Orders extends Component {
 
           if (listOrders.length > 0) {
             listOrders.map(order => {
+              debugger
               const steps = [];
               let classCss = "";
               const times = [];
@@ -160,11 +161,11 @@ class Orders extends Component {
                       <hr />
                       {order.statusId < 3
                         ? <button style={{ float: 'right' }} onClick={this.clickCancle.bind(this, order.orderId)} type="submit" className="btn btn-warning">Hủy đơn hàng</button>
-                        : <button style={{ float: 'right' }} type="submit" className="btn btn-secondary ">Đã hủy đơn</button>
+                        : ""
                       }
-                      {order.received === false
+                      {order.received === false && order.statusId === 7
                         ? <button style={{ float: 'right', marginRight: '5px' }} onClick={this.clickReceived.bind(this, order.orderId)} type="submit" className="btn btn-warning">Xác nhận đã nhận</button>
-                        : <button style={{ float: 'right', marginRight: '5px' }} type="submit" className="btn btn-secondary ">Đã nhận</button>
+                        : ""
                       }
                     </div>
                   </article>

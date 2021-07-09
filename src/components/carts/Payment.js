@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { PayPalButton } from "react-paypal-button-v2";
+import cartApi from '../../api/cartApi';
 import paymentApi from '../../api/paymentApi';
 
 class Payment extends Component {
@@ -33,6 +34,9 @@ class Payment extends Component {
                 if (res.data.isSuccessed) {
                   localStorage.removeItem('cartItems');
                   localStorage.removeItem('totalPrice');
+                  cartApi.cleanCarts()
+                    .then(res => console.log(res.data))
+                    .catch(err => console.log(err));
                   alert("Thêm đơn hàng thành công!");
                   window.location.href = ('/');
                 }
