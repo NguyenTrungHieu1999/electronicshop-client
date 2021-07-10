@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import userApi from '../../api/userApi';
 import Cookies from 'js-cookie';
-import { validateDate, validatePhoneNumber } from '../account/ValidationForm';
+import { validatePhoneNumber } from '../account/ValidationForm';
 import { roleDecode, userIdDecode } from '../../services/DecodeService';
 import { forgotPassWord } from '../../api/authApi';
 import moment from 'moment';
@@ -15,7 +15,6 @@ class Profile extends Component {
       firstMiddleName: "",
       lastName: "",
       address: "",
-      birthday: "",
       phoneNumber: "",
       birthdayValid: '',
       phoneNumberValid: '',
@@ -55,7 +54,7 @@ class Profile extends Component {
             firstMiddleName: res.data.resultObj.firstMiddleName,
             lastName: res.data.resultObj.lastName,
             address: res.data.resultObj.address || "",
-            birthday: moment(birthday).format('YYYY-MM-DD') || "",
+            birthday: birthday === "" ? "" : moment(birthday).format('YYYY-MM-DD'),
             phoneNumber: res.data.resultObj.phoneNumber || "",
           })
         }
@@ -81,16 +80,16 @@ class Profile extends Component {
           phoneNumberValid: validatePhoneNumber(value)
         })
       }
-    } else if (name === "birthday") {
-      if (value.match(/^ *$/) !== null) {
-        this.setState({
-          birthdayValid: ""
-        })
-      } else {
-        this.setState({
-          birthdayValid: validateDate(value)
-        })
-      }
+    // } else if (name === "birthday") {
+    //   if (value.match(/^ *$/) !== null) {
+    //     this.setState({
+    //       birthdayValid: ""
+    //     })
+    //   } else {
+    //     this.setState({
+    //       birthdayValid: validateDate(value)
+    //     })
+    //   }
     }
   }
 
@@ -98,7 +97,7 @@ class Profile extends Component {
 
     event.preventDefault();
     const id = userIdDecode;
-    let { email, userName, gender, firstMiddleName, lastName, address, birthday, phoneNumber, phoneNumberValid, birthdayValid } = this.state;
+    let { email, userName, gender, firstMiddleName, lastName, address, birthday, phoneNumber, phoneNumberValid } = this.state;
 
     let userInRole = ''
     if (roleDecode === 'Admin') {
@@ -107,8 +106,7 @@ class Profile extends Component {
       userInRole = 'Emp';
     }
 
-    if (phoneNumberValid === "" && birthdayValid === "") {
-      birthday = birthday.match(/^ *$/) !== null ? null : (new Date(birthday));
+    if (phoneNumberValid === "") {
       phoneNumber = phoneNumber.match(/^ *$/) !== null ? null : phoneNumber;
       address = address.match(/^ *$/) !== null ? null : address;
 
@@ -127,7 +125,7 @@ class Profile extends Component {
 
   render() {
     document.title = "Thông tin tài khoản";
-    const { email, userName, gender, firstMiddleName, lastName, address, birthday, phoneNumber, phoneNumberValid, birthdayValid } = this.state;
+    const { email, userName, gender, firstMiddleName, lastName, address, birthday, phoneNumber, phoneNumberValid } = this.state;
     return (
       <React.Fragment>
         {Cookies.get('isAuth') === 'true'
@@ -219,14 +217,13 @@ class Profile extends Component {
                         <div className="form-group">
                           <label className="info-title" htmlFor="birthday">Ngày sinh</label>
                           <input
-                            type="text"
+                            type="date"
                             className="form-control unicase-form-control text-input"
                             id="birthday"
                             name="birthday"
                             value={birthday}
                             onChange={this.onHandleChange}
                           />
-                          {birthdayValid !== '' ? <label className="alert-danger">{birthdayValid}</label> : ""}
                         </div>
                         <div className="form-group">
                           <label className="info-title" htmlFor="phoneNumber">Số điện thoại</label>

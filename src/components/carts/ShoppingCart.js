@@ -83,7 +83,8 @@ class ShoppingCart extends Component {
           products[index] = item;
         }
       }
-    })
+    });
+
     this.setState({
       products: products
     })

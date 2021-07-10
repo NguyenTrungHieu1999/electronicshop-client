@@ -43,7 +43,7 @@ class ResetPassword extends Component {
         const res = await resetPassword({ token, email, password, confirmPassword });
         if (res && res.isSuccessed) {
           alert(res.resultObj);
-          window.location.href = ('tai-khoan');
+          window.location.href = ('/');
         }
         else {
           alert(res.message);
