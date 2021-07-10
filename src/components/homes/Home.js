@@ -21,6 +21,18 @@ class Home extends Component {
       sorted: 0,
       price: 0
     }
+    this.shuffleArray = this.shuffleArray.bind(this);
+  }
+
+  shuffleArray(array) {
+    let i = array.length - 1;
+    for (; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+    return array;
   }
 
   async componentDidMount() {
@@ -30,7 +42,7 @@ class Home extends Component {
       const cates = await getAllCategory();
       this.setState({
         productTypes: types.resultObj,
-        products: products.resultObj,
+        products: this.shuffleArray(products.resultObj),
         cates: cates.resultObj
       })
     };

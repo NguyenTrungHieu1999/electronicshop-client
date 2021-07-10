@@ -59,7 +59,7 @@ class Orders extends Component {
         if (res.data && res.data.isSuccessed) {
           const listOrders = res.data.resultObj;
           const postData = [];
-          const status = ["Đặt hàng thành công", "Đã được tiếp nhận", "Đang lấy hàng", "Đóng gói xong", "Bàn giao vận chuyển", "Đang giao hàng", "Giao hàng thành công", "Hủy đơn hàng"];
+          const status = ["Đặt hàng thành công", "Đã được tiếp nhận", "Đang lấy hàng", "Đóng gói xong", "Bàn giao vận chuyển", "Đang giao hàng", "Giao hàng thành công", "Đã hủy"];
 
           if (listOrders.length > 0) {
             listOrders.map(order => {
@@ -72,7 +72,7 @@ class Orders extends Component {
                 order.orderStatusDetails.map(od => {
                   if (od.statusId === t + 1) {
                     flat = 1;
-                    times.push(moment(od.createdDate).format('lll'));
+                    times.push(moment(od.createdDate).format('DD/MM/yyyy hh:mm:ss'));
                   }
                 });
                 if (flat === 0) {
@@ -117,7 +117,7 @@ class Orders extends Component {
                               renderText={value => <p>{value}₫</p>}
                             />
                           </div>
-                          <div className="col-md-3"> <strong>Ngày giao hàng dự kiến: </strong> <br /> {moment(order.deliveryDate).format('L')} </div>
+                          <div className="col-md-3"> <strong>Ngày giao hàng dự kiến: </strong> <br /> {moment(order.deliveryDate).format('DD/MM/yyyy')} </div>
                           <div className="col-md-3"> <strong>Trạng thái: </strong> <br /> <span style={{ color: 'blueviolet' }}>{order.orderStatus}</span>  </div>
                         </div>
                       </article>

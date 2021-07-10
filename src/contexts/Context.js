@@ -104,14 +104,14 @@ export class ContextProvider extends Component {
       quantity += item.total;
     })
 
-    if (quantity >= 10) {
-      alert("Giỏ hàng đã đạt giới hạn cho phép mua");
+    if (quantity >= 100) {
+      alert("Bạn chỉ được mua với số lượng từ 100 sản phẩm");
     } else {
       if (cartItems) {
         cartItems.map((item, index) => {
           if (item.product.id === product.id) {
             hasItem = 1;
-            if (item.total < 2 && item.total < product.inventory) {
+            if (item.total < 5 && item.total < product.inventory) {
               item.total += total;
               cartItems[index] = item;
               if (isAuth) {

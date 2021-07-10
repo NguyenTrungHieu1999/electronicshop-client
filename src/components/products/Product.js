@@ -35,23 +35,38 @@ class Product extends Component {
       offset: 0,
       perPage: 5,
       currentPage: 0,
+      offsetForCmt: 0,
+      perPageForCmt: 5,
+      currentPageForCmt: 0,
       review: '',
       comment: '',
       reviewValid: '',
       commentValid: '',
       allReviews: [],
       allComments: [],
-      canReviews: false
+      listCmt: [],
+      canReviews: false,
+      parentId: null
     }
 
+    this.addComment = React.createRef();
     this.changeRating = this.changeRating.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);
+    this.handlePageClickForCmt = this.handlePageClickForCmt.bind(this);
   }
 
   changeRating(newRating, name) {
     this.setState({
       ratingForReview: newRating
     });
+  }
+
+  replyComment(userName, id) {
+    this.addComment.current.focus();
+    document.getElementById("AddCmt").placeholder = "@" + userName + " ";
+    this.setState({
+      parentId: id
+    })
   }
 
   async receivedData() {
@@ -67,8 +82,58 @@ class Product extends Component {
           .getAllCommentByProductId(id)
           .then(res => {
             if (res.data && res.data.isSuccessed) {
+              const sliceForCmt = res.data.resultObj.slice(this.state.offsetForCmt, this.state.offsetForCmt + this.state.perPageForCmt);
+              let cmt = sliceForCmt.map(c => {
+                return (
+                  <React.Fragment key={c.id}>
+                    {/* <div className="review-title">
+                      <span style={{ color: 'blue' }} className="summary"><strong>{c.userName}</strong></span>
+                      <span className="date"><i
+                        className="fa fa-calendar" />
+                        <span>{Moment(c.createdDate).format('DD/MM/yyyy hh:mm:ss')}</span>
+                      </span>
+                    </div>
+                    <div
+                      className="text">{c.text}
+                    </div>
+                    <br/> */}
+                    <div className="comment-box">
+                      <span className="commenter-pic">
+                        <img src="/assets/images/avatar.png" className="img-fluid" />
+                      </span>
+                      <span className="commenter-name">
+                        <a>{c.userName}</a> <span className="comment-time">{Moment(c.createdDate).format('DD/MM/yyyy hh:mm:ss')}</span>
+                      </span>
+                      <p className="comment-txt more">{c.text}</p>
+                      <div className="comment-meta">
+                        <button onClick={this.replyComment.bind(this, c.userName, c.id)} className="comment-reply"><i className="fa fa-reply-all" aria-hidden="true" /> Trả lời</button>
+                      </div>
+                      {c.children.length > 0
+                        && <div className="comment-box replied">
+                          {c.children.map(cr => {
+                            return (
+                              <React.Fragment key={cr.id}>
+                                <span className="commenter-pic">
+                                  <img src="/assets/images/avatar.png" className="img-fluid" />
+                                </span>
+                                <span className="commenter-name">
+                                  <a>{cr.user.userName}</a> <span className="comment-time">{Moment(cr.createdDate).format('DD/MM/yyyy hh:mm:ss')}</span>
+                                </span>
+                                <p className="comment-txt more">{cr.text}</p>
+                              </React.Fragment>
+                            )
+                          })
+                          }
+                        </div>
+                      }
+                    </div>
+                  </React.Fragment>
+                )
+              });
               this.setState({
-                allComments: res.data.resultObj
+                allComments: cmt,
+                listCmt: res.data.resultObj,
+                pageCountForCmt: Math.ceil(res.data.resultObj.length / this.state.perPageForCmt),
               })
             }
           })
@@ -116,6 +181,20 @@ class Product extends Component {
     this.setState({
       currentPage: selectedPage,
       offset: offset
+    },
+      async () => {
+        await this.receivedData()
+      }
+    );
+  };
+
+  handlePageClickForCmt = (e) => {
+    const selectedPage = e.selected;
+    const offsetForCmt = selectedPage * this.state.perPageForCmt;
+
+    this.setState({
+      currentPageForCmt: selectedPage,
+      offsetForCmt: offsetForCmt
     },
       async () => {
         await this.receivedData()
@@ -179,7 +258,7 @@ class Product extends Component {
   onHandleSubmitComment = (event) => {
     event.preventDefault();
     const isAuth = Cookies.get('isAuth');
-    const { comment, commentValid } = this.state;
+    const { comment, commentValid, parentId } = this.state;
     if (comment !== '') {
       if (isAuth === false || isAuth === undefined || isAuth === null) {
         alert("Quý khách phải đăng nhập hệ thống để thực hiện bình luận.")
@@ -188,12 +267,15 @@ class Product extends Component {
           commentApi
             .createComment({
               productId: this.props.match.params.id,
-              text: comment
+              text: comment,
+              parentId: parentId
             })
             .then(res => {
               if (res.data && res.data.isSuccessed) {
+                document.getElementById("AddCmt").placeholder = "Thêm bình luận";
                 this.setState({
-                  comment: ''
+                  comment: '',
+                  parentId: null
                 },
                   async () => {
                     await this.receivedData();
@@ -214,7 +296,7 @@ class Product extends Component {
 
   render() {
     document.title = "Chi tiết sản phẩm";
-    const { product, products, photos, cate, allReviews, allComments, canReviews, commentValid, reviewValid } = this.state;
+    const { product, products, photos, cate, allReviews, allComments, canReviews, commentValid, reviewValid, listCmt } = this.state;
     let hasItem = 0;
     let hasCart = 0;
     const settings = {
@@ -461,7 +543,7 @@ class Product extends Component {
                           <li className="active"><a data-toggle="tab" href="#description">Cấu
                             hình</a></li>
                           <li><a data-toggle="tab" href="#review">Đánh giá</a></li>
-                          <li><a data-toggle="tab" href="#tags">Bình luận</a></li>
+                          {/* <li><a data-toggle="tab" href="#tags">Bình luận</a></li> */}
                         </ul>
                       </div>
                       <div className="col-sm-12 col-md-9 col-lg-9">
@@ -485,7 +567,7 @@ class Product extends Component {
                                             <div className="review-title">
                                               <span className="summary">{userReview.userName}</span><span
                                                 className="date"><i
-                                                  className="fa fa-calendar" /><span>{Moment(userReview.createDate).format('YYYY-MM-DD')}</span></span>
+                                                  className="fa fa-calendar" /><span>{Moment(userReview.createDate).format('DD/MM/yyyy hh:mm:ss')}</span></span>
                                             </div>
                                             <div>
                                               <StarRatings
@@ -554,7 +636,7 @@ class Product extends Component {
                               }
                             </div>
                           </div>
-                          <div id="tags" className="tab-pane">
+                          {/* <div id="tags" className="tab-pane">
                             <div className="product-tab">
                               <div className="product-reviews">
                                 <h4 className="title">Bình luận của khách hàng</h4>
@@ -567,7 +649,7 @@ class Product extends Component {
                                             <span className="summary">{userComment.userName}</span>
                                             <span className="date"><i
                                               className="fa fa-calendar" />
-                                              <span>{Moment(userComment.createDate).format('YYYY-MM-DD')}</span>
+                                              <span>{Moment(userComment.createDate).format('DD/MM/yyyy hh:mm:ss')}</span>
                                             </span>
                                           </div>
                                           <div
@@ -578,6 +660,21 @@ class Product extends Component {
                                     })
                                       : ''
                                     }
+                                    {allComments}
+                                  </div>
+                                  <div style={{ display: 'flex' }}>
+                                    <ReactPaginate
+                                      previousLabel={"<"}
+                                      nextLabel={">"}
+                                      breakLabel={"..."}
+                                      breakClassName={"break-me"}
+                                      pageCount={this.state.pageCountForCmt}
+                                      marginPagesDisplayed={10}
+                                      pageRangeDisplayed={1}
+                                      onPageChange={this.handlePageClickForCmt}
+                                      containerClassName={"pagination"}
+                                      subContainerClassName={"pages pagination"}
+                                      activeClassName={"active"} />
                                   </div>
                                 </div>
                               </div>
@@ -617,12 +714,77 @@ class Product extends Component {
                               </div>
                             </div>
                           </div>
+                         */}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <section className="section featured-product">
+                <div className="row">
+                  <div className="col-xs-12 col-sm-12">
+                    <div className="body-content outer-top-vs" id="top-banner-and-menu">
+                      <div className="container">
+                        <div className="row">
+                          <section className="ProductsByCondition">
+                            <h3 className="section-title">Bình luận của khách hàng</h3>
+                            <hr />
+                            <div className="row">
+                              <div className="col-12">
+                                <div className="comments">
+                                  <div className="comments-details">
+                                    <span className="total-comments comments-sort">{listCmt.length} bình luận</span>
+                                    <span className="dropdown">
+                                    </span>
+                                  </div>
+                                  <div className="comment-box add-comment">
+                                    <span className="commenter-pic">
+                                      <img className="img-fluid" />
+                                    </span>
+                                    <span className="commenter-name">
+                                      <form onSubmit={this.onHandleSubmitComment}>
+                                        <input
+                                          type="text"
+                                          ref={this.addComment}
+                                          id="AddCmt"
+                                          placeholder="Thêm bình luận"
+                                          name='comment'
+                                          value={this.state.comment}
+                                          onChange={this.onHandleChange}
+                                        />
+                                        {commentValid !== '' && <label className="alert-danger">{commentValid}</label>}
+                                        <button type="submit" className="btn btn-default">Bình luận</button>
+                                      </form>
+                                    </span>
+                                  </div>
+                                  {allComments.length > 0 && <React.Fragment> {allComments}</React.Fragment>
+                                  }
+
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+                      </div>
+                      {listCmt.length > 0 && <div style={{ display: 'flex' }}>
+                        <ReactPaginate
+                          previousLabel={"<"}
+                          nextLabel={">"}
+                          breakLabel={"..."}
+                          breakClassName={"break-me"}
+                          pageCount={this.state.pageCountForCmt}
+                          marginPagesDisplayed={5}
+                          pageRangeDisplayed={1}
+                          onPageChange={this.handlePageClickForCmt}
+                          containerClassName={"pagination"}
+                          subContainerClassName={"pages pagination"}
+                          activeClassName={"active"} />
+                      </div>}
+                    </div>
+                  </div>
+                </div>
+              </section>
               <section className="section featured-product">
                 <div className="row">
                   <div className="col-xs-12 col-sm-12">
@@ -638,24 +800,25 @@ class Product extends Component {
                                 <div className="tab-pane active " id="grid-container">
                                   <div className="category-product">
                                     <div className="row">
-                                      {products}
+                                      {products.length > 0 ? products : "Không có sản phẩm nào"}
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{ display: 'flex' }}>
-                                  <ReactPaginate
-                                    previousLabel={"<"}
-                                    nextLabel={">"}
-                                    breakLabel={"..."}
-                                    breakClassName={"break-me"}
-                                    pageCount={this.state.pageCount}
-                                    marginPagesDisplayed={2}
-                                    pageRangeDisplayed={5}
-                                    onPageChange={this.handlePageClick}
-                                    containerClassName={"pagination"}
-                                    subContainerClassName={"pages pagination"}
-                                    activeClassName={"active"} />
-                                </div>
+                                {products.length > 0
+                                  && <div style={{ display: 'flex' }}>
+                                    <ReactPaginate
+                                      previousLabel={"<"}
+                                      nextLabel={">"}
+                                      breakLabel={"..."}
+                                      breakClassName={"break-me"}
+                                      pageCount={this.state.pageCount}
+                                      marginPagesDisplayed={2}
+                                      pageRangeDisplayed={5}
+                                      onPageChange={this.handlePageClick}
+                                      containerClassName={"pagination"}
+                                      subContainerClassName={"pages pagination"}
+                                      activeClassName={"active"} />
+                                  </div>}
                               </div>
                             </div>
                           </section>
@@ -665,6 +828,7 @@ class Product extends Component {
                   </div>
                 </div>
               </section>
+
               <div className="clearfix" />
             </div>
           </div>

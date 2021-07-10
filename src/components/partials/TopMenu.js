@@ -35,9 +35,9 @@ function TopMenu() {
             {isAuth
               ?
               <div className="dropdown">
-                <button onClick={() => { window.location.href = ('thong-tin-tai-khoan') }} className="dropbtn">Xin chào, {name}</button>
+                <button onClick={() => { window.location.href = ('/thong-tin-tai-khoan') }} className="dropbtn">Xin chào, {name}</button>
                 <div className="dropdown-content">
-                  <li onClick={() => { window.location.href = ('thong-tin-tai-khoan') }}>Tài khoản của tôi</li>
+                  <li onClick={() => { window.location.href = ('/thong-tin-tai-khoan') }}>Tài khoản của tôi</li>
                   <li onClick={() => { window.location.href = ('/don-hang') }}>Đơn mua</li>
                   <li onClick={() => { window.location.href = ('/yeu-thich') }}>Yêu thích</li>
                   <li onClick={signOutHandle}>Đăng xuất</li>

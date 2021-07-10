@@ -54,7 +54,7 @@ class ProductCate extends Component {
           title: resCate.resultObj.name,
           rootCate: rootCate,
           rootTitle: rootTitle,
-          pageCount: Math.ceil(postData.length / this.state.perPage),
+          pageCount: Math.ceil(productsData.length / this.state.perPage),
           postData: postData
         })
       }
@@ -184,8 +184,8 @@ class ProductCate extends Component {
                           breakLabel={"..."}
                           breakClassName={"break-me"}
                           pageCount={this.state.pageCount}
-                          marginPagesDisplayed={2}
-                          pageRangeDisplayed={5}
+                          marginPagesDisplayed={5}
+                          pageRangeDisplayed={4}
                           onPageChange={this.handlePageClick}
                           containerClassName={"pagination"}
                           subContainerClassName={"pages pagination"}
@@ -193,7 +193,7 @@ class ProductCate extends Component {
                       </div>
                       {/* /.tab-pane */}
                     </React.Fragment>
-                    : ""
+                    : "Không có sản phẩm nào"
                   }
                 </div>
               </div>

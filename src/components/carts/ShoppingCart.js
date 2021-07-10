@@ -71,7 +71,7 @@ class ShoppingCart extends Component {
 
     products.map((item, index) => {
       if (item.product.id === product.id) {
-        if (value > 0 && item.total < product.inventory && item.total < 2) {
+        if (value > 0 && item.total < product.inventory && item.total < 5) {
           item.total = item.total + value;
         }
         if (value < 0) {
@@ -279,8 +279,9 @@ class ShoppingCart extends Component {
                                         </div>
                                         <input type="text" value={item.total} />
                                       </div>
-                                      {item.total >= 2 || item.total >= item.product.inventory ?
+                                      {item.total === 5 || item.total === item.product.inventory ?
                                         <label className="alert-warning">Số lượng sản phẩm đạt giới hạn được phép mua</label> : null}
+                                      {(item.total > item.product.inventory || item.total > 5) && <label className="alert-warning">Số lượng sản phẩm vượt quá số lượng tồn ở kho</label>}
                                     </td>
                                     <CurrencyFormat value={item.product.price} displayType={'text'}
                                       thousandSeparator={true} prefix={''} renderText={value =>
