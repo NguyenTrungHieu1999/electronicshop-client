@@ -42,7 +42,7 @@ class Home extends Component {
       const cates = await getAllCategory();
       this.setState({
         productTypes: types.resultObj,
-        products: this.shuffleArray(products.resultObj),
+        products: products.resultObj,
         cates: cates.resultObj
       })
     };

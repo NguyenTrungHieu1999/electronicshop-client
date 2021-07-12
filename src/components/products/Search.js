@@ -171,7 +171,7 @@ class Search extends Component {
                           breakLabel={"..."}
                           breakClassName={"break-me"}
                           pageCount={this.state.pageCount}
-                          marginPagesDisplayed={2}
+                          marginPagesDisplayed={4}
                           pageRangeDisplayed={5}
                           onPageChange={this.handlePageClick}
                           containerClassName={"pagination"}

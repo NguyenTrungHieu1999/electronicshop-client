@@ -177,20 +177,22 @@ class ProductCate extends Component {
                           </div>
                         </div>
                       </div>
-                      <div style={{ display: 'flex' }} className="ProductsByCondition">
-                        <ReactPaginate
-                          previousLabel={"<"}
-                          nextLabel={">"}
-                          breakLabel={"..."}
-                          breakClassName={"break-me"}
-                          pageCount={this.state.pageCount}
-                          marginPagesDisplayed={5}
-                          pageRangeDisplayed={4}
-                          onPageChange={this.handlePageClick}
-                          containerClassName={"pagination"}
-                          subContainerClassName={"pages pagination"}
-                          activeClassName={"active"} />
-                      </div>
+                      {postData.length > 0
+                        && <div style={{ display: 'flex' }} className="ProductsByCondition">
+                          <ReactPaginate
+                            previousLabel={"<"}
+                            nextLabel={">"}
+                            breakLabel={"..."}
+                            breakClassName={"break-me"}
+                            pageCount={this.state.pageCount}
+                            marginPagesDisplayed={5}
+                            pageRangeDisplayed={4}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={"pagination"}
+                            subContainerClassName={"pages pagination"}
+                            activeClassName={"active"} />
+                        </div>
+                      }
                       {/* /.tab-pane */}
                     </React.Fragment>
                     : "Không có sản phẩm nào"
