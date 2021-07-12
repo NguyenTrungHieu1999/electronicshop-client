@@ -40,9 +40,10 @@ class Home extends Component {
     if (types && types.isSuccessed) {
       const products = await getAllProduct();
       const cates = await getAllCategory();
+      debugger
       this.setState({
         productTypes: types.resultObj,
-        products: products.resultObj,
+        products: this.shuffleArray(products.resultObj),
         cates: cates.resultObj
       })
     };

@@ -108,7 +108,7 @@ class Product extends Component {
                       <div className="comment-meta">
                         <button onClick={this.replyComment.bind(this, c.userName, c.id)} className="comment-reply"><i className="fa fa-reply-all" aria-hidden="true" /> Trả lời</button>
                       </div>
-                      {c.children.length > 0
+                      {c.children && c.children.length > 0
                         && <div className="comment-box replied">
                           {c.children.map(cr => {
                             return (
@@ -140,11 +140,13 @@ class Product extends Component {
         const slice = resProducts.resultObj.slice(this.state.offset, this.state.offset + this.state.perPage);
 
         let products = slice.map(product => {
-          return (
-            <React.Fragment key={product.id}>
-              <CardItem product={product} classCSS="col-lg-15" />
-            </React.Fragment>
-          )
+          if (product.id !== this.props.match.params.id){
+            return (
+              <React.Fragment key={product.id}>
+                <CardItem product={product} classCSS="col-lg-15" />
+              </React.Fragment>
+            )
+          }
         })
 
         let photos = [];

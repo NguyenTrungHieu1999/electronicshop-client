@@ -135,10 +135,16 @@ class Orders extends Component {
                                   <figure className="itemside-1 mb-3">
                                     <div className="aside-1"><img src={p.productPhoto} className="img-sm-1 border" /></div>
                                     <figcaption className="info-1 align-self-center">
-                                      <a style={{ fontSize: '12px' }}
+                                      {p.inventory > 0 ? <a style={{ fontSize: '12px' }}
                                         href={`/san-pham/${p.alias}&${p.productId}`} className="title-1">
                                         {p.productName}
                                       </a>
+                                        : <a style={{ fontSize: '12px' }}
+                                          className="title-1">
+                                          {p.productName}
+                                        </a>
+                                      }
+
                                       <p style={{ fontSize: '12px' }} className="text-muted">x{p.quantity}</p>
                                       <CurrencyFormat
                                         value={p.price}
