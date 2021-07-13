@@ -41,7 +41,7 @@ export default function ExternalLogins() {
   const responseFacebook = async (res) => {
     console.log(res);
 
-    if (res) {
+    if (res && res.length > 0) {
       const index = res.name.lastIndexOf(" ");
 
       LogInModel = {
@@ -135,7 +135,7 @@ export default function ExternalLogins() {
             style={{ cursor: 'pointer', float: 'right' }}
             onClick={renderProps.onClick}>
             <i className="fa fa-facebook" />
-              Đăng nhập với Facebook
+            Đăng nhập với Facebook
           </a>
         )}
       />

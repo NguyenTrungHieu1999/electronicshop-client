@@ -23,6 +23,7 @@ class Payment extends Component {
         amount={totalPrice / 20000}
         // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
         onSuccess={(details, data) => {
+          details.payer.name.given_name = receiver;
           // OPTIONAL: Call your server to save the transaction
           if (receiver === '' || receiversAddress === '' || phoneNumber === '' || email === '') {
             alert("Quý khách vui lòng điền đầy đủ thông tin.");
@@ -38,6 +39,7 @@ class Payment extends Component {
                     .then(res => console.log(res.data))
                     .catch(err => console.log(err));
                   alert("Thêm đơn hàng thành công!");
+                  alert(details.payer.name.given_name)
                   window.location.href = ('/');
                 }
               })

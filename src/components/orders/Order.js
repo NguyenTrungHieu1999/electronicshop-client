@@ -210,7 +210,7 @@ class Orders extends Component {
                   onClick={() => window.location.href = (`/`)}
                   style={{ display: 'inline', cursor: 'pointer' }} className="active"
                 >Trang chủ</li>
-                <li className="active">Đơn hàng</li>
+                <li className="active">Đơn mua</li>
               </ul>
             </div>
           </div>

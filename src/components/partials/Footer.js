@@ -19,7 +19,7 @@ export default class Footer extends Component {
                   <div className="feature-box">
                     <div className="icon-support" />
                     <div className="content-blocks">
-                      call + 1900 10000
+                      Gọi +(84) 38 4341 437
             </div>
                   </div>
                 </li>
