@@ -41,7 +41,8 @@ export default function ExternalLogins() {
   const responseFacebook = async (res) => {
     console.log(res);
 
-    if (res && res.length > 0) {
+    debugger;
+    if (res.status !=='unknown') {
       const index = res.name.lastIndexOf(" ");
 
       LogInModel = {
@@ -57,6 +58,8 @@ export default function ExternalLogins() {
       console.log(LogInModel);
 
       sendRequest(LogInModel);
+    }else {
+      alert("Đăng nhập thất bại");
     }
   }
 

@@ -266,6 +266,7 @@ class Home extends Component {
                   </form>
 
                 </section>
+              
               </div>
               <React.Fragment>
                 {showDatas.length > 0

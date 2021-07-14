@@ -14,41 +14,40 @@ class Search extends Component {
       perPage: 20,
       currentPage: 0,
       keyword: '',
-      postData: []
+      postData: [],
+      sorted: 0,
+      price: 0,
+      productsData: []
     };
 
     this.handlePageClick = this.handlePageClick.bind(this);
   }
 
+  onHandleChange = (event) => {
+    let target = event.target;
+    let name = target.name;
+    let value = target.value;
+
+    this.setState({
+      [name]: value
+    })
+  }
+
   async receivedData() {
-    const search = this.props.location.search;
-    const keyword = new URLSearchParams(search).get("key");
-    debugger;
+    let { productsData } = this.state;
+    const slice = productsData.slice(this.state.offset, this.state.offset + this.state.perPage);
 
-    try {
-      const resProducts = await searchProduct(keyword);
+    const postData = slice.map(pd =>
+      <CardItem
+        product={pd} key={pd.id}
+        classCSS="col-lg-15"
+      />
+    )
 
-      if (resProducts && resProducts.isSuccessed) {
-        const productsData = resProducts.resultObj;
-
-        const slice = productsData.slice(this.state.offset, this.state.offset + this.state.perPage);
-
-        const postData = slice.map(pd =>
-          <CardItem
-            product={pd} key={pd.id}
-            classCSS="col-lg-15"
-          />
-        )
-
-        this.setState({
-          pageCount: Math.ceil(productsData.length / this.state.perPage),
-          postData: postData,
-          keyword: keyword
-        })
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    this.setState({
+      pageCount: Math.ceil(productsData.length / this.state.perPage),
+      postData: postData
+    })
   }
 
   handlePageClick = (e) => {
@@ -60,12 +59,24 @@ class Search extends Component {
       offset: offset
     },
       async () => {
-        await this.receivedData()
+        this.receivedData()
       }
     );
   };
 
   async componentDidMount() {
+    const search = this.props.location.search;
+    const keyword = new URLSearchParams(search).get("key");
+    const resProducts = await searchProduct(keyword);
+
+    if (resProducts && resProducts.isSuccessed) {
+      const productsData = resProducts.resultObj;
+      this.setState({
+        productsData: productsData,
+        keyword: keyword
+      })
+    }
+
     await this.receivedData();
   }
 

@@ -30,7 +30,7 @@ class Payment extends Component {
             return null;
           } else {
             return paymentApi
-              .checkout({ paid: true, receiver: receiver, receiversAddress: receiversAddress, phoneNumber: phoneNumber, email: email, totalMoney: totalPrice, note: note, orderDetails: orderDetailModel })
+              .checkout({ paid: true, receiver: receiver, receiversAddress: receiversAddress, phoneNumber: phoneNumber, email: email, totalMoney: totalPrice, note: note, paymentMethod: "Paypal", orderDetails: orderDetailModel })
               .then(res => {
                 if (res.data.isSuccessed) {
                   localStorage.removeItem('cartItems');
@@ -38,8 +38,8 @@ class Payment extends Component {
                   cartApi.cleanCarts()
                     .then(res => console.log(res.data))
                     .catch(err => console.log(err));
-                  alert("Thêm đơn hàng thành công!");
-                  alert(details.payer.name.given_name)
+                  console.log(data);
+                  debugger
                   window.location.href = ('/');
                 }
               })

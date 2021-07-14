@@ -159,6 +159,7 @@ class ShoppingCart extends Component {
           email: email,
           totalMoney: totalPrice,
           note: note,
+          paymentMethod: "Khi nhận hàng",
           orderDetails: orderDetailModel
         })
         .then(res => {

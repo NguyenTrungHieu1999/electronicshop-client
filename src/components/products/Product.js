@@ -19,6 +19,7 @@ import "./Product.css";
 import HotDeals from '../partials/leftmenus/HotDeals';
 import paymentApi from '../../api/paymentApi';
 import { validateString } from '../account/ValidationForm';
+import { userIdDecode } from '../../services/DecodeService';
 
 class Product extends Component {
 
@@ -104,10 +105,16 @@ class Product extends Component {
                       <span className="commenter-name">
                         <a>{c.userName}</a> <span className="comment-time">{Moment(c.createdDate).format('DD/MM/yyyy hh:mm:ss')}</span>
                       </span>
-                      <p className="comment-txt more">{c.text}</p>
-                      <div className="comment-meta">
+                      <p className="comment-txt more">{c.status ? c.text : <i>***Bình luận chứa nội dung không phù hợp***</i>}</p>
+                      
+                      {c.status && <div className="comment-meta">
                         <button onClick={this.replyComment.bind(this, c.userName, c.id)} className="comment-reply"><i className="fa fa-reply-all" aria-hidden="true" /> Trả lời</button>
-                      </div>
+                      </div>}
+                      {/* {c.userId === userIdDecode &&
+                        <div className="comment-meta">
+                          <button onClick={this.replyComment.bind(this, c.userName, c.id)} className="comment-reoly"><i className="fa fa-edit" aria-hidden="true" /> Chỉnh sửa</button>
+                        </div>
+                      } */}
                       {c.children && c.children.length > 0
                         && <div className="comment-box replied">
                           {c.children.map(cr => {
@@ -140,7 +147,7 @@ class Product extends Component {
         const slice = resProducts.resultObj.slice(this.state.offset, this.state.offset + this.state.perPage);
 
         let products = slice.map(product => {
-          if (product.id !== this.props.match.params.id){
+          if (product.id !== this.props.match.params.id) {
             return (
               <React.Fragment key={product.id}>
                 <CardItem product={product} classCSS="col-lg-15" />

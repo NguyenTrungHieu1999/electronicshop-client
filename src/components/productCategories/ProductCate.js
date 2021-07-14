@@ -17,13 +17,28 @@ class ProductCate extends Component {
       offset: 0,
       perPage: 20,
       currentPage: 0,
-      postData: []
+      postData: [],
+      sorted: 0,
+      price: 0,
+      productsData: []
     };
 
     this.handlePageClick = this.handlePageClick.bind(this);
   }
 
-  async receivedData() {
+  onHandleChange = (event) => {
+    let target = event.target;
+    let name = target.name;
+    let value = target.value;
+
+    this.setState({
+      [name]: value
+    })
+  }
+
+  onHandleSubmit = async (event) => {
+    event.preventDefault();
+    const { sorted, price } = this.state;
     const id = this.props.match.params.id;
 
     try {
@@ -32,15 +47,6 @@ class ProductCate extends Component {
 
       if (resCate && resCate.isSuccessed && resProducts && resProducts.isSuccessed) {
         const productsData = resProducts.resultObj;
-        const slice = productsData.slice(this.state.offset, this.state.offset + this.state.perPage);
-
-        const postData = slice.map(pd =>
-          <CardItem
-            product={pd} key={pd.id}
-            classCSS="col-lg-15"
-          />
-        )
-
         let rootTitle = "";
         let rootCate = [];
         if (resCate.resultObj.rootId !== null) {
@@ -48,19 +54,63 @@ class ProductCate extends Component {
           rootTitle = resRootCate.resultObj.name;
           rootCate = resRootCate.resultObj;
         }
-
-        debugger;
         this.setState({
           title: resCate.resultObj.name,
           rootCate: rootCate,
           rootTitle: rootTitle,
-          pageCount: Math.ceil(productsData.length / this.state.perPage),
-          postData: postData
+          productsData: productsData
         })
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) { console.log(err) }
+
+    debugger;
+    let data = [...this.state.productsData];
+
+    switch (sorted) {
+      case "1":
+        data = data.sort((a, b) => a.price - b.price);
+        break;
+      case "2":
+        data = data.sort((a, b) => b.price - a.price);
+        break;
     }
+    switch (price) {
+      case "1":
+        data = data.filter(p => p.price < 10000000);
+        break;
+      case "2":
+        data = data.filter(p => p.price >= 10000000 && p.price < 20000000);
+        break;
+      case "3":
+        data = data.filter(p => p.price >= 20000000 && p.price < 40000000);
+        break;
+      case "4":
+        data = data.filter(p => p.price >= 40000000);
+        break;
+    }
+
+    this.setState({
+      productsData: data
+    })
+
+    await this.receivedData();
+  }
+
+  async receivedData() {
+    const { productsData } = this.state;
+    const slice = productsData.slice(this.state.offset, this.state.offset + this.state.perPage);
+
+    const postData = slice.map(pd =>
+      <CardItem
+        product={pd} key={pd.id}
+        classCSS="col-lg-15"
+      />
+    )
+
+    this.setState({
+      pageCount: Math.ceil(productsData.length / this.state.perPage),
+      postData: postData
+    })
   }
 
   handlePageClick = (e) => {
@@ -78,6 +128,30 @@ class ProductCate extends Component {
   };
 
   async componentDidMount() {
+    const id = this.props.match.params.id;
+
+    try {
+      const resCate = await getCategoryById(id);
+      const resProducts = await getProductByCateId(id);
+
+      if (resCate && resCate.isSuccessed && resProducts && resProducts.isSuccessed) {
+        const productsData = resProducts.resultObj;
+        let rootTitle = "";
+        let rootCate = [];
+        if (resCate.resultObj.rootId !== null) {
+          const resRootCate = await getCategoryById(resCate.resultObj.rootId);
+          rootTitle = resRootCate.resultObj.name;
+          rootCate = resRootCate.resultObj;
+        }
+        this.setState({
+          title: resCate.resultObj.name,
+          rootCate: rootCate,
+          rootTitle: rootTitle,
+          productsData: productsData
+        })
+      }
+    } catch (err) { console.log(err) }
+
     await this.receivedData();
   }
 
@@ -168,6 +242,49 @@ class ProductCate extends Component {
               </div>
               <div className="search-result-container ">
                 <div id="myTabContent" className="tab-content category-list">
+                  <section className="section new-arriavls ProductsByCondition">
+                    <form onSubmit={this.onHandleSubmit}>
+                      <div className="col col-sm-6 col-md-6 no-padding">
+                        <div className="lbl-cnt"> <strong style={{ color: 'Highlight' }} className="lbl">Sắp xếp theo: </strong>
+                          <div className="fld inline">
+                            <div className="dropdown dropdown-small dropdown-med dropdown-white inline">
+                              <div className="form-group">
+                                <select
+                                  className="form-control"
+                                  name="sorted"
+                                  value={this.state.sorted}
+                                  onChange={this.onHandleChange}>
+                                  <option value={0}>Mặc định</option>
+                                  <option value={1}>Giá tăng dần</option>
+                                  <option value={2}>Giá giảm dần</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          &emsp;
+                          <div className="fld inline">
+                            <div className="dropdown dropdown-small dropdown-med dropdown-white inline">
+                              <div className="form-group">
+                                <select
+                                  className="form-control"
+                                  name="price"
+                                  value={this.state.price}
+                                  onChange={this.onHandleChange}>
+                                  <option value={0}>Mặc định</option>
+                                  <option value={1}>Nhỏ hơn 10.000.000đ</option>
+                                  <option value={2}>Từ 10.000.000đ đến nhỏ hơn 20.000.000đ</option>
+                                  <option value={3}>Từ 20.000.000đ đến nhỏ hơn 40.000.000đ</option>
+                                  <option value={4}>Lớn hơn 40.000.000đ</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Sắp xếp</button>
+                    </form>
+
+                  </section>
                   {postData.length > 0 ?
                     <React.Fragment>
                       <div className="tab-pane active ProductsByCondition" id="grid-container">
