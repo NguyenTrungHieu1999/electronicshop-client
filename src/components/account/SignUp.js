@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { Register } from '../../api/authApi';
 import { validateEmail, validatePassword, validateUserName, validateConfirmPassword } from './ValidationForm';
 
@@ -15,8 +16,18 @@ class SignUp extends Component {
       emailValid: "",
       userNameValid: "",
       passwordValid: "",
-      confirmPasswordValid: ""
+      confirmPasswordValid: "",
+      recaptchaValid: false
     };
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(value) {
+    if (value !== null) {
+      this.setState({
+        recaptchaValid: true
+      })
+    }
   }
 
   onHandleChange = (event) => {
@@ -31,9 +42,7 @@ class SignUp extends Component {
     if (name === 'email') {
       this.setState({ emailValid: validateEmail(value) });
     } else if (name === 'userName') {
-      this.setState({
-        userNameValid: validateUserName(value)
-      })
+      this.setState({userNameValid: validateUserName(value)})
     } else if (name === 'password') {
       this.setState({ passwordValid: validatePassword(value) });
     } else if (name === 'confirmPassword') {
@@ -44,13 +53,18 @@ class SignUp extends Component {
   onHandleSubmit = async (event) => {
 
     event.preventDefault();
-    const { email, userName, password, confirmPassword, gender, emailValid,
-      userNameValid, passwordValid, confirmPasswordValid } = this.state;
 
-    console.log(this.state)
+    const { email, userName, password, confirmPassword, gender, emailValid,
+      userNameValid, passwordValid, confirmPasswordValid, recaptchaValid } = this.state;
+
+    if (recaptchaValid === false) {
+      alert("Vui lòng xác nhận bạn không phải người máy");
+    }
 
     if (emailValid === "" && userNameValid === "" &&
-      passwordValid === "" && confirmPasswordValid === "") {
+      passwordValid === "" && confirmPasswordValid === "" &&
+      recaptchaValid === true && email !== "" && userName !== "" &&
+      password !== "" && confirmPassword !== "") {
       try {
         let res = await Register({
           userName: userName, password: password,
@@ -61,9 +75,11 @@ class SignUp extends Component {
         } else {
           alert(res.message);
         }
-      } catch (error) {
-        console.log(error);
+      } catch {
+        alert("Đăng ký tài khoản thất bại")
       }
+    }else if (recaptchaValid === true){
+      alert("Nhập dữ liệu hợp lệ")
     }
   }
 
@@ -139,6 +155,11 @@ class SignUp extends Component {
             {confirmPasswordValid !== '' && <label className="alert-danger">{confirmPasswordValid}</label>}
           </div>
 
+          <ReCAPTCHA
+            ref={this.recaptchaRef}
+            sitekey="6LcGp5YbAAAAACiOSL2wWwapqJj5Y0WwIGyddDOK"
+            onChange={this.onChange}
+          />
           <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Đăng ký</button>
 
         </form>

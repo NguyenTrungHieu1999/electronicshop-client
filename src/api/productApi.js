@@ -4,7 +4,7 @@ const apiURL = process.env.REACT_APP_API_URL
 
 const getAllProduct = async () => {
   try {
-    let res = await axios.get(`${apiURL}/api/products`)
+    let res = await axios.get(`${apiURL}/api/products/get-all/client`)
     return res.data;
   } catch (error) {
     console.log(error);
@@ -13,7 +13,8 @@ const getAllProduct = async () => {
 
 const getProductById = async (productId) => {
   try {
-    let res = await axios.get(`${apiURL}/api/products/${productId}`);
+    let res = await axios.get(`${apiURL}/api/Products/${productId}/client`);
+    debugger
     return res.data;
   } catch (error) {
     console.log(error);

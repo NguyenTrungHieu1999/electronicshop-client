@@ -39,9 +39,6 @@ export default function ExternalLogins() {
   }
 
   const responseFacebook = async (res) => {
-    console.log(res);
-
-    debugger;
     if (res.status !=='unknown') {
       const index = res.name.lastIndexOf(" ");
 
@@ -64,13 +61,11 @@ export default function ExternalLogins() {
   }
 
   const sendRequest = (model) => {
-
-    console.log(model);
-    debugger;
     loginservice_json
       .externalLogins(model)
       .then(res => {
         if (res.data.isSuccessed) {
+          debugger
           Cookies.set('token', res.data.resultObj, { expires: 7 });
           Cookies.set('isAuth', 'true', { expires: 7 });
           let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
@@ -112,7 +107,7 @@ export default function ExternalLogins() {
           alert(res.data.message);
         }
       })
-      .catch((err) => alert(err));
+      .catch(err => alert(err));
   }
 
   return (

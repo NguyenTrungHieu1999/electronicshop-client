@@ -91,7 +91,7 @@ function SignIn() {
           } else {
             alert(res.data.message);
           }
-        });
+        }).catch(() => alert("Không kết nối được với máy chủ"));
     }
   }
 

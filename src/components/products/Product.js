@@ -74,6 +74,7 @@ class Product extends Component {
     const id = this.props.match.params.id;
     try {
       const resProduct = await getProductById(id);
+      debugger
       if (resProduct && resProduct.isSuccessed) {
         const resCate = await getCategoryById(resProduct.resultObj.categoryId);
         const resProducts = await getProductByCateId(resCate.resultObj.id);
