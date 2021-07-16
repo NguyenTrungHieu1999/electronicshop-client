@@ -39,6 +39,9 @@ class Product extends Component {
       offsetForCmt: 0,
       perPageForCmt: 5,
       currentPageForCmt: 0,
+      offsetForReview: 0,
+      perPageForReview: 5,
+      currentPageForReview: 0,
       review: '',
       comment: '',
       reviewValid: '',
@@ -54,6 +57,7 @@ class Product extends Component {
     this.changeRating = this.changeRating.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);
     this.handlePageClickForCmt = this.handlePageClickForCmt.bind(this);
+    this.handlePageClickForReview = this.handlePageClickForReview.bind(this);
   }
 
   changeRating(newRating, name) {
@@ -80,6 +84,31 @@ class Product extends Component {
         const resProducts = await getProductByCateId(resCate.resultObj.id);
         const restotalRating = await totalRate(id);
         const resReviewByProduct = await getReviewByProductId(id);
+        const sliceForReview = resReviewByProduct.resultObj.slice(this.state.offsetForReview, this.state.offsetForReview + this.state.perPageForReview);
+        let rv = sliceForReview.map(r => {
+          return (
+            <React.Fragment key={r.id}>
+              <div className="review-title">
+                <span className="summary">{r.userName}</span><span
+                  className="date"><i
+                    className="fa fa-calendar" /><span>{Moment(r.createDate).format('DD/MM/yyyy hh:mm:ss')}</span></span>
+              </div>
+              <div>
+                <StarRatings
+                  rating={r.rateStar}
+                  starRatedColor="yellow"
+                  numberOfStars={5}
+                  starDimension="20px"
+                  starSpacing="5px"
+                  name='rating'
+                />
+              </div>
+              <div
+                className="text">{r.text}</div>
+              <br />
+            </React.Fragment>
+          )
+        });
         commentApi
           .getAllCommentByProductId(id)
           .then(res => {
@@ -88,17 +117,6 @@ class Product extends Component {
               let cmt = sliceForCmt.map(c => {
                 return (
                   <React.Fragment key={c.id}>
-                    {/* <div className="review-title">
-                      <span style={{ color: 'blue' }} className="summary"><strong>{c.userName}</strong></span>
-                      <span className="date"><i
-                        className="fa fa-calendar" />
-                        <span>{Moment(c.createdDate).format('DD/MM/yyyy hh:mm:ss')}</span>
-                      </span>
-                    </div>
-                    <div
-                      className="text">{c.text}
-                    </div>
-                    <br/> */}
                     <div className="comment-box">
                       <span className="commenter-pic">
                         <img src="/assets/images/avatar.png" className="img-fluid" />
@@ -107,7 +125,7 @@ class Product extends Component {
                         <a>{c.userName}</a> <span className="comment-time">{Moment(c.createdDate).format('DD/MM/yyyy hh:mm:ss')}</span>
                       </span>
                       <p className="comment-txt more">{c.status ? c.text : <i>***Bình luận chứa nội dung không phù hợp***</i>}</p>
-                      
+
                       {c.status && <div className="comment-meta">
                         <button onClick={this.replyComment.bind(this, c.userName, c.id)} className="comment-reply"><i className="fa fa-reply-all" aria-hidden="true" /> Trả lời</button>
                       </div>}
@@ -177,6 +195,8 @@ class Product extends Component {
           pageCount: Math.ceil(resProducts.resultObj.length / this.state.perPage),
           ratingForProduct: restotalRating.resultObj,
           allReviews: resReviewByProduct.resultObj,
+          listReview: rv,
+          pageCountForReview: Math.ceil(resReviewByProduct.resultObj.length / this.state.perPageForReview),
         })
       }
     } catch (error) {
@@ -211,6 +231,20 @@ class Product extends Component {
       }
     );
   };
+
+  handlePageClickForReview = (e) => {
+    const selectedPage = e.selected;
+    const offsetForReview = selectedPage * this.state.perPageForReview;
+
+    this.setState({
+      currentPageForReview: selectedPage,
+      offsetForReview: offsetForReview
+    },
+      async () => {
+        await this.receivedData()
+      }
+    );
+  }
 
   onHandleChange = (event) => {
     let target = event.target;
@@ -306,7 +340,7 @@ class Product extends Component {
 
   render() {
     document.title = "Chi tiết sản phẩm";
-    const { product, products, photos, cate, allReviews, allComments, canReviews, commentValid, reviewValid, listCmt } = this.state;
+    const { product, products, photos, cate, allReviews, allComments, canReviews, commentValid, reviewValid, listCmt, listReview } = this.state;
     let hasItem = 0;
     let hasCart = 0;
     const settings = {
@@ -569,34 +603,21 @@ class Product extends Component {
                                 <h4 className="title">Đánh giá của khách hàng</h4>
                                 <div className="reviews">
                                   <div className="review">
-                                    {allReviews
-                                      ?
-                                      allReviews.map((userReview) => {
-                                        return (
-                                          <React.Fragment key={userReview.id}>
-                                            <div className="review-title">
-                                              <span className="summary">{userReview.userName}</span><span
-                                                className="date"><i
-                                                  className="fa fa-calendar" /><span>{Moment(userReview.createDate).format('DD/MM/yyyy hh:mm:ss')}</span></span>
-                                            </div>
-                                            <div>
-                                              <StarRatings
-                                                rating={userReview.rateStar}
-                                                starRatedColor="yellow"
-                                                numberOfStars={5}
-                                                starDimension="20px"
-                                                starSpacing="5px"
-                                                name='rating'
-                                              />
-                                            </div>
-                                            <div
-                                              className="text">{userReview.text}</div>
-                                            <br />
-                                          </React.Fragment>
-                                        )
-                                      })
-                                      : ''
-                                    }
+                                    {allReviews && listReview}
+                                    {allReviews.length > 0 && <div style={{ display: 'flex' }}>
+                                      <ReactPaginate
+                                        previousLabel={"<"}
+                                        nextLabel={">"}
+                                        breakLabel={"..."}
+                                        breakClassName={"break-me"}
+                                        pageCount={this.state.pageCountForReview}
+                                        marginPagesDisplayed={5}
+                                        pageRangeDisplayed={1}
+                                        onPageChange={this.handlePageClickForReview}
+                                        containerClassName={"pagination"}
+                                        subContainerClassName={"pages pagination"}
+                                        activeClassName={"active"} />
+                                    </div>}
                                   </div>
                                 </div>
                               </div>
@@ -646,85 +667,6 @@ class Product extends Component {
                               }
                             </div>
                           </div>
-                          {/* <div id="tags" className="tab-pane">
-                            <div className="product-tab">
-                              <div className="product-reviews">
-                                <h4 className="title">Bình luận của khách hàng</h4>
-                                <div className="reviews">
-                                  <div className="review">
-                                    {allComments ? allComments.map((userComment) => {
-                                      return (
-                                        <React.Fragment key={userComment.id}>
-                                          <div className="review-title">
-                                            <span className="summary">{userComment.userName}</span>
-                                            <span className="date"><i
-                                              className="fa fa-calendar" />
-                                              <span>{Moment(userComment.createDate).format('DD/MM/yyyy hh:mm:ss')}</span>
-                                            </span>
-                                          </div>
-                                          <div
-                                            className="text">{userComment.text}</div>
-                                          <br />
-                                        </React.Fragment>
-                                      )
-                                    })
-                                      : ''
-                                    }
-                                    {allComments}
-                                  </div>
-                                  <div style={{ display: 'flex' }}>
-                                    <ReactPaginate
-                                      previousLabel={"<"}
-                                      nextLabel={">"}
-                                      breakLabel={"..."}
-                                      breakClassName={"break-me"}
-                                      pageCount={this.state.pageCountForCmt}
-                                      marginPagesDisplayed={10}
-                                      pageRangeDisplayed={1}
-                                      onPageChange={this.handlePageClickForCmt}
-                                      containerClassName={"pagination"}
-                                      subContainerClassName={"pages pagination"}
-                                      activeClassName={"active"} />
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="product-add-review">
-                                <h4 className="title">Viết bình luận của bạn.</h4>
-                                <div className="review-form">
-                                  <div className="form-container">
-                                    <form className="cnt-form"
-                                      onSubmit={this.onHandleSubmitComment}>
-                                      <div className="row">
-                                        <div className="col-md-12">
-                                          <div className="form-group">
-                                            <label
-                                              htmlFor="exampleInputReview">Bình
-                                              luận <span
-                                                className="astk">*</span></label>
-                                            <textarea
-                                              className="form-control txt txt-review"
-                                              id="exampleInputReview"
-                                              rows={4}
-                                              name='comment'
-                                              value={this.state.comment}
-                                              onChange={this.onHandleChange}
-                                            />
-                                            {commentValid !== '' && <label className="alert-danger">{commentValid}</label>}
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="action text-right">
-                                        <button
-                                          className="btn btn-primary btn-upper">Gửi
-                                        </button>
-                                      </div>
-                                    </form>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                         */}
                         </div>
                       </div>
                     </div>
