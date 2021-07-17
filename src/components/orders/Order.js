@@ -135,11 +135,29 @@ class Orders extends Component {
                                   <figure className="itemside-1 mb-3">
                                     <div className="aside-1"><img src={p.productPhoto} className="img-sm-1 border" /></div>
                                     <figcaption className="info-1 align-self-center">
-                                      {p.inventory > 0 ? <a style={{ fontSize: '12px' }}
+                                      {p.inventory > 0 ? <a style={
+                                        {
+                                          display: '-webkit-box',
+                                          height: '2.6em',
+                                          lineHeight: '1.3em',
+                                          WebkitLineClamp: 2,
+                                          WebkitBoxOrient: 'vertical',
+                                          overflow: 'hidden',
+                                          textOverflow: 'ellipsis'
+                                        }}
                                         href={`/san-pham/${p.alias}&${p.productId}`} className="title-1">
                                         {p.productName}
                                       </a>
-                                        : <a style={{ fontSize: '12px' }}
+                                        : <a style={
+                                          {
+                                            display: '-webkit-box',
+                                            height: '2.6em',
+                                            lineHeight: '1.3em',
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: 'vertical',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                          }}
                                           className="title-1">
                                           {p.productName}
                                         </a>

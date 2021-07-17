@@ -23,6 +23,54 @@ class Search extends Component {
     this.handlePageClick = this.handlePageClick.bind(this);
   }
 
+  onHandleSubmit = async (event) => {
+    event.preventDefault();
+    const { sorted, price } = this.state;
+    
+    const search = this.props.location.search;
+    const keyword = new URLSearchParams(search).get("key");
+    const resProducts = await searchProduct(keyword);
+
+    if (resProducts && resProducts.isSuccessed) {
+      const productsData = resProducts.resultObj;
+      this.setState({
+        productsData: productsData,
+        keyword: keyword
+      })
+    }
+
+    let data = [...this.state.productsData];
+
+    switch (sorted) {
+      case "1":
+        data = data.sort((a, b) => a.price - b.price);
+        break;
+      case "2":
+        data = data.sort((a, b) => b.price - a.price);
+        break;
+    }
+    switch (price) {
+      case "1":
+        data = data.filter(p => p.price < 10000000);
+        break;
+      case "2":
+        data = data.filter(p => p.price >= 10000000 && p.price < 20000000);
+        break;
+      case "3":
+        data = data.filter(p => p.price >= 20000000 && p.price < 40000000);
+        break;
+      case "4":
+        data = data.filter(p => p.price >= 40000000);
+        break;
+    }
+
+    this.setState({
+      productsData: data
+    })
+
+    await this.receivedData();
+  }
+
   onHandleChange = (event) => {
     let target = event.target;
     let name = target.name;
@@ -106,14 +154,6 @@ class Search extends Component {
                 <div id="category" className="category-carousel hidden-xs">
                   <div className="item">
                     <div className="image"> <img src="/assets/images/banners/cat-banner-1.jpg" alt="" className="img-responsive" /> </div>
-                    {/* <div className="container-fluid">
-                      <div className="caption vertical-top text-left">
-                        <div className="big-text"> Big Sale </div>
-                        <div className="excerpt hidden-sm hidden-md"> Save up to 49% off </div>
-                        <div className="excerpt-normal hidden-sm hidden-md"> Lorem ipsum dolor sit amet, consectetur adipiscing elit </div>
-                        <div className="buy-btn"><a href="#" className="lnk btn btn-primary">Show Now</a></div>
-                      </div>
-                    </div> */}
                   </div>
                 </div>
               </div>
@@ -166,6 +206,49 @@ class Search extends Component {
               </div>
               <div className="search-result-container ">
                 <div id="myTabContent" className="tab-content category-list">
+                  <section className="section new-arriavls ProductsByCondition">
+                    <form onSubmit={this.onHandleSubmit}>
+                      <div className="col col-sm-6 col-md-6 no-padding">
+                        <div className="lbl-cnt"> <strong style={{ color: 'Highlight' }} className="lbl">Sắp xếp theo: </strong>
+                          <div className="fld inline">
+                            <div className="dropdown dropdown-small dropdown-med dropdown-white inline">
+                              <div className="form-group">
+                                <select
+                                  className="form-control"
+                                  name="sorted"
+                                  value={this.state.sorted}
+                                  onChange={this.onHandleChange}>
+                                  <option value={0}>Mặc định</option>
+                                  <option value={1}>Giá tăng dần</option>
+                                  <option value={2}>Giá giảm dần</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          &emsp;
+                          <div className="fld inline">
+                            <div className="dropdown dropdown-small dropdown-med dropdown-white inline">
+                              <div className="form-group">
+                                <select
+                                  className="form-control"
+                                  name="price"
+                                  value={this.state.price}
+                                  onChange={this.onHandleChange}>
+                                  <option value={0}>Mặc định</option>
+                                  <option value={1}>Nhỏ hơn 10.000.000đ</option>
+                                  <option value={2}>Từ 10.000.000đ đến nhỏ hơn 20.000.000đ</option>
+                                  <option value={3}>Từ 20.000.000đ đến nhỏ hơn 40.000.000đ</option>
+                                  <option value={4}>Lớn hơn 40.000.000đ</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Sắp xếp</button>
+                    </form>
+
+                  </section>
                   {postData.length > 0 ?
                     <>
                       <div className="tab-pane active ProductsByCondition" id="grid-container">

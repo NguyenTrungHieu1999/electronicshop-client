@@ -61,9 +61,8 @@ class ProductCate extends Component {
           productsData: productsData
         })
       }
-    } catch (err) { console.log(err) }
+    } catch { }
 
-    debugger;
     let data = [...this.state.productsData];
 
     switch (sorted) {
@@ -285,6 +284,7 @@ class ProductCate extends Component {
                     </form>
 
                   </section>
+                  
                   {postData.length > 0 ?
                     <React.Fragment>
                       <div className="tab-pane active ProductsByCondition" id="grid-container">
