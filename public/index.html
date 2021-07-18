@@ -56,8 +56,27 @@
     <div id="fb-root"></div>
     
     <!-- Your Plugin chat code -->
-    <div id="fb-customer-chat" class="fb-customerchat">
-    </div>
+    <div id="fb-customer-chat" class="fb-customerchat"></div>
+    <script>
+      var chatbox = document.getElementById('fb-customer-chat');
+      chatbox.setAttribute("page_id", "102090245499672");
+      chatbox.setAttribute("attribution", "biz_inbox");
+
+      window.fbAsyncInit = function () {
+        FB.init({
+          xfbml: true,
+          version: 'v11.0'
+        });
+      };
+
+      (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script>
     <!-- <a id="button"></a> -->
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
@@ -73,26 +92,6 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 <!-- JavaScripts placed at the end of the document so the pages load faster -->
-<script>
-  var chatbox = document.getElementById('fb-customer-chat');
-  chatbox.setAttribute("page_id", "102090245499672");
-  chatbox.setAttribute("attribution", "biz_inbox");
-
-  window.fbAsyncInit = function () {
-    FB.init({
-      xfbml: true,
-      version: 'v11.0'
-    });
-  };
-
-  (function (d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-</script>
 <script src="%PUBLIC_URL%/assets/js/jquery-1.11.1.min.js"></script>
 <script src="%PUBLIC_URL%/assets/js/bootstrap.min.js"></script>
 <script src="%PUBLIC_URL%/assets/js/bootstrap-hover-dropdown.min.js"></script>
