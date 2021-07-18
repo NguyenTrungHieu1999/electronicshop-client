@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReCAPTCHA from 'react-google-recaptcha';
 import { Register } from '../../api/authApi';
 import { validateEmail, validatePassword, validateUserName, validateConfirmPassword } from './ValidationForm';
 
@@ -154,12 +153,6 @@ class SignUp extends Component {
             />
             {confirmPasswordValid !== '' && <label className="alert-danger">{confirmPasswordValid}</label>}
           </div>
-
-          <ReCAPTCHA
-            ref={this.recaptchaRef}
-            sitekey="6LcGp5YbAAAAACiOSL2wWwapqJj5Y0WwIGyddDOK"
-            onChange={this.onChange}
-          />
           <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Đăng ký</button>
 
         </form>
