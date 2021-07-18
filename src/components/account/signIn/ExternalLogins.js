@@ -39,7 +39,7 @@ export default function ExternalLogins() {
   }
 
   const responseFacebook = async (res) => {
-    if (res.status !=='unknown') {
+    if (res.status !== 'unknown') {
       const index = res.name.lastIndexOf(" ");
 
       LogInModel = {
@@ -55,12 +55,12 @@ export default function ExternalLogins() {
       console.log(LogInModel);
 
       sendRequest(LogInModel);
-    }else {
+    } else {
       alert("Đăng nhập thất bại");
     }
   }
 
-  const sendRequest = (model) => {
+  const sendRequest = async (model) => {
     loginservice_json
       .externalLogins(model)
       .then(res => {
