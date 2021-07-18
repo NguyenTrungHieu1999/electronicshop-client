@@ -37,9 +37,8 @@ function App() {
             <Route path='/don-hang' component={Orders}/>
           </Switch>
           <MessengerCustomerChat
-            pageId="<PAGE_ID>"
-            appId="<APP_ID>"
-            htmlRef="<REF_STRING>"
+            pageId="102090245499672"
+            appId="136478068166816"
           />,
           <Footer />
         </Router>
