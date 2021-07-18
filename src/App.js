@@ -16,6 +16,7 @@ import Profile from './components/users/Profile';
 import Contact from './components/contact/Contact';
 import Orders from './components/orders/Order';
 import React from 'react';
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 function App() {
   return (
     <React.Fragment>
@@ -39,6 +40,10 @@ function App() {
           <Footer />
         </Router>
       </ContextProvider>
+      <MessengerCustomerChat
+        pageId="136478068166816"
+        appId="102090245499672"
+      />
     </React.Fragment>
   );
 }

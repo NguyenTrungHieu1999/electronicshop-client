@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 class Contact extends Component {
   render() {
     document.title = "Liên hệ";
@@ -45,6 +45,10 @@ class Contact extends Component {
             </div>
           </div>
         </div>
+        <MessengerCustomerChat
+          pageId="136478068166816"
+          appId="102090245499672"
+        />
       </React.Fragment>
     );
   }

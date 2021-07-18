@@ -9,7 +9,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import cartApi from '../../api/cartApi';
 import Cookies from 'js-cookie';
-import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 class Home extends Component {
 
@@ -164,7 +163,6 @@ class Home extends Component {
         }
       ]
     };
-    
     if (Cookies.get('isAuth')) {
       cartApi.getAllCarts().then(res => {
         let totalPrice = 0;
@@ -182,7 +180,6 @@ class Home extends Component {
         localStorage.setItem('totalPrice', totalPrice);
       });
     }
-
     return (
       <div>
         <div className="body-content outer-top-vs" id="top-banner-and-menu">
@@ -271,7 +268,7 @@ class Home extends Component {
                   </form>
 
                 </section>
-              
+
               </div>
               <React.Fragment>
                 {showDatas.length > 0
@@ -308,10 +305,6 @@ class Home extends Component {
             </div>
           </div>
         </div>
-        <MessengerCustomerChat
-          pageId="102090245499672"
-          appId="136478068166816"
-        />
       </div>
     );
   }
