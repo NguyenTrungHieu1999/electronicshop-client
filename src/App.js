@@ -15,10 +15,10 @@ import FavoriteProduct from './components/favorites/FavoriteProduct';
 import Profile from './components/users/Profile';
 import Contact from './components/contact/Contact';
 import Orders from './components/orders/Order';
-import MessengerCustomerChat from 'react-messenger-customer-chat';
+import React from 'react';
 function App() {
   return (
-    <>
+    <React.Fragment>
       <ContextProvider>
         <Router>
           <Header />
@@ -36,15 +36,10 @@ function App() {
             <Route path='/lien-he' component={Contact} />
             <Route path='/don-hang' component={Orders}/>
           </Switch>
-          <MessengerCustomerChat
-            pageId="102090245499672"
-            appId="136478068166816"
-          />,
           <Footer />
         </Router>
       </ContextProvider>
-    </>
-
+    </React.Fragment>
   );
 }
 

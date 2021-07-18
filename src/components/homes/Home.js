@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import cartApi from '../../api/cartApi';
 import Cookies from 'js-cookie';
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 class Home extends Component {
 
@@ -306,6 +307,10 @@ class Home extends Component {
               </React.Fragment>
             </div>
           </div>
+          <MessengerCustomerChat
+            pageId="102090245499672"
+            appId="136478068166816"
+          />
         </div>
       </div>
     );
