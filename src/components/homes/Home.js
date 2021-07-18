@@ -307,11 +307,11 @@ class Home extends Component {
               </React.Fragment>
             </div>
           </div>
-          <MessengerCustomerChat
-            pageId="102090245499672"
-            appId="136478068166816"
-          />
         </div>
+        <MessengerCustomerChat
+          pageId="102090245499672"
+          appId="136478068166816"
+        />
       </div>
     );
   }
