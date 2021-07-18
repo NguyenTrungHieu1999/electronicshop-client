@@ -15,6 +15,7 @@ import FavoriteProduct from './components/favorites/FavoriteProduct';
 import Profile from './components/users/Profile';
 import Contact from './components/contact/Contact';
 import Orders from './components/orders/Order';
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 function App() {
   return (
     <>
@@ -35,6 +36,11 @@ function App() {
             <Route path='/lien-he' component={Contact} />
             <Route path='/don-hang' component={Orders}/>
           </Switch>
+          <MessengerCustomerChat
+            pageId="<PAGE_ID>"
+            appId="<APP_ID>"
+            htmlRef="<REF_STRING>"
+          />,
           <Footer />
         </Router>
       </ContextProvider>
