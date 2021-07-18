@@ -16,17 +16,7 @@ class SignUp extends Component {
       userNameValid: "",
       passwordValid: "",
       confirmPasswordValid: "",
-      recaptchaValid: false
     };
-    this.onChange = this.onChange.bind(this);
-  }
-
-  onChange(value) {
-    if (value !== null) {
-      this.setState({
-        recaptchaValid: true
-      })
-    }
   }
 
   onHandleChange = (event) => {
@@ -41,7 +31,7 @@ class SignUp extends Component {
     if (name === 'email') {
       this.setState({ emailValid: validateEmail(value) });
     } else if (name === 'userName') {
-      this.setState({userNameValid: validateUserName(value)})
+      this.setState({ userNameValid: validateUserName(value) })
     } else if (name === 'password') {
       this.setState({ passwordValid: validatePassword(value) });
     } else if (name === 'confirmPassword') {
@@ -54,15 +44,10 @@ class SignUp extends Component {
     event.preventDefault();
 
     const { email, userName, password, confirmPassword, gender, emailValid,
-      userNameValid, passwordValid, confirmPasswordValid, recaptchaValid } = this.state;
-
-    if (recaptchaValid === false) {
-      alert("Vui lòng xác nhận bạn không phải người máy");
-    }
+      userNameValid, passwordValid, confirmPasswordValid } = this.state;
 
     if (emailValid === "" && userNameValid === "" &&
-      passwordValid === "" && confirmPasswordValid === "" &&
-      recaptchaValid === true && email !== "" && userName !== "" &&
+      passwordValid === "" && confirmPasswordValid === "" && email !== "" && userName !== "" &&
       password !== "" && confirmPassword !== "") {
       try {
         let res = await Register({
@@ -77,7 +62,7 @@ class SignUp extends Component {
       } catch {
         alert("Đăng ký tài khoản thất bại")
       }
-    }else if (recaptchaValid === true){
+    } else {
       alert("Nhập dữ liệu hợp lệ")
     }
   }
