@@ -113,7 +113,7 @@ export default function ExternalLogins() {
   return (
     <div>
       <GoogleLogin
-        clientId="499129772453-mqgkumi1dogjb9dbvl1k57u434n1slob.apps.googleusercontent.com"
+        clientId="499129772453-12j5m0stg9u83tflhrddkhrghpapp1i8.apps.googleusercontent.com"
         buttonText="Login"
         onSuccess={responseGoogle}
       // onFailure={responseGoogle}
