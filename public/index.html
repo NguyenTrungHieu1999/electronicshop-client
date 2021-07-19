@@ -53,6 +53,7 @@
   </head>
   <body className="cnt-home">
     <a id="button"></a>
+    <br/>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
     </div>
@@ -101,24 +102,6 @@
       $('html, body').animate({ scrollTop: 0 }, '300');
     });
 </script>
-<!-- <script>
-  window.fbAsyncInit = function () {
-    FB.init({
-      appId: '136478068166816',
-      xfbml: true,
-      version: 'v9.0'
-    });
-    FB.AppEvents.logPageView();
-  };
-
-  (function (d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) { return; }
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-</script> -->
 <script>
   var chatbox = document.getElementById('fb-customer-chat');
   chatbox.setAttribute("page_id", "100225912358943");
@@ -136,6 +119,24 @@
     if (d.getElementById(id)) return;
     js = d.createElement(s); js.id = id;
     js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+<script>
+  window.fbAsyncInit = function () {
+    FB.init({
+      appId: '136478068166816',
+      xfbml: true,
+      version: 'v9.0'
+    });
+    FB.AppEvents.logPageView();
+  };
+
+  (function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) { return; }
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 </script>
