@@ -38,6 +38,10 @@ export default function ExternalLogins() {
 
   }
 
+  const responseGoogleFailure = (res) => {
+    alert("Không thể kết nối với máy chủ");
+  }
+
   const responseFacebook = async (res) => {
     if (res.status !== 'unknown') {
       const index = res.name.lastIndexOf(" ");
@@ -107,16 +111,16 @@ export default function ExternalLogins() {
           alert(res.data.message);
         }
       })
-      .catch(err => alert(err));
+      .catch(() => alert("Không kết nối được với máy chủ"));
   }
 
   return (
-    <div>
+    <React.Fragment>
       <GoogleLogin
         clientId="499129772453-12j5m0stg9u83tflhrddkhrghpapp1i8.apps.googleusercontent.com"
         buttonText="Login"
         onSuccess={responseGoogle}
-      // onFailure={responseGoogle}
+        onFailure={responseGoogleFailure}
       >
         <span> Đăng nhập với Google</span>
       </GoogleLogin>
@@ -127,7 +131,6 @@ export default function ExternalLogins() {
         fields="name,email,picture"
         callback={responseFacebook}
         render={renderProps => (
-          // eslint-disable-next-line jsx-a11y/anchor-is-valid
           <a
             className="facebook-sign-in"
             style={{ cursor: 'pointer', float: 'right' }}
@@ -137,6 +140,6 @@ export default function ExternalLogins() {
           </a>
         )}
       />
-    </div>
+    </React.Fragment>
   );
 };

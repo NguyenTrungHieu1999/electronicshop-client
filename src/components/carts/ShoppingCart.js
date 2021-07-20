@@ -344,7 +344,7 @@ class ShoppingCart extends Component {
                       <div className="container">
                         <div className="sign-in-page">
                           <div className="row">
-                            <div className="col-md-6 col-sm-6 sign-in">
+                            <div className="col-md-8 col-sm-12 sign-in">
                               <h4>Thêm địa chỉ giao hàng</h4>
                               <p>Xin chào, Chào mừng quý khách đến với Electronic Shop.</p>
                               <p>Quý khách vui lòng nhập đầy đủ thông tin bên dưới để tiến hành thanh toán!</p>
@@ -418,7 +418,7 @@ class ShoppingCart extends Component {
                                 </div>
                               </form>
                             </div>
-                            <div className="col-md-6 col-sm-12 cart-shopping-total">
+                            <div className="col-md-4 col-sm-12 cart-shopping-total">
                               <table className="table">
                                 <thead>
                                   <tr>
