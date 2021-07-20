@@ -312,7 +312,7 @@ class ProductCate extends Component {
                       }
                       {/* /.tab-pane */}
                     </React.Fragment>
-                    : "Không có sản phẩm nào"
+                    : "Không có sản phẩm"
                   }
                 </div>
               </div>

@@ -30,6 +30,10 @@ export default function Slider1() {
         <img src="/assets/images/sliders/03.jpg">
         </img>
       </div>
+      <div>
+        <img src="/assets/images/sliders/04.jpg">
+        </img>
+      </div>
     </Slider>
   );
 }
