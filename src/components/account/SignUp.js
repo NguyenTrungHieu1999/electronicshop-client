@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { Register } from '../../api/authApi';
 import { validateEmail, validatePassword, validateUserName, validateConfirmPassword } from './ValidationForm';
 
@@ -16,7 +17,20 @@ class SignUp extends Component {
       userNameValid: "",
       passwordValid: "",
       confirmPasswordValid: "",
+      captcha: false
     };
+  }
+
+  callBack = () => {
+    console.log("something inside re captcha");
+  }
+
+  verifyBack = (response) => {
+    if (response) {
+      this.setState({
+        captcha: true,
+      });
+    }
   }
 
   onHandleChange = (event) => {
@@ -44,11 +58,11 @@ class SignUp extends Component {
     event.preventDefault();
 
     const { email, userName, password, confirmPassword, gender, emailValid,
-      userNameValid, passwordValid, confirmPasswordValid } = this.state;
+      userNameValid, passwordValid, confirmPasswordValid, captcha } = this.state;
 
     if (emailValid === "" && userNameValid === "" &&
       passwordValid === "" && confirmPasswordValid === "" && email !== "" && userName !== "" &&
-      password !== "" && confirmPassword !== "") {
+      password !== "" && confirmPassword !== "" && captcha === true) {
       try {
         let res = await Register({
           userName: userName, password: password,
@@ -62,8 +76,11 @@ class SignUp extends Component {
       } catch {
         alert("Đăng ký tài khoản thất bại")
       }
-    } else {
-      alert("Nhập dữ liệu hợp lệ")
+    } else if(captcha === false){
+      alert("Xác nhận bạn không phải là người máy")
+    }
+    else{
+      alert("Hãy nhập dữ liệu hợp lệ")
     }
   }
 
@@ -137,6 +154,16 @@ class SignUp extends Component {
               onChange={this.onHandleChange}
             />
             {confirmPasswordValid !== '' && <label className="alert-danger">{confirmPasswordValid}</label>}
+          </div>
+          <div className="form-group">
+            <div className="invisible-recaptch">
+              <ReCAPTCHA
+                sitekey="6LcGp5YbAAAAACiOSL2wWwapqJj5Y0WwIGyddDOK"
+                render="explicit"
+                onloadCallback={this.callBack}
+                onChange={this.verifyBack}
+              />
+            </div>
           </div>
           <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Đăng ký</button>
 
