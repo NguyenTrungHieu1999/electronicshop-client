@@ -45,11 +45,10 @@ export default class Footer extends Component {
             <div className="footer-bottom">
               <div className="container">
                 <div className="row">
-                  <div className="col-xs-12 col-sm-6 col-md-3">
+                  <div className="col-xs-12 col-sm-6 col-md-4">
                     <div className="address-block">
-                      {/* /.module-heading */}
                       <div className="module-body">
-                        <ul className="toggle-footer" style={{}}>
+                        <ul className="toggle-footer">
                           <li className="media">
                             <div className="pull-left"> <span className="icon fa-stack fa-lg"> <i className="fa fa-map-marker fa-stack-1x fa-inverse" /> </span> </div>
                             <div className="media-body">
@@ -64,57 +63,48 @@ export default class Footer extends Component {
                           </li>
                           <li className="media">
                             <div className="pull-left"> <span className="icon fa-stack fa-lg"> <i className="fa fa-envelope fa-stack-1x fa-inverse" /> </span> </div>
-                            <div className="media-body"> <span><a href="#">ElectronicShop0123@gmail.com</a></span> </div>
+                            <div className="media-body"> <span><a>ElectronicShop0123@gmail.com</a></span> </div>
                           </li>
                         </ul>
                       </div>
                     </div>
-                    {/* /.module-body */}
                   </div>
-                  {/* /.col */}
                   <div className="col-xs-12 col-sm-6 col-md-3">
                     <div className="module-heading">
-                      <h4 className="module-title">Dịch vụ</h4>
+                      <h4 style={{color: 'ButtonHighlight'}} className="module-title">Hỗ trợ khách hàng</h4>
                     </div>
-                    {/* /.module-heading */}
                     <div className="module-body">
-                      <ul className="list-unstyled">
-                        <li className="first"><a href="#" title="Contact us">Tài khoản</a></li>
-                        <li><a href="#" title="About us">Lược sử</a></li>
-                        <li><a href="#" title="faq">Câu hỏi thường gặp</a></li>
-                        <li className="last"><a href="#" title="Where is my order?">Hỗ trợ</a></li>
+                      <ul>
+                        <li className="first"><a >Trung tâm bảo hành</a></li>
+                        <li><a>Thanh toán và giao hàng</a></li>
+                        <li><a>Dịch vụ sửa chữa và bảo trì</a></li>
+                        <li className="last"><a>Doanh nghiệp thân thiết</a></li>
                       </ul>
                     </div>
-                    {/* /.module-body */}
                   </div>
-                  {/* /.col */}
                   <div className="col-xs-12 col-sm-6 col-md-3">
                     <div className="module-heading">
-                      <h4 className="module-title">Công ty</h4>
+                      <h4 style={{ color: 'ButtonHighlight' }} className="module-title">Công ty</h4>
                     </div>
-                    {/* /.module-heading */}
                     <div className="module-body">
-                      <ul className="list-unstyled">
-                        <li className="first"><a title="Your Account" href="#">Tài khoản</a></li>
-                        <li><a title="Addresses" href="#">Thông tin</a></li>
-                        <li><a title="Information" href="#">Dịch vụ khách hàng</a></li>
+                      <ul>
+                        <li className="first"><a >Tài khoản</a></li>
+                        <li><a>Hỏi đáp</a></li>
+                        <li><a >Tin công nghệ</a></li>
+                        <li><a >Tuyển dụng</a></li>
                       </ul>
                     </div>
-                    {/* /.module-body */}
                   </div>
-                  {/* /.col */}
-                  <div className="col-xs-12 col-sm-6 col-md-3">
+                  <div className="col-xs-12 col-sm-6 col-md-2">
                     <div className="module-heading">
-                      <h4 className="module-title">Thông tin</h4>
+                      <h4 style={{ color: 'ButtonHighlight' }} className="module-title">Thông tin</h4>
                     </div>
-                    {/* /.module-heading */}
                     <div className="module-body">
-                      <ul className="list-unstyled">
-                        <li className="first"><a href="#" title="About">Thông tin</a></li>
+                      <ul>
+                        <li className="first"><a>Giới thiệu</a></li>
                         <li className=" last"><a href="/lien-he" title="Suppliers">Liên hệ</a></li>
                       </ul>
                     </div>
-                    {/* /.module-body */}
                   </div>
                 </div>
               </div>
@@ -123,27 +113,31 @@ export default class Footer extends Component {
               <div className="container">
                 <div className="col-xs-12 col-sm-4 no-padding social">
                   <ul className="link">
-                    <li className="fb pull-left"><a target="_blank" rel="nofollow" href="#" title="Facebook" /></li>
-                    <li className="tw pull-left"><a target="_blank" rel="nofollow" href="#" title="Twitter" /></li>
-                    <li className="googleplus pull-left"><a target="_blank" rel="nofollow" href="#" title="GooglePlus" /></li>
-                    <li className="youtube pull-left"><a target="_blank" rel="nofollow" href="#" title="Youtube" /></li>
+                    <li className="fb pull-left"><a target="_blank" rel="nofollow" title="Facebook" /></li>
+                    <li className="tw pull-left"><a target="_blank" rel="nofollow" title="Twitter" /></li>
+                    <li className="googleplus pull-left"><a target="_blank" rel="nofollow" title="GooglePlus" /></li>
+                    <li className="rss pull-left"><a target="_blank" rel="nofollow"  title="RSS" /></li>
+                    <li className="pintrest pull-left"><a target="_blank" rel="nofollow" title="PInterest" /></li>
+                    <li className="linkedin pull-left"><a target="_blank" rel="nofollow"  title="Linkedin" /></li>
+                    <li className="youtube pull-left"><a target="_blank" rel="nofollow"  title="Youtube" /></li>
                   </ul>
                 </div>
-                <div className="col-xs-12 col-sm-4 no-padding copyright"> </div>
+                <div className="col-xs-12 col-sm-4 no-padding copyright"></div>
                 <div className="col-xs-12 col-sm-4 no-padding">
                   <div className="clearfix payment-methods">
                     <ul>
-                      <li><img src="/assets/images/payments/1.png" alt="" /></li>
-                      <li><img src="/assets/images/payments/2.png" alt="" /></li>
-                      <li><img src="/assets/images/payments/3.png" alt="" /></li>
-                      <li><img src="/assets/images/payments/4.png" alt="" /></li>
-                      <li><img src="/assets/images/payments/5.png" alt="" /></li>
+                      <li><img src="assets/images/payments/1.png" alt="" /></li>
+                      <li><img src="assets/images/payments/2.png" alt="" /></li>
+                      <li><img src="assets/images/payments/3.png" alt="" /></li>
+                      <li><img src="assets/images/payments/4.png" alt="" /></li>
+                      <li><img src="assets/images/payments/5.png" alt="" /></li>
                     </ul>
                   </div>
                   {/* /.payment-methods */}
                 </div>
               </div>
             </div>
+
           </footer>
           {/* ============================================================= FOOTER : END============================================================= */}
         </div>

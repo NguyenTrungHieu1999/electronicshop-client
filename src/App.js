@@ -34,7 +34,7 @@ function App() {
             <Route path ='/yeu-thich' component={FavoriteProduct}/>
             <Route path='/thong-tin-tai-khoan' component={Profile}/>
             <Route path='/lien-he' component={Contact} />
-            <Route path='/don-hang' component={Orders}/>
+            <Route path='/don-mua' component={Orders}/>
           </Switch>
           <Footer />
         </Router>

@@ -9,6 +9,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import cartApi from '../../api/cartApi';
 import Cookies from 'js-cookie';
+import 'antd/dist/antd.css';
+import { Skeleton } from 'antd';
 
 class Home extends Component {
 
@@ -299,7 +301,7 @@ class Home extends Component {
                       )
                     })}
                   </React.Fragment>
-                  : "Không có sản phẩm"
+                  : <Skeleton active />
                 }
               </React.Fragment>
             </div>
