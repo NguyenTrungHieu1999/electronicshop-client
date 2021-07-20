@@ -21,10 +21,6 @@ class SignUp extends Component {
     };
   }
 
-  callBack = () => {
-    console.log("something inside re captcha");
-  }
-
   verifyBack = (response) => {
     if (response) {
       this.setState({
@@ -59,6 +55,8 @@ class SignUp extends Component {
 
     const { email, userName, password, confirmPassword, gender, emailValid,
       userNameValid, passwordValid, confirmPasswordValid, captcha } = this.state;
+
+    debugger;
 
     if (emailValid === "" && userNameValid === "" &&
       passwordValid === "" && confirmPasswordValid === "" && email !== "" && userName !== "" &&
@@ -160,7 +158,6 @@ class SignUp extends Component {
               <ReCAPTCHA
                 sitekey="6LcGp5YbAAAAACiOSL2wWwapqJj5Y0WwIGyddDOK"
                 render="explicit"
-                onloadCallback={this.callBack}
                 onChange={this.verifyBack}
               />
             </div>
