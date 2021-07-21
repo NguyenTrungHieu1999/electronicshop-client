@@ -22,7 +22,8 @@ class ShoppingCart extends Component {
       receiverValid: '',
       receiversAddressValid: '',
       phoneNumberValid: '',
-      emailValid: ''
+      emailValid: '',
+      isOutTock: false
     }
   }
 
@@ -57,6 +58,11 @@ class ShoppingCart extends Component {
             product: product,
             total: item.total
           });
+        }
+        if(product.inventory <= 0){
+          this.setState({
+            isOutTock: true
+          })
         }
       });
     })
@@ -282,7 +288,7 @@ class ShoppingCart extends Component {
                                       </div>
                                       {item.total === 5 || item.total === item.product.inventory ?
                                         <label className="alert-warning">Số lượng sản phẩm đạt giới hạn được phép mua</label> : null}
-                                      {(item.total > item.product.inventory || item.total > 5) && <label className="alert-warning">Số lượng sản phẩm vượt quá số lượng tồn ở kho</label>}
+                                      {(item.total > item.product.inventory || item.total > 5 || item.product.inventory <= 0) && <label className="alert-warning">Số lượng sản phẩm vượt quá số lượng tồn ở kho</label>}
                                     </td>
                                     <CurrencyFormat value={item.product.price} displayType={'text'}
                                       thousandSeparator={true} prefix={''} renderText={value =>
@@ -435,7 +441,7 @@ class ShoppingCart extends Component {
                                 <tbody>
                                   <tr>
                                     <td>
-                                      {receiver === '' || receiversAddress === '' || phoneNumber === '' || email === '' || receiverValid !== '' || receiversAddressValid !== '' || phoneNumberValid !== '' || emailValid !== ''
+                                      {receiver === '' || receiversAddress === '' || phoneNumber === '' || email === '' || receiverValid !== '' || receiversAddressValid !== '' || phoneNumberValid !== '' || emailValid !== '' || this.state.isOutTock === true
                                         ? ""
                                         :
                                         <React.Fragment>

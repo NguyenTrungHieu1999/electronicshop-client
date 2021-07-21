@@ -459,7 +459,7 @@ class Product extends Component {
                               </div>
                               <div className="pull-left">
                                 <div className="stock-box">
-                                  <span className="value">{product.inventory >= 0 ? `Còn ${product.inventory} sản phẩm` : "Hết hàng"}</span>
+                                  <span className="value">{product.inventory > 0 ? `Còn ${product.inventory} sản phẩm` : "Hết hàng"}</span>
                                 </div>
                               </div>
                             </div>
@@ -530,50 +530,59 @@ class Product extends Component {
                         <div className="quantity-container info-container">
                           <div className="row">
                             <div className="add-btn">
-                              <ContextApi.Consumer>
-                                {({ cartItems, addToCart }) => (
-                                  <React.Fragment>
-                                    {cartItems.length === 0
-                                      ? <button
-                                        id="addToCart"
-                                        className="btn btn-primary"
-                                        onClick={() => addToCart(product, 1)}
-                                      >
-                                        <i className="fa fa-shopping-cart inner-right-vs" />
-                                        Thêm giỏ hàng
-                                      </button>
-                                      : <React.Fragment>
-                                        {cartItems.map(item => {
-                                          if (item.product.id === product.id) {
-                                            hasCart = 1;
-                                            return (
-                                              <button
-                                                id="addToCart"
-                                                className="btn btn-info"
-                                                disabled={true}
-                                                key={item.id}
-                                              >
-                                                <i className="fa fa-shopping-cart inner-right-vs" />
-                                                Đã thêm vào giỏ hàng
-                                              </button>
-                                            )
+                              {product && product.inventory <= 0 
+                                ? <button
+                                  id="addToCart"
+                                  className="btn btn-secondary"
+                                >
+                                  Đã hết hàng
+                                </button>
+                                :
+                                <ContextApi.Consumer>
+                                  {({ cartItems, addToCart }) => (
+                                    <React.Fragment>
+                                      {cartItems.length === 0
+                                        ? <button
+                                          id="addToCart"
+                                          className="btn btn-primary"
+                                          onClick={() => addToCart(product, 1)}
+                                        >
+                                          <i className="fa fa-shopping-cart inner-right-vs" />
+                                          Thêm giỏ hàng
+                                        </button>
+                                        : <React.Fragment>
+                                          {cartItems.map(item => {
+                                            if (item.product.id === product.id) {
+                                              hasCart = 1;
+                                              return (
+                                                <button
+                                                  id="addToCart"
+                                                  className="btn btn-info"
+                                                  disabled={true}
+                                                  key={item.id}
+                                                >
+                                                  <i className="fa fa-shopping-cart inner-right-vs" />
+                                                  Đã thêm vào giỏ hàng
+                                                </button>
+                                              )
+                                            }
                                           }
-                                        }
-                                        )}
-                                        {hasCart === 0 &&
-                                          <button
-                                            id="addToCart"
-                                            className="btn btn-primary"
-                                            onClick={() => addToCart(product, 1)}
-                                          >
-                                            <i className="fa fa-shopping-cart inner-right-vs" />
-                                            Thêm giỏ hàng
-                                          </button>}
-                                      </React.Fragment>
-                                    }
-                                  </React.Fragment>
-                                )}
-                              </ContextApi.Consumer>
+                                          )}
+                                          {hasCart === 0 &&
+                                            <button
+                                              id="addToCart"
+                                              className="btn btn-primary"
+                                              onClick={() => addToCart(product, 1)}
+                                            >
+                                              <i className="fa fa-shopping-cart inner-right-vs" />
+                                              Thêm giỏ hàng
+                                            </button>}
+                                        </React.Fragment>
+                                      }
+                                    </React.Fragment>
+                                  )}
+                                </ContextApi.Consumer>
+                              }
                             </div>
                           </div>
                         </div>

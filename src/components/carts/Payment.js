@@ -38,12 +38,13 @@ class Payment extends Component {
                   cartApi.cleanCarts()
                     .then(res => console.log(res.data))
                     .catch(err => console.log(err));
-                  console.log(data);
-                  debugger
+                  alert("Thêm đơn hàng thành công!");
                   window.location.href = ('/');
+                } else {
+                  alert(res.data.message);
                 }
               })
-              .catch(error => console.log(error))
+              .catch(error => console.log(error));
           }
         }
         }

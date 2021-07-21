@@ -106,6 +106,8 @@ export class ContextProvider extends Component {
 
     if (quantity >= 100) {
       alert("Bạn chỉ được mua với số lượng từ 100 sản phẩm");
+    } else if(product.inventory <= 0){
+      alert("Sản phẩm đã hết hàng")
     } else {
       if (cartItems) {
         cartItems.map((item, index) => {
