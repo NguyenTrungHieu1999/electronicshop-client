@@ -253,7 +253,7 @@ class ShoppingCart extends Component {
                                       <div className="row">
                                         <div className="col-sm-12">
                                           <div className="reviews">
-                                            (còn {item.product.inventory} sản phẩm)
+                                            ({item.product.inventory > 0 ? `Còn ${item.product.inventory} sản phẩm` : "Hết hàng"})
                                           </div>
                                         </div>
                                       </div>

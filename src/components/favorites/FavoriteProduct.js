@@ -56,7 +56,7 @@ class FavoriteProduct extends Component {
                                       <div className="row">
                                         <div className="col-sm-12">
                                           <div className="reviews">
-                                            (còn {item.inventory} sản phẩm)
+                                            ({item.inventory > 0 ? `Còn ${item.inventory} sản phẩm` : "Hết hàng"})
                                           </div>
                                         </div>
                                       </div>
