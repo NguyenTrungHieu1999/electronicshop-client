@@ -48,8 +48,8 @@ function SignIn() {
         .login({ email: signInModel.email, password: signInModel.password, rememberMe: signInModel.rememberMe })
         .then(res => {
           if (res.data.isSuccessed) {
-            Cookies.set('token', res.data.resultObj, { expires: 7 });
-            Cookies.set('isAuth', 'true', { expires: 7 });
+            Cookies.set('token', res.data.resultObj, { expires: 3 });
+            Cookies.set('isAuth', 'true', { expires: 3 });
             // cartModels.length && cartApi.createCarts({ cartModels: cartModels });
             let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
         

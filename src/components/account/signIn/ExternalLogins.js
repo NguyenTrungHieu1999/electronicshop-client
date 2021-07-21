@@ -70,8 +70,8 @@ export default function ExternalLogins() {
       .then(res => {
         if (res.data.isSuccessed) {
           debugger
-          Cookies.set('token', res.data.resultObj, { expires: 7 });
-          Cookies.set('isAuth', 'true', { expires: 7 });
+          Cookies.set('token', res.data.resultObj, { expires: 3 });
+          Cookies.set('isAuth', 'true', { expires: 3 });
           let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
           let cartModels = []
           cartItems.length && cartItems.map(item => {
