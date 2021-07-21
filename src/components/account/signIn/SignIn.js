@@ -5,6 +5,8 @@ import ExternalLogins from './ExternalLogins';
 import { useHistory } from 'react-router-dom';
 import loginservice_json from '../../../api/loginservice_json';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SignIn() {
 
@@ -52,7 +54,7 @@ function SignIn() {
             Cookies.set('isAuth', 'true', { expires: 3 });
             // cartModels.length && cartApi.createCarts({ cartModels: cartModels });
             let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        
+
             let cartModels = [];
             cartItems.length && cartItems.map(item => {
               cartModels.push({
@@ -66,11 +68,11 @@ function SignIn() {
               'Content-Type': 'application/json;charset=UTF-8',
               'Authorization': `Bearer ${Cookies.get('token')}`
             }
-            if(cartModels.length > 0) {
+            if (cartModels.length > 0) {
               axios.post('https://localhost:5001/api/Carts/create', { cartModels }, { headers })
-                .then(response => { window.location.href = '/'; console.log(response.data)})
+                .then(response => { window.location.href = '/'; console.log(response.data) })
                 .catch(err => console.log(err));
-            }else{
+            } else {
               axios.get('https://localhost:5001/api/Carts/getAll', { headers }).then(res1 => {
                 let totalPrice = 0;
                 let cartItems1 = [];
@@ -89,9 +91,25 @@ function SignIn() {
               });
             }
           } else {
-            alert(res.data.message);
+            toast.warn(res.data.message, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           }
-        }).catch(() => alert("Không kết nối được với máy chủ"));
+        }).catch(() => toast.warn('Không thể kết nối với máy chủ', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }));
     }
   }
 
@@ -137,8 +155,8 @@ function SignIn() {
               checked={signInModel.rememberMe}
               onChange={onHandleChange}
             />
-              Ghi nhớ!
-            </label>
+            Ghi nhớ!
+          </label>
           <li
             style={{ listStyleType: 'none', cursor: 'pointer' }}
             className="forgot-password pull-right"
@@ -147,6 +165,7 @@ function SignIn() {
         </div>
         <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Đăng nhập</button>
       </form>
+      <ToastContainer />
     </div>
   );
 }

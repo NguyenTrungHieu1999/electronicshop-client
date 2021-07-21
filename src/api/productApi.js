@@ -14,7 +14,6 @@ const getAllProduct = async () => {
 const getProductById = async (productId) => {
   try {
     let res = await axios.get(`${apiURL}/api/Products/${productId}/client`);
-    debugger
     return res.data;
   } catch (error) {
     console.log(error);

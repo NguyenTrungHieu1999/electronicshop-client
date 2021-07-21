@@ -4,7 +4,8 @@ import GoogleLogin from "react-google-login";
 import Cookies from 'js-cookie';
 import loginservice_json from '../../../api/loginservice_json';
 import axios from 'axios';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ExternalLogins() {
 
@@ -39,7 +40,15 @@ export default function ExternalLogins() {
   }
 
   const responseGoogleFailure = (res) => {
-    alert("Không thể kết nối với máy chủ");
+    toast.warn("Không thể kết nối với máy chủ", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   }
 
   const responseFacebook = async (res) => {
@@ -60,7 +69,15 @@ export default function ExternalLogins() {
 
       sendRequest(LogInModel);
     } else {
-      alert("Đăng nhập thất bại");
+      toast.warn("Đăng nhập thất bại", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
@@ -108,10 +125,26 @@ export default function ExternalLogins() {
             });
           }
         } else {
-          alert(res.data.message);
+          toast.warn(res.data.message, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       })
-      .catch(() => alert("Không kết nối được với máy chủ"));
+      .catch(() => toast.warn("Không kết nối được với máy chủ", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      }));
   }
 
   return (
@@ -140,6 +173,7 @@ export default function ExternalLogins() {
           </a>
         )}
       />
+      <ToastContainer />
     </React.Fragment>
   );
 };

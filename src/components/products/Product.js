@@ -6,7 +6,7 @@ import StarRatings from 'react-star-ratings';
 import { getCategoryById } from '../../api/categoryApi';
 import CardItem from '../homes/CardItem';
 import ReactPaginate from 'react-paginate';
-import { getReviewByProductId, totalRate } from '../../api/reviewApi';
+import { editReviewById, getReviewByProductId, totalRate } from '../../api/reviewApi';
 import createReviewApi from '../../api/createReviewApi';
 import Cookies from 'js-cookie';
 import Moment from 'moment';
@@ -20,6 +20,8 @@ import HotDeals from '../partials/leftmenus/HotDeals';
 import paymentApi from '../../api/paymentApi';
 import { validateString } from '../account/ValidationForm';
 import { userIdDecode } from '../../services/DecodeService';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class Product extends Component {
 
@@ -31,6 +33,7 @@ class Product extends Component {
       photos: [],
       cate: [],
       ratingForReview: 0,
+      ratingForEditReview: 0,
       ratingForProduct: 0,
       ratingForUser: 0,
       offset: 0,
@@ -43,6 +46,7 @@ class Product extends Component {
       perPageForReview: 5,
       currentPageForReview: 0,
       review: '',
+      editReview: '',
       comment: '',
       reviewValid: '',
       commentValid: '',
@@ -55,6 +59,7 @@ class Product extends Component {
 
     this.addComment = React.createRef();
     this.changeRating = this.changeRating.bind(this);
+    this.changeRatingForEdit = this.changeRatingForEdit.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);
     this.handlePageClickForCmt = this.handlePageClickForCmt.bind(this);
     this.handlePageClickForReview = this.handlePageClickForReview.bind(this);
@@ -64,6 +69,12 @@ class Product extends Component {
     this.setState({
       ratingForReview: newRating
     });
+  }
+
+  changeRatingForEdit(newRating, name) {
+    this.setState({
+      ratingForEditReview: newRating
+    })
   }
 
   replyComment(userName, id) {
@@ -76,39 +87,15 @@ class Product extends Component {
 
   async receivedData() {
     const id = this.props.match.params.id;
+    const userId = parseInt(userIdDecode);
     try {
       const resProduct = await getProductById(id);
-      debugger
       if (resProduct && resProduct.isSuccessed) {
         const resCate = await getCategoryById(resProduct.resultObj.categoryId);
         const resProducts = await getProductByCateId(resCate.resultObj.id);
         const restotalRating = await totalRate(id);
         const resReviewByProduct = await getReviewByProductId(id);
         const sliceForReview = resReviewByProduct.resultObj.slice(this.state.offsetForReview, this.state.offsetForReview + this.state.perPageForReview);
-        let rv = sliceForReview.map(r => {
-          return (
-            <React.Fragment key={r.id}>
-              <div className="review-title">
-                <span className="summary">{r.userName}</span><span
-                  className="date"><i
-                    className="fa fa-calendar" /><span>{Moment(r.createDate).format('DD/MM/yyyy hh:mm:ss')}</span></span>
-              </div>
-              <div>
-                <StarRatings
-                  rating={r.rateStar}
-                  starRatedColor="yellow"
-                  numberOfStars={5}
-                  starDimension="20px"
-                  starSpacing="5px"
-                  name='rating'
-                />
-              </div>
-              <div
-                className="text">{r.text}</div>
-              <br />
-            </React.Fragment>
-          )
-        });
         commentApi
           .getAllCommentByProductId(id)
           .then(res => {
@@ -187,6 +174,31 @@ class Product extends Component {
               canReviews: res.data.resultObj
             })
           }).catch(err => console.log(err));
+        let rv = sliceForReview.map(r => {
+          return (
+            <React.Fragment key={r.id}>
+              <div className="review-title">
+                <span className="summary">{r.userName}</span>
+                <span className="date"><i className="fa fa-calendar" />
+                  <span>{Moment(r.createDate).format('DD/MM/yyyy hh:mm:ss')}</span>
+                </span>
+              </div>
+              <div>
+                <StarRatings
+                  rating={r.rateStar}
+                  starRatedColor="yellow"
+                  numberOfStars={5}
+                  starDimension="20px"
+                  starSpacing="5px"
+                  name='rating'
+                />
+              </div>
+              <div
+                className="text">{r.text}</div>
+              <br />
+            </React.Fragment>
+          )
+        });
         this.setState({
           product: resProduct.resultObj,
           products: products,
@@ -250,8 +262,6 @@ class Product extends Component {
     let target = event.target;
     let name = target.name;
     let value = target.value;
-
-    console.log("Value: ", value);
     this.setState({
       [name]: value
     });
@@ -267,9 +277,18 @@ class Product extends Component {
     event.preventDefault();
     const isAuth = Cookies.get('isAuth');
     const { ratingForReview, review, reviewValid } = this.state;
+    debugger;
     if (review !== '') {
       if (isAuth === false || isAuth === undefined || isAuth === null) {
-        alert("Quý khách phải đăng nhập hệ thống để thực hiện đánh giá.");
+        toast.warn('Quý khách phải đăng nhập hệ thống để thực hiện đánh giá.', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
         if (ratingForReview !== 0 && reviewValid === "") {
           createReviewApi
@@ -291,6 +310,65 @@ class Product extends Component {
               }
             })
         } else {
+          toast.warn('Quý khách cần chọn số sao đánh giá', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      }
+    } else {
+      toast.warn('Quý khách vui lòng nhập đánh giá.', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }
+
+  onHandleEditReview = async (reviewId) => {
+    const isAuth = Cookies.get('isAuth');
+    const { ratingForEditReview, editReview } = this.state;
+    debugger;
+    if (editReview !== '') {
+      if (isAuth === false || isAuth === undefined || isAuth === null) {
+        toast.warn('Quý khách phải đăng nhập hệ thống để thực hiện cập nhật đánh giá.', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        if (ratingForEditReview !== 0) {
+          try {
+            const resEdit = await editReviewById({ id: reviewId, text: editReview, rateStar: ratingForEditReview });
+            debugger;
+            if (resEdit.isSuccessed) {
+              this.setState({
+                ratingForEditReview: 0,
+                editReview: '',
+              },
+                async () => {
+                  await this.receivedData();
+                });
+            } else {
+              alert(resEdit.message);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
           alert("Quý khách cần chọn số sao đánh giá")
         }
       }
@@ -305,7 +383,15 @@ class Product extends Component {
     const { comment, commentValid, parentId } = this.state;
     if (comment !== '') {
       if (isAuth === false || isAuth === undefined || isAuth === null) {
-        alert("Quý khách phải đăng nhập hệ thống để thực hiện bình luận.")
+        toast.warn('Quý khách phải đăng nhập hệ thống để thực hiện bình luận.', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
         if (commentValid === "") {
           commentApi
@@ -330,7 +416,15 @@ class Product extends Component {
         }
       }
     } else {
-      alert("Quý khách vui lòng nhập bình luận.");
+      toast.warn('Quý khách vui lòng nhập bình luận.', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
@@ -377,6 +471,7 @@ class Product extends Component {
     };
     return (
       <React.Fragment>
+        <ToastContainer />
         <div className="breadcrumb">
           <div className="container">
             <div className="breadcrumb-inner">
@@ -530,7 +625,7 @@ class Product extends Component {
                         <div className="quantity-container info-container">
                           <div className="row">
                             <div className="add-btn">
-                              {product && product.inventory <= 0 
+                              {product && product.inventory <= 0
                                 ? <button
                                   id="addToCart"
                                   className="btn btn-secondary"
@@ -630,49 +725,51 @@ class Product extends Component {
                                   </div>
                                 </div>
                               </div>
-                              {canReviews === true && <div className="product-add-review">
-                                <h4 className="title">Viết đánh giá của bạn.</h4>
-                                <div className="review-table">
-                                  <div className="table-responsive">
-                                    <StarRatings
-                                      rating={this.state.ratingForReview}
-                                      starRatedColor="yellow"
-                                      changeRating={this.changeRating}
-                                      numberOfStars={5}
-                                      name='ratingForReview'
-                                    />
+                              {canReviews === true &&
+                                <div className="product-add-review">
+                                  <h4 className="title">Viết đánh giá của bạn.</h4>
+                                  <div className="review-table">
+                                    <div className="table-responsive">
+                                      <StarRatings
+                                        rating={this.state.ratingForReview}
+                                        starRatedColor="yellow"
+                                        changeRating={this.changeRating}
+                                        numberOfStars={5}
+                                        name='ratingForReview'
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="review-form">
-                                  <div className="form-container">
-                                    <form className="cnt-form"
-                                      onSubmit={this.onHandleSubmitReview}>
-                                      <div className="row">
-                                        <div className="col-md-12">
-                                          <div className="form-group">
-                                            <label
-                                              htmlFor="exampleInputReview">Đánh
-                                              giá <span
-                                                className="astk">*</span></label>
-                                            <textarea
-                                              required
-                                              className="form-control txt txt-review"
-                                              name='review'
-                                              rows={4}
-                                              value={this.state.review}
-                                              onChange={this.onHandleChange}
-                                            />
-                                            {reviewValid !== '' && <label className="alert-danger">{reviewValid}</label>}
+                                  <div className="review-form">
+                                    <div className="form-container">
+                                      <form className="cnt-form"
+                                        onSubmit={this.onHandleSubmitReview}>
+                                        <div className="row">
+                                          <div className="col-md-12">
+                                            <div className="form-group">
+                                              <label
+                                                htmlFor="exampleInputReview">Đánh
+                                                giá <span
+                                                  className="astk">*</span></label>
+                                              <textarea
+                                                required
+                                                className="form-control txt txt-review"
+                                                name='review'
+                                                rows={4}
+                                                value={this.state.review}
+                                                onChange={this.onHandleChange}
+                                              />
+                                              {reviewValid !== '' && <label className="alert-danger">{reviewValid}</label>}
+                                            </div>
                                           </div>
                                         </div>
-                                      </div>
-                                      <div className="action text-right">
-                                        <button type='submit' className="btn btn-primary btn-upper">Gửi</button>
-                                      </div>
-                                    </form>
+                                        <div className="action text-right">
+                                          <button type='submit' className="btn btn-primary btn-upper">Gửi</button>
+                                        </div>
+                                      </form>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
+
                               }
                             </div>
                           </div>
@@ -721,7 +818,6 @@ class Product extends Component {
                                   </div>
                                   {allComments.length > 0 && <React.Fragment> {allComments}</React.Fragment>
                                   }
-
                                 </div>
                               </div>
                             </div>
@@ -789,7 +885,6 @@ class Product extends Component {
                   </div>
                 </div>
               </section>
-
               <div className="clearfix" />
             </div>
           </div>

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { forgotPassWord } from '../../api/authApi';
 import { validateEmail } from '../account/ValidationForm';
 import './Style.css';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 class ForgotPassword extends Component {
 
   constructor(props) {
@@ -34,7 +35,15 @@ class ForgotPassword extends Component {
       const res = await forgotPassWord(email);
 
       if (res && res.isSuccessed) {
-        alert("Email đã được gửi đi.");
+        toast.info('Một email đã được gửi đến quý khách', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     }
   }
@@ -44,6 +53,7 @@ class ForgotPassword extends Component {
     const { email, emailValid } = this.state;
     return (
       <>
+        <ToastContainer />
         <div className="container mb-2 mt-5" style={{ margin: '5%' }}>
           <div className="row justify-content-center">
             <div className="col-lg-12 col-md-12">

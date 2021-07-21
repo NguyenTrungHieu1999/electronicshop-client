@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { Register } from '../../api/authApi';
 import { validateEmail, validatePassword, validateUserName, validateConfirmPassword } from './ValidationForm';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class SignUp extends Component {
 
@@ -67,18 +69,59 @@ class SignUp extends Component {
           confirmPassword: confirmPassword, email: email, gender: gender
         });
         if (res.isSuccessed) {
-          alert("Đăng ký tài khoản thành công!");
+          toast.info('Đăng ký tài khoản thành công', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         } else {
-          alert(res.message);
+          toast.warn(res.message, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       } catch {
-        alert("Đăng ký tài khoản thất bại")
+        toast.warn("Đăng ký tài khoản thất bại", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
       }
-    } else if(captcha === false){
-      alert("Xác nhận bạn không phải là người máy")
+    } else if (captcha === false) {
+      toast.warn("Xác nhận bạn không phải là người máy", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
-    else{
-      alert("Hãy nhập dữ liệu hợp lệ")
+    else {
+      toast.warn("Hãy nhập dữ liệu hợp lệ", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
@@ -163,10 +206,9 @@ class SignUp extends Component {
             </div>
           </div>
           <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Đăng ký</button>
-
         </form>
+        <ToastContainer />
       </div>
-
     );
   }
 }

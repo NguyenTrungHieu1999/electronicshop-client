@@ -2,6 +2,8 @@ import Cookies from "js-cookie";
 import React, { Component } from "react";
 import cartApi from "../api/cartApi";
 import favoriteApi from "../api/favoriteApi";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const ContextApi = React.createContext();
 
@@ -66,9 +68,25 @@ export class ContextProvider extends Component {
       favoriteApi.addRemoveFavorites({ productId: product.id })
         .then(res => {
           if (res.data.resultObj === 10) {
-            alert("Thêm yêu thích thành công");
+            toast.info('Đã thêm sản phẩm vào mục yêu thích', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           } else {
-            alert("Xóa yêu thích thành công");
+            toast.warn('Đã xóa sản phẩm khỏi mục yêu thích', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           }
           debugger;
           favoriteApi.getAllFavorites()
@@ -79,7 +97,15 @@ export class ContextProvider extends Component {
             }).catch(err1 => console.log(err1));
         }).catch(err => console.log(err));
     } else {
-      window.location.href = '/tai-khoan';
+      toast.warn('Hãy đăng nhập vào hệ thống để thêm sản phẩm vào mục yêu thích', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
@@ -105,9 +131,25 @@ export class ContextProvider extends Component {
     })
 
     if (quantity >= 100) {
-      alert("Bạn chỉ được mua với số lượng từ 100 sản phẩm");
-    } else if(product.inventory <= 0){
-      alert("Sản phẩm đã hết hàng")
+      toast.warn('Bạn chỉ được mua với số lượng từ 100 sản phẩm', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (product.inventory <= 0) {
+      toast.warn('Sản phẩm đã hết hàng', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } else {
       if (cartItems) {
         cartItems.map((item, index) => {
@@ -116,13 +158,30 @@ export class ContextProvider extends Component {
             if (item.total < 5 && item.total < product.inventory) {
               item.total += total;
               cartItems[index] = item;
+              toast.info('Đã thêm một sản phẩm vào giỏ hàng', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              })
               if (isAuth) {
                 cartApi.updateCarts({ productId: product.id, total: 1 })
                   .then(res => console.log(res.data.resultObj))
                   .catch(err => console.log(err));
               }
             } else {
-              alert("Sản phẩm đã đạt giới hạn")
+              toast.warn('Sản phẩm đã đạt giới hạn được phép mua', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
             }
           }
         });
@@ -136,6 +195,15 @@ export class ContextProvider extends Component {
             product: product,
             total: total
           });
+          toast.info('Đã thêm một sản phẩm vào giỏ hàng', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
         }
 
         cartItems.map(item => {
@@ -161,18 +229,25 @@ export class ContextProvider extends Component {
       cartItems.map((item, index) => {
         if (item.product.id === product.id) {
           item.total -= total;
-
           if (item.total < 1) {
             cartItems.splice(index, 1);
           } else {
             cartItems[index] = item;
           }
-
           if (isAuth) {
             cartApi.updateCarts({ productId: product.id, total: -1 })
               .then(res => console.log(res.data.resultObj))
               .catch(err => console.log(err));
           }
+          toast.warn('Đã xóa một sản phẩm khỏi giỏ hàng', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       });
       cartItems.map(item => {
@@ -202,6 +277,15 @@ export class ContextProvider extends Component {
               .catch(err => console.log(err));
           }
           cartItems.splice(index, 1);
+          toast.warn('Đã xóa sản phẩm khỏi giỏ hàng', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       });
       cartItems.map(item => {
@@ -226,6 +310,15 @@ export class ContextProvider extends Component {
         .then(res => console.log(res.data))
         .catch(err => console.log(err));
     }
+    toast.warn('Đã xóa tất cả sản phẩm khỏi giỏ hàng', {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     this.setState({
       cartItems: [],
       totalPrice: 0
@@ -249,6 +342,7 @@ export class ContextProvider extends Component {
         }}
       >
         {this.props.children}
+        <ToastContainer />
       </ContextApi.Provider>
     );
   }

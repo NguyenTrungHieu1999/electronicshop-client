@@ -8,6 +8,8 @@ import CurrencyFormat from 'react-currency-format';
 import cartApi from '../../api/cartApi';
 import { validateString } from '../account/ValidationForm';
 import Cookies from 'js-cookie';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 class Header extends Component {
@@ -44,7 +46,15 @@ class Header extends Component {
     var str = this.state.keyword;
     if (!this.isEmptyOrSpaces(str)) {
       if (this.state.keywordValid !== '') {
-        alert(this.state.keywordValid);
+        toast.warn(this.state.keywordValid, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
         window.location.href = (`/tim-kiem?key=${str}`);
       }
@@ -71,6 +81,7 @@ class Header extends Component {
 
     return (
       <header className="header-style-1">
+        <ToastContainer />
         {/* ============================================== TOP MENU ============================================== */}
         <TopMenu />
         {/* ============================================== TOP MENU : END ============================================== */}

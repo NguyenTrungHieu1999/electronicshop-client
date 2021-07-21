@@ -7,6 +7,8 @@ import paymentApi from '../../api/paymentApi';
 import { getAllProduct } from "../../api/productApi";
 import cartApi from '../../api/cartApi';
 import Cookies from 'js-cookie';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class ShoppingCart extends Component {
 
@@ -154,7 +156,15 @@ class ShoppingCart extends Component {
       })
     }
     if (receiver === '' || receiversAddress === '' || phoneNumber === '' || email === '') {
-      alert("Quý khách vui lòng điền đầy đủ thông tin.");
+      toast.warn("Quý khách vui lòng điền đầy đủ thông tin.", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } else {
       paymentApi
         .checkout({
@@ -175,10 +185,26 @@ class ShoppingCart extends Component {
             cartApi.cleanCarts()
               .then(res => console.log(res.data))
               .catch(err => console.log(err));
-            alert("Thêm đơn hàng thành công!");
+            toast.info('Thêm đơn hàng thành công!', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
             window.location.href = ('/');
           } else {
-            alert(res.data.message);
+            toast.warn(res.data.message, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           }
         })
         .catch(error => console.log(error));
@@ -200,6 +226,7 @@ class ShoppingCart extends Component {
     } = this.state;
     return (
       <React.Fragment>
+        <ToastContainer />
         <div className="breadcrumb">
           <div className="container">
             <div className="breadcrumb-inner">

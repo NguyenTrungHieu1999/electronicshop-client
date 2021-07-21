@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { resetPassword } from '../../api/authApi';
 import { validateConfirmPassword, validatePassword } from '../account/ValidationForm';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 class ResetPassword extends Component {
 
@@ -42,11 +45,27 @@ class ResetPassword extends Component {
 
         const res = await resetPassword({ token, email, password, confirmPassword });
         if (res && res.isSuccessed) {
-          alert(res.resultObj);
+          toast.info(res.resultObj, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
           window.location.href = ('/');
         }
         else {
-          alert(res.message);
+          toast.warn(res.message, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
 
       } catch (error) {
@@ -59,6 +78,7 @@ class ResetPassword extends Component {
     const { password, confirmPassword, passwordValid, confirmPasswordValid } = this.state;
     return (
       <>
+        <ToastContainer />
         <div className="container padding-bottom-3x mb-2 mt-5" style={{ margin: '5%' }}>
           <div className="row justify-content-center">
             <div className="col-lg-12 col-md-12">

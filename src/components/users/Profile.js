@@ -5,6 +5,10 @@ import { validatePhoneNumber } from '../account/ValidationForm';
 import { roleDecode, userIdDecode } from '../../services/DecodeService';
 import { forgotPassWord } from '../../api/authApi';
 import moment from 'moment';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +36,15 @@ class Profile extends Component {
     if (email !== '') {
       const res = await forgotPassWord(email);
       if (res && res.isSuccessed) {
-        alert("Email đã được gửi đi, quý khách vui lòng kiểm tra Email đã đăng ký tại website và làm theo hướng dẫn.");
+        toast.info('Email đã được gửi đi, quý khách vui lòng kiểm tra Email đã đăng ký tại website và làm theo hướng dẫn.', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     }
   }
@@ -114,10 +126,26 @@ class Profile extends Component {
         .updateProfile({ id, firstMiddleName, lastName, birthday, gender, phoneNumber, address, status: 0, userInRole: userInRole })
         .then(res => {
           if (res.data && res.data.isSuccessed) {
-            alert(res.data.resultObj);
+            toast.info(res.data.resultObj, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
             this.loadData();
           } else {
-            alert(res.data.message);
+            toast.warn(res.data.message, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           }
         });
     }
@@ -128,6 +156,7 @@ class Profile extends Component {
     const { email, userName, gender, firstMiddleName, lastName, address, birthday, phoneNumber, phoneNumberValid } = this.state;
     return (
       <React.Fragment>
+        <ToastContainer />
         {Cookies.get('isAuth') === 'true'
           ? <React.Fragment>
             <div className="breadcrumb">
