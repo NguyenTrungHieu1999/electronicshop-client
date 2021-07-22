@@ -21,8 +21,16 @@ class CardItem extends Component {
     })
   }
 
-  render() {
+  async componentDidUpdate(prevProps, prevState) {
+    if(prevProps.product !== this.props.product || prevState.rating !== this.state.rating){
+      const restotalRating = await totalRate(this.props.product.id);
+      this.setState({
+        rating: restotalRating.resultObj
+      })
+    }
+  }
 
+  render() {
     const { product, classCSS } = this.props;
 
     return (

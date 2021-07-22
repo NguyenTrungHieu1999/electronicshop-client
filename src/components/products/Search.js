@@ -66,8 +66,14 @@ class Search extends Component {
     }
 
     this.setState({
-      productsData: data
-    })
+      productsData: data,
+      offset: 0,
+      currentPage: 0
+    },
+      async () => {
+        this.receivedData()
+      }
+    )
 
     await this.receivedData();
   }

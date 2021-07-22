@@ -90,7 +90,9 @@ class ProductCate extends Component {
     }
 
     this.setState({
-      productsData: data
+      productsData: data,
+      offset: 0,
+      currentPage: 0
     })
 
     await this.receivedData();
