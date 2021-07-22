@@ -14,7 +14,8 @@ class Orders extends Component {
       perPage: 2,
       currentPage: 0,
       postData: [],
-      showData: []
+      showData: [],
+      isShow: false
     };
     this.handlePageClick = this.handlePageClick.bind(this);
   }
@@ -203,7 +204,8 @@ class Orders extends Component {
               {
                 pageCount: Math.ceil(postData.length / this.state.perPage),
                 postData: postData,
-                showData: showData
+                showData: showData,
+                isShow: true
               });
           }
         }
@@ -217,7 +219,7 @@ class Orders extends Component {
 
   render() {
     document.title = "Đơn mua";
-    const { showData } = this.state;
+    const { showData, isShow } = this.state;
     return (
       <React.Fragment>
         <div className="breadcrumb">
@@ -234,23 +236,28 @@ class Orders extends Component {
           </div>
         </div>
         <div className="body-content outer-top-xs">
-          <div className="container">
-            {showData.length > 0 ? showData : <h2>Không tồn tại đơn hàng nào</h2>}
-          </div>
-          {showData.length > 0 && <div style={{ display: 'flex' }} className="ProductsByCondition">
-            <ReactPaginate
-              previousLabel={"<"}
-              nextLabel={">"}
-              breakLabel={"..."}
-              breakClassName={"break-me"}
-              pageCount={this.state.pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={1}
-              onPageChange={this.handlePageClick}
-              containerClassName={"pagination"}
-              subContainerClassName={"pages pagination"}
-              activeClassName={"active"} />
-          </div>}
+          {isShow === false
+          ? <h1>Đang tải dữ liệu, vui lòng đợi giây lát</h1>
+          : <React.Fragment>
+              <div className="container">
+                {showData.length > 0 ? showData : <h2>Không tồn tại đơn hàng nào</h2>}
+              </div>
+              {showData.length > 0 && <div style={{ display: 'flex' }} className="ProductsByCondition">
+                <ReactPaginate
+                  previousLabel={"<"}
+                  nextLabel={">"}
+                  breakLabel={"..."}
+                  breakClassName={"break-me"}
+                  pageCount={this.state.pageCount}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={1}
+                  onPageChange={this.handlePageClick}
+                  containerClassName={"pagination"}
+                  subContainerClassName={"pages pagination"}
+                  activeClassName={"active"} />
+              </div>}
+          </React.Fragment>
+          }
         </div>
       </React.Fragment>
     );

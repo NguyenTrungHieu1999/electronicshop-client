@@ -20,7 +20,8 @@ class ProductCate extends Component {
       postData: [],
       sorted: 0,
       price: 0,
-      productsData: []
+      productsData: [],
+      isShow: false
     };
 
     this.handlePageClick = this.handlePageClick.bind(this);
@@ -108,7 +109,8 @@ class ProductCate extends Component {
 
     this.setState({
       pageCount: Math.ceil(productsData.length / this.state.perPage),
-      postData: postData
+      postData: postData,
+      isShow : true
     })
   }
 
@@ -156,7 +158,7 @@ class ProductCate extends Component {
 
   render() {
     document.title = "Danh mục sản phẩm";
-    let { postData, rootCate, rootTitle, title } = this.state;
+    let { postData, rootCate, rootTitle, title, isShow } = this.state;
     return (
       <React.Fragment>
         <div className="breadcrumb">
@@ -227,20 +229,9 @@ class ProductCate extends Component {
                 </div>
 
               </div>
-
-              <div className="clearfix filters-container m-t-10">
-                <div className="row">
-                  <div className="col col-sm-6 col-md-3 col-lg-3 col-xs-6">
-                    <div className="filter-tabs">
-                      <ul id="filter-tabs" className="nav nav-tabs nav-tab-box nav-tab-fa-icon">
-                        <li className="active"> <a data-toggle="tab" href="#grid-container"><h3 className="section-title">{this.state.title}</h3></a> </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="search-result-container ">
-                <div id="myTabContent" className="tab-content category-list">
+              {isShow === false
+              ? <h1>Đang tải dữ liệu, vui lòng đợi giây lát</h1>
+              : <React.Fragment>
                   <section className="section new-arriavls ProductsByCondition">
                     <form onSubmit={this.onHandleSubmit}>
                       <div className="col col-sm-6 col-md-6 no-padding">
@@ -282,40 +273,54 @@ class ProductCate extends Component {
                       </div>
                       <button type="submit" className="btn-upper btn btn-primary checkout-page-button">Sắp xếp</button>
                     </form>
-
                   </section>
-                  
-                  {postData.length > 0 ?
-                    <React.Fragment>
-                      <div className="tab-pane active ProductsByCondition" id="grid-container">
-                        <div className="category-product">
-                          <div className="row">
-                            {postData}
-                          </div>
+                  <div className="clearfix filters-container m-t-10">
+                    <div className="row">
+                      <div className="col col-sm-6 col-md-3 col-lg-3 col-xs-6">
+                        <div className="filter-tabs">
+                          <ul id="filter-tabs" className="nav nav-tabs nav-tab-box nav-tab-fa-icon">
+                            <li className="active"> <a data-toggle="tab" href="#grid-container"><h3 className="section-title">{this.state.title}</h3></a> </li>
+                          </ul>
                         </div>
                       </div>
-                      {postData.length > 0
-                        && <div style={{ display: 'flex' }} className="ProductsByCondition">
-                          <ReactPaginate
-                            previousLabel={"<"}
-                            nextLabel={">"}
-                            breakLabel={"..."}
-                            breakClassName={"break-me"}
-                            pageCount={this.state.pageCount}
-                            marginPagesDisplayed={5}
-                            pageRangeDisplayed={4}
-                            onPageChange={this.handlePageClick}
-                            containerClassName={"pagination"}
-                            subContainerClassName={"pages pagination"}
-                            activeClassName={"active"} />
-                        </div>
+                    </div>
+                  </div>
+                  <div className="search-result-container ">
+                    <div id="myTabContent" className="tab-content category-list">
+                      {postData.length > 0 ?
+                        <React.Fragment>
+                          <div className="tab-pane active ProductsByCondition" id="grid-container">
+                            <div className="category-product">
+                              <div className="row">
+                                {postData}
+                              </div>
+                            </div>
+                          </div>
+                          {postData.length > 0
+                            && <div style={{ display: 'flex' }} className="ProductsByCondition">
+                              <ReactPaginate
+                                previousLabel={"<"}
+                                nextLabel={">"}
+                                breakLabel={"..."}
+                                breakClassName={"break-me"}
+                                pageCount={this.state.pageCount}
+                                marginPagesDisplayed={5}
+                                pageRangeDisplayed={4}
+                                onPageChange={this.handlePageClick}
+                                containerClassName={"pagination"}
+                                subContainerClassName={"pages pagination"}
+                                activeClassName={"active"} />
+                            </div>
+                          }
+                          {/* /.tab-pane */}
+                        </React.Fragment>
+                        : "Không có sản phẩm"
                       }
-                      {/* /.tab-pane */}
-                    </React.Fragment>
-                    : "Không có sản phẩm"
-                  }
-                </div>
-              </div>
+                    </div>
+                  </div>
+              </React.Fragment>
+              }
+
             </div>
           </div>
         </div>

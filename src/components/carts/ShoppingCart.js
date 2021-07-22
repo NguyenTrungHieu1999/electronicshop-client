@@ -25,7 +25,8 @@ class ShoppingCart extends Component {
       receiversAddressValid: '',
       phoneNumberValid: '',
       emailValid: '',
-      isOutTock: false
+      isOutTock: false,
+      isShow: false
     }
   }
 
@@ -70,7 +71,8 @@ class ShoppingCart extends Component {
     })
 
     this.setState({
-      products: productsCart
+      products: productsCart,
+      isShow: true
     })
   }
 
@@ -223,6 +225,7 @@ class ShoppingCart extends Component {
       receiversAddressValid,
       phoneNumberValid,
       emailValid,
+      isShow
     } = this.state;
     return (
       <React.Fragment>
@@ -242,261 +245,266 @@ class ShoppingCart extends Component {
           </div>
         </div>
         <div className="body-content outer-top-xs">
-          <div className="container">
-            <div className="row ">
-              <div className="shopping-cart">
-                <div className="shopping-cart-table ">
-                  <div className="table-responsive">
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          <th className="cart-description item">Hình ảnh</th>
-                          <th className="cart-product-name item">Tên sản phẩm</th>
-                          <th className="cart-qty item">Số lượng</th>
-                          <th className="cart-sub-total item">Giá</th>
-                          <th className="cart-total last-item">Tổng giá</th>
-                          <th className="cart-romove item">Xóa</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <ContextApi.Consumer>
-                          {({ addToCart, removeFromCart, removeItem }) => (
-                            products && products.map(item => {
-                              return (
-                                <React.Fragment key={item.product.id}>
-                                  <tr>
-                                    <td className="cart-image">
-                                      <a className="entry-thumbnail"
-                                        href={`/san-pham/${item.product.alias}&${item.product.id}`}>
-                                        <img src={item.product.productPhotos[0].url} alt="" />
-                                      </a>
-                                    </td>
-                                    <td className="cart-product-name-info">
-                                      <h4 className="cart-product-description">
-                                        <a href={`/san-pham/${item.product.alias}&${item.product.id}`}>
-                                          {item.product.name}
-                                        </a>
-                                      </h4>
-                                      <div className="row">
-                                        <div className="col-sm-12">
-                                          <div className="reviews">
-                                            ({item.product.inventory > 0 ? `Còn ${item.product.inventory} sản phẩm` : "Hết hàng"})
+          {isShow === false
+          ?<h1>Đang tải dữ liệu, vui lòng đợi giây lát</h1>
+          :<React.Fragment>
+              <div className="container">
+                <div className="row ">
+                  <div className="shopping-cart">
+                    <div className="shopping-cart-table ">
+                      <div className="table-responsive">
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th className="cart-description item">Hình ảnh</th>
+                              <th className="cart-product-name item">Tên sản phẩm</th>
+                              <th className="cart-qty item">Số lượng</th>
+                              <th className="cart-sub-total item">Giá</th>
+                              <th className="cart-total last-item">Tổng giá</th>
+                              <th className="cart-romove item">Xóa</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <ContextApi.Consumer>
+                              {({ addToCart, removeFromCart, removeItem }) => (
+                                products && products.map(item => {
+                                  return (
+                                    <React.Fragment key={item.product.id}>
+                                      <tr>
+                                        <td className="cart-image">
+                                          <a className="entry-thumbnail"
+                                            href={`/san-pham/${item.product.alias}&${item.product.id}`}>
+                                            <img src={item.product.productPhotos[0].url} alt="" />
+                                          </a>
+                                        </td>
+                                        <td className="cart-product-name-info">
+                                          <h4 className="cart-product-description">
+                                            <a href={`/san-pham/${item.product.alias}&${item.product.id}`}>
+                                              {item.product.name}
+                                            </a>
+                                          </h4>
+                                          <div className="row">
+                                            <div className="col-sm-12">
+                                              <div className="reviews">
+                                                ({item.product.inventory > 0 ? `Còn ${item.product.inventory} sản phẩm` : "Hết hàng"})
+                                              </div>
+                                            </div>
                                           </div>
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td className="cart-product-quantity">
-                                      <div className="quant-input">
-                                        <div className="arrows">
-                                          <div
-                                            onClick={
-                                              () => {
-                                                this.setToTalCart(item.product, 1);
-                                                addToCart(item.product, 1)
-                                              }
-                                            }
-                                            className="arrow plus gradient">
-                                            <span className="ir">
-                                              <i className="icon fa fa-sort-asc" />
-                                            </span>
+                                        </td>
+                                        <td className="cart-product-quantity">
+                                          <div className="quant-input">
+                                            <div className="arrows">
+                                              <div
+                                                onClick={
+                                                  () => {
+                                                    this.setToTalCart(item.product, 1);
+                                                    addToCart(item.product, 1)
+                                                  }
+                                                }
+                                                className="arrow plus gradient">
+                                                <span className="ir">
+                                                  <i className="icon fa fa-sort-asc" />
+                                                </span>
+                                              </div>
+                                              <div
+                                                className="arrow minus gradient"
+                                                onClick={() => {
+                                                  this.setToTalCart(item.product, -1)
+                                                  removeFromCart(item.product, 1)
+                                                }}>
+                                                <span className="ir">
+                                                  <i className="icon fa fa-sort-desc" />
+                                                </span>
+                                              </div>
+                                            </div>
+                                            <input type="text" value={item.total} />
                                           </div>
-                                          <div
-                                            className="arrow minus gradient"
+                                          {item.total === 5 || item.total === item.product.inventory ?
+                                            <label className="alert-warning">Số lượng sản phẩm đạt giới hạn được phép mua</label> : null}
+                                          {(item.total > item.product.inventory || item.total > 5 || item.product.inventory <= 0) && <label className="alert-warning">Số lượng sản phẩm vượt quá số lượng tồn ở kho</label>}
+                                        </td>
+                                        <CurrencyFormat value={item.product.price} displayType={'text'}
+                                          thousandSeparator={true} prefix={''} renderText={value =>
+                                            <td className="cart-product-sub-total">{value}₫</td>}
+                                        />
+                                        <CurrencyFormat value={item.product.price * item.total} displayType={'text'}
+                                          thousandSeparator={true} prefix={''} renderText={value =>
+                                            <td className="cart-product-grand-total">{value}₫</td>}
+                                        />
+                                        <td className="romove-item">
+                                          <span
                                             onClick={() => {
-                                              this.setToTalCart(item.product, -1)
-                                              removeFromCart(item.product, 1)
-                                            }}>
-                                            <span className="ir">
-                                              <i className="icon fa fa-sort-desc" />
-                                            </span>
-                                          </div>
-                                        </div>
-                                        <input type="text" value={item.total} />
-                                      </div>
-                                      {item.total === 5 || item.total === item.product.inventory ?
-                                        <label className="alert-warning">Số lượng sản phẩm đạt giới hạn được phép mua</label> : null}
-                                      {(item.total > item.product.inventory || item.total > 5 || item.product.inventory <= 0) && <label className="alert-warning">Số lượng sản phẩm vượt quá số lượng tồn ở kho</label>}
-                                    </td>
-                                    <CurrencyFormat value={item.product.price} displayType={'text'}
-                                      thousandSeparator={true} prefix={''} renderText={value =>
-                                        <td className="cart-product-sub-total">{value}₫</td>}
-                                    />
-                                    <CurrencyFormat value={item.product.price * item.total} displayType={'text'}
-                                      thousandSeparator={true} prefix={''} renderText={value =>
-                                        <td className="cart-product-grand-total">{value}₫</td>}
-                                    />
-                                    <td className="romove-item">
-                                      <span
-                                        onClick={() => {
-                                          this.removeItemCart(item.product);
-                                          removeItem(item.product)
-                                        }} title="Xóa" className="icon">
-                                        <i className="fa fa-trash-o"></i>
-                                      </span>
-                                    </td>
-                                  </tr>
-                                </React.Fragment>
-                              )
-                            })
-                          )}
-                        </ContextApi.Consumer>
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <td colSpan={7}>
-                            <div className="shopping-cart-btn">
-                              <span>
-                                <button onClick={() => window.location.href = ('/')} className="btn btn-upper btn-info">Tiếp tục mua hàng</button>
-                                &emsp;
-                                <ContextApi.Consumer>
-                                  {({ cleanCart }) => (
-                                    <button
-                                      className="btn btn-upper btn-danger pull-right"
-                                      onClick={() => {
-                                        this.cleanShoppingCart();
-                                        cleanCart();
-                                      }
-                                      }
-                                    >
-                                      Xóa toàn bộ giỏ hàng
-                                    </button>
-                                  )}
-                                </ContextApi.Consumer>
-                              </span>
-                            </div>
-                          </td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
-                </div>
-                <ContextApi.Consumer>
-                  {({ totalPrice }) => (
-                    products.length > 0 &&
-                    <div className="body-content">
-                      <div className="container">
-                        <div className="sign-in-page">
-                          <div className="row">
-                            <div className="col-md-8 col-sm-12 sign-in">
-                              <h4>Thêm địa chỉ giao hàng</h4>
-                              <p>Xin chào, Chào mừng quý khách đến với Electronic Shop.</p>
-                              <p>Quý khách vui lòng nhập đầy đủ thông tin bên dưới để tiến hành thanh toán!</p>
-                              <form className="register-form outer-top-xs">
-                                <div className="form-group">
-                                  <label className="info-title" htmlFor="Address">Địa chỉ<span>*</span></label>
-                                  <input
-                                    required
-                                    type="text"
-                                    className="form-control unicase-form-control text-input"
-                                    id="Address"
-                                    name="receiversAddress"
-                                    value={this.state.receiversAddress}
-                                    onChange={this.onHandleChange}
-                                  />
-                                  {receiversAddressValid !== '' ?
-                                    <label className="alert-danger">{receiversAddressValid}</label> : null}
+                                              this.removeItemCart(item.product);
+                                              removeItem(item.product)
+                                            }} title="Xóa" className="icon">
+                                            <i className="fa fa-trash-o"></i>
+                                          </span>
+                                        </td>
+                                      </tr>
+                                    </React.Fragment>
+                                  )
+                                })
+                              )}
+                            </ContextApi.Consumer>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <td colSpan={7}>
+                                <div className="shopping-cart-btn">
+                                  <span>
+                                    <button onClick={() => window.location.href = ('/')} className="btn btn-upper btn-info">Tiếp tục mua hàng</button>
+                                    &emsp;
+                                    <ContextApi.Consumer>
+                                      {({ cleanCart }) => (
+                                        <button
+                                          className="btn btn-upper btn-danger pull-right"
+                                          onClick={() => {
+                                            this.cleanShoppingCart();
+                                            cleanCart();
+                                          }
+                                          }
+                                        >
+                                          Xóa toàn bộ giỏ hàng
+                                        </button>
+                                      )}
+                                    </ContextApi.Consumer>
+                                  </span>
                                 </div>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    </div>
+                    <ContextApi.Consumer>
+                      {({ totalPrice }) => (
+                        products.length > 0 &&
+                        <div className="body-content">
+                          <div className="container">
+                            <div className="sign-in-page">
+                              <div className="row">
+                                <div className="col-md-8 col-sm-12 sign-in">
+                                  <h4>Thêm địa chỉ giao hàng</h4>
+                                  <p>Xin chào, Chào mừng quý khách đến với Electronic Shop.</p>
+                                  <p>Quý khách vui lòng nhập đầy đủ thông tin bên dưới để tiến hành thanh toán!</p>
+                                  <form className="register-form outer-top-xs">
+                                    <div className="form-group">
+                                      <label className="info-title" htmlFor="Address">Địa chỉ<span>*</span></label>
+                                      <input
+                                        required
+                                        type="text"
+                                        className="form-control unicase-form-control text-input"
+                                        id="Address"
+                                        name="receiversAddress"
+                                        value={this.state.receiversAddress}
+                                        onChange={this.onHandleChange}
+                                      />
+                                      {receiversAddressValid !== '' ?
+                                        <label className="alert-danger">{receiversAddressValid}</label> : null}
+                                    </div>
 
-                                <div className="form-group">
-                                  <label className="info-title" htmlFor="Receiver">Người nhận <span>*</span></label>
-                                  <input
-                                    required
-                                    type="text"
-                                    className="form-control unicase-form-control text-input"
-                                    id="Receiver"
-                                    name="receiver"
-                                    value={this.state.receiver}
-                                    onChange={this.onHandleChange}
-                                  />
-                                  {receiverValid !== '' ?
-                                    <label className="alert-danger">{receiverValid}</label> : null}
+                                    <div className="form-group">
+                                      <label className="info-title" htmlFor="Receiver">Người nhận <span>*</span></label>
+                                      <input
+                                        required
+                                        type="text"
+                                        className="form-control unicase-form-control text-input"
+                                        id="Receiver"
+                                        name="receiver"
+                                        value={this.state.receiver}
+                                        onChange={this.onHandleChange}
+                                      />
+                                      {receiverValid !== '' ?
+                                        <label className="alert-danger">{receiverValid}</label> : null}
+                                    </div>
+                                    <div className="form-group">
+                                      <label className="info-title" htmlFor="PhoneNumber">Số điện
+                                        thoại <span>*</span></label>
+                                      <input
+                                        type="tel"
+                                        className="form-control unicase-form-control text-input"
+                                        id="PhoneNumber"
+                                        name="phoneNumber"
+                                        value={this.state.phoneNumber}
+                                        onChange={this.onHandleChange}
+                                      />
+                                      {phoneNumberValid !== '' ?
+                                        <label className="alert-danger">{phoneNumberValid}</label> : null}
+                                    </div>
+                                    <div className="form-group">
+                                      <label className="info-title" htmlFor="Email">Email<span>*</span></label>
+                                      <input
+                                        type="tel"
+                                        className="form-control unicase-form-control text-input"
+                                        id="Email"
+                                        name="email"
+                                        value={this.state.email}
+                                        onChange={this.onHandleChange}
+                                      />
+                                      {emailValid !== '' ?
+                                        <label className="alert-danger">{emailValid}</label> : null}
+                                    </div>
+                                    <div className="form-group">
+                                      <label className="info-title" htmlFor="Note">Ghi chú<span></span></label>
+                                      <input
+                                        type="tel"
+                                        className="form-control unicase-form-control text-input"
+                                        id="Note"
+                                        name="note"
+                                        value={this.state.note}
+                                        onChange={this.onHandleChange}
+                                      />
+                                    </div>
+                                  </form>
                                 </div>
-                                <div className="form-group">
-                                  <label className="info-title" htmlFor="PhoneNumber">Số điện
-                                    thoại <span>*</span></label>
-                                  <input
-                                    type="tel"
-                                    className="form-control unicase-form-control text-input"
-                                    id="PhoneNumber"
-                                    name="phoneNumber"
-                                    value={this.state.phoneNumber}
-                                    onChange={this.onHandleChange}
-                                  />
-                                  {phoneNumberValid !== '' ?
-                                    <label className="alert-danger">{phoneNumberValid}</label> : null}
-                                </div>
-                                <div className="form-group">
-                                  <label className="info-title" htmlFor="Email">Email<span>*</span></label>
-                                  <input
-                                    type="tel"
-                                    className="form-control unicase-form-control text-input"
-                                    id="Email"
-                                    name="email"
-                                    value={this.state.email}
-                                    onChange={this.onHandleChange}
-                                  />
-                                  {emailValid !== '' ?
-                                    <label className="alert-danger">{emailValid}</label> : null}
-                                </div>
-                                <div className="form-group">
-                                  <label className="info-title" htmlFor="Note">Ghi chú<span></span></label>
-                                  <input
-                                    type="tel"
-                                    className="form-control unicase-form-control text-input"
-                                    id="Note"
-                                    name="note"
-                                    value={this.state.note}
-                                    onChange={this.onHandleChange}
-                                  />
-                                </div>
-                              </form>
-                            </div>
-                            <div className="col-md-4 col-sm-12 cart-shopping-total">
-                              <table className="table">
-                                <thead>
-                                  <tr>
-                                    <th>
-                                      <div className="cart-sub-total" style={{ textAlign: 'center' }}>
-                                        Tổng tiền
-                                        <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true}
-                                          prefix={''} renderText={value => <p
-                                            className="cart-product-sub-total">{value}₫</p>} />
-                                      </div>
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td>
-                                      {receiver === '' || receiversAddress === '' || phoneNumber === '' || email === '' || receiverValid !== '' || receiversAddressValid !== '' || phoneNumberValid !== '' || emailValid !== '' || this.state.isOutTock === true
-                                        ? ""
-                                        :
-                                        <React.Fragment>
-                                          <div style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
-                                            <button onClick={this.onHandleClick} type="submit"
-                                              className="btn btn-primary checkout-btn">Thanh toán ngay sau khi nhận
-                                              hàng
-                                            </button>
+                                <div className="col-md-4 col-sm-12 cart-shopping-total">
+                                  <table className="table">
+                                    <thead>
+                                      <tr>
+                                        <th>
+                                          <div className="cart-sub-total" style={{ textAlign: 'center' }}>
+                                            Tổng tiền
+                                            <CurrencyFormat value={totalPrice} displayType={'text'} thousandSeparator={true}
+                                              prefix={''} renderText={value => <p
+                                                className="cart-product-sub-total">{value}₫</p>} />
                                           </div>
-                                          <br />
-                                          {Cookies.get('isAuth') && <Payment receiver={receiver} receiversAddress={receiversAddress}
-                                            phoneNumber={phoneNumber} email={email} note={note} />}
-                                        </React.Fragment>
-                                      }
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                          {receiver === '' || receiversAddress === '' || phoneNumber === '' || email === '' || receiverValid !== '' || receiversAddressValid !== '' || phoneNumberValid !== '' || emailValid !== '' || this.state.isOutTock === true
+                                            ? ""
+                                            :
+                                            <React.Fragment>
+                                              <div style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+                                                <button onClick={this.onHandleClick} type="submit"
+                                                  className="btn btn-primary checkout-btn">Thanh toán ngay sau khi nhận
+                                                  hàng
+                                                </button>
+                                              </div>
+                                              <br />
+                                              {Cookies.get('isAuth') && <Payment receiver={receiver} receiversAddress={receiversAddress}
+                                                phoneNumber={phoneNumber} email={email} note={note} />}
+                                            </React.Fragment>
+                                          }
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  )}
-                </ContextApi.Consumer>
+                      )}
+                    </ContextApi.Consumer>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+          </React.Fragment>
+          }
         </div>
 
       </React.Fragment>
