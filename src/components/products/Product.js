@@ -6,7 +6,7 @@ import StarRatings from 'react-star-ratings';
 import { getCategoryById } from '../../api/categoryApi';
 import CardItem from '../homes/CardItem';
 import ReactPaginate from 'react-paginate';
-import { editReviewById, getReviewByProductId, totalRate } from '../../api/reviewApi';
+import { getReviewByProductId, totalRate } from '../../api/reviewApi';
 import createReviewApi from '../../api/createReviewApi';
 import Cookies from 'js-cookie';
 import Moment from 'moment';
@@ -19,9 +19,9 @@ import "./Product.css";
 import HotDeals from '../partials/leftmenus/HotDeals';
 import paymentApi from '../../api/paymentApi';
 import { validateString } from '../account/ValidationForm';
-import { userIdDecode } from '../../services/DecodeService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Comment from './Comment';
 
 class Product extends Component {
 
@@ -33,9 +33,7 @@ class Product extends Component {
       photos: [],
       cate: [],
       ratingForReview: 0,
-      ratingForEditReview: 0,
       ratingForProduct: 0,
-      ratingForUser: 0,
       offset: 0,
       perPage: 5,
       currentPage: 0,
@@ -46,7 +44,6 @@ class Product extends Component {
       perPageForReview: 5,
       currentPageForReview: 0,
       review: '',
-      editReview: '',
       comment: '',
       reviewValid: '',
       commentValid: '',
@@ -54,12 +51,10 @@ class Product extends Component {
       allComments: [],
       listCmt: [],
       canReviews: false,
-      parentId: null
     }
 
     this.addComment = React.createRef();
     this.changeRating = this.changeRating.bind(this);
-    this.changeRatingForEdit = this.changeRatingForEdit.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);
     this.handlePageClickForCmt = this.handlePageClickForCmt.bind(this);
     this.handlePageClickForReview = this.handlePageClickForReview.bind(this);
@@ -71,13 +66,7 @@ class Product extends Component {
     });
   }
 
-  changeRatingForEdit(newRating, name) {
-    this.setState({
-      ratingForEditReview: newRating
-    })
-  }
-
-  replyComment(userName, id) {
+  replyComment = (userName, id) => {
     this.addComment.current.focus();
     document.getElementById("AddCmt").placeholder = "@" + userName + " ";
     this.setState({
@@ -87,7 +76,6 @@ class Product extends Component {
 
   async receivedData() {
     const id = this.props.match.params.id;
-    const userId = parseInt(userIdDecode);
     try {
       const resProduct = await getProductById(id);
       if (resProduct && resProduct.isSuccessed) {
@@ -101,50 +89,15 @@ class Product extends Component {
           .then(res => {
             if (res.data && res.data.isSuccessed) {
               const sliceForCmt = res.data.resultObj.slice(this.state.offsetForCmt, this.state.offsetForCmt + this.state.perPageForCmt);
-              let cmt = sliceForCmt.map(c => {
+              const cmts = sliceForCmt.map(comment => {
                 return (
-                  <React.Fragment key={c.id}>
-                    <div className="comment-box">
-                      <span className="commenter-pic">
-                        <img src="/assets/images/avatar.png" className="img-fluid" />
-                      </span>
-                      <span className="commenter-name">
-                        <a>{c.userName}</a> <span className="comment-time">{Moment(c.createdDate).format('DD/MM/yyyy hh:mm:ss')}</span>
-                      </span>
-                      <p className="comment-txt more">{c.status ? c.text : <i>***Bình luận chứa nội dung không phù hợp***</i>}</p>
-
-                      {c.status && <div className="comment-meta">
-                        <button onClick={this.replyComment.bind(this, c.userName, c.id)} className="comment-reply"><i className="fa fa-reply-all" aria-hidden="true" /> Trả lời</button>
-                      </div>}
-                      {/* {c.userId === userIdDecode &&
-                        <div className="comment-meta">
-                          <button onClick={this.replyComment.bind(this, c.userName, c.id)} className="comment-reoly"><i className="fa fa-edit" aria-hidden="true" /> Chỉnh sửa</button>
-                        </div>
-                      } */}
-                      {c.children && c.children.length > 0
-                        && <div className="comment-box replied">
-                          {c.children.map(cr => {
-                            return (
-                              <React.Fragment key={cr.id}>
-                                <span className="commenter-pic">
-                                  <img src="/assets/images/avatar.png" className="img-fluid" />
-                                </span>
-                                <span className="commenter-name">
-                                  <a>{cr.user.userName}</a> <span className="comment-time">{Moment(cr.createdDate).format('DD/MM/yyyy hh:mm:ss')}</span>
-                                </span>
-                                <p className="comment-txt more">{cr.text}</p>
-                              </React.Fragment>
-                            )
-                          })
-                          }
-                        </div>
-                      }
-                    </div>
-                  </React.Fragment>
+                  <div className="comment-box">
+                    <Comment onReplyComment={this.replyComment} key={comment.id} comment={comment} />
+                  </div>
                 )
-              });
+              })
               this.setState({
-                allComments: cmt,
+                allComments: cmts,
                 listCmt: res.data.resultObj,
                 pageCountForCmt: Math.ceil(res.data.resultObj.length / this.state.perPageForCmt),
               })
@@ -331,49 +284,6 @@ class Product extends Component {
         draggable: true,
         progress: undefined,
       });
-    }
-  }
-
-  onHandleEditReview = async (reviewId) => {
-    const isAuth = Cookies.get('isAuth');
-    const { ratingForEditReview, editReview } = this.state;
-    debugger;
-    if (editReview !== '') {
-      if (isAuth === false || isAuth === undefined || isAuth === null) {
-        toast.warn('Quý khách phải đăng nhập hệ thống để thực hiện cập nhật đánh giá.', {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      } else {
-        if (ratingForEditReview !== 0) {
-          try {
-            const resEdit = await editReviewById({ id: reviewId, text: editReview, rateStar: ratingForEditReview });
-            debugger;
-            if (resEdit.isSuccessed) {
-              this.setState({
-                ratingForEditReview: 0,
-                editReview: '',
-              },
-                async () => {
-                  await this.receivedData();
-                });
-            } else {
-              alert(resEdit.message);
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        } else {
-          alert("Quý khách cần chọn số sao đánh giá")
-        }
-      }
-    } else {
-      alert("Quý khách vui lòng nhập đánh giá.")
     }
   }
 
@@ -816,8 +726,7 @@ class Product extends Component {
                                       </form>
                                     </span>
                                   </div>
-                                  {allComments.length > 0 && <React.Fragment> {allComments}</React.Fragment>
-                                  }
+                                  {allComments}
                                 </div>
                               </div>
                             </div>
