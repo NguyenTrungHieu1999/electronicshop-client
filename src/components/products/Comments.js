@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import Comment from './Comment';
 
 class Comments extends Component {
+  constructor(props) {
+    super(props);
+  }
+  
   render() {
-    const { comments, userName } = this.props;
+    const { comments, userName, onReplyComment} = this.props;
     debugger
     return (
       <div>
         {comments.map(function (comment) {
-          return <Comment userName={userName} key={comment.id} comment={comment} />
+          return <Comment onReplyComment={onReplyComment} userName={userName} key={comment.id} comment={comment} />
         })}
       </div>
     );

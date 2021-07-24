@@ -71,7 +71,7 @@ class Comment extends Component {
             </div>
           </React.Fragment>
         }
-        <Comments userName={comment.user.userName} comments={comment.children} />
+        <Comments onReplyComment={this.props.onReplyComment} userName={comment.user.userName} comments={comment.children} />
       </React.Fragment>
     );
   }
