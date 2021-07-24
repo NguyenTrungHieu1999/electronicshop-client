@@ -449,6 +449,11 @@ class Product extends Component {
                                     numberOfStars={5}
                                     name='rating'
                                   />
+                                  <br />
+                                  {allReviews.length > 0
+                                    ? <i >{this.state.ratingForProduct} sao / {allReviews.length} đánh giá</i>
+                                    : <i >Chưa có đánh giá </i>
+                                  }
                                 </div>
                               </div>
                             </div>
@@ -464,7 +469,7 @@ class Product extends Component {
                               </div>
                               <div className="pull-left">
                                 <div className="stock-box">
-                                  <span className="value">{product.inventory > 0 ? `Còn ${product.inventory} sản phẩm` : "Hết hàng"}</span>
+                                  <span className="value">{product.inventory > 0 ? <i style={{color: 'blue'}}> Còn {product.inventory} sản phẩm </i> : "Hết hàng"}</span>
                                 </div>
                               </div>
                             </div>
@@ -615,25 +620,29 @@ class Product extends Component {
                             <div className="product-tab">
                               <div className="product-reviews">
                                 <h4 className="title">Đánh giá của khách hàng</h4>
-                                <div className="reviews">
-                                  <div className="review">
-                                    {allReviews && listReview}
-                                    {allReviews.length > 0 && <div style={{ display: 'flex' }}>
-                                      <ReactPaginate
-                                        previousLabel={"<"}
-                                        nextLabel={">"}
-                                        breakLabel={"..."}
-                                        breakClassName={"break-me"}
-                                        pageCount={this.state.pageCountForReview}
-                                        marginPagesDisplayed={5}
-                                        pageRangeDisplayed={1}
-                                        onPageChange={this.handlePageClickForReview}
-                                        containerClassName={"pagination"}
-                                        subContainerClassName={"pages pagination"}
-                                        activeClassName={"active"} />
-                                    </div>}
+                                {allReviews.length > 0 ?
+                                  <div className="reviews">
+                                    <div className="review">
+                                      {listReview}
+                                      <div style={{ display: 'flex' }}>
+                                        <ReactPaginate
+                                          previousLabel={"<"}
+                                          nextLabel={">"}
+                                          breakLabel={"..."}
+                                          breakClassName={"break-me"}
+                                          pageCount={this.state.pageCountForReview}
+                                          marginPagesDisplayed={5}
+                                          pageRangeDisplayed={1}
+                                          onPageChange={this.handlePageClickForReview}
+                                          containerClassName={"pagination"}
+                                          subContainerClassName={"pages pagination"}
+                                          activeClassName={"active"} />
+                                      </div>
+                                    </div>
                                   </div>
-                                </div>
+                                  : <h5>Chưa có đánh giá</h5>
+                                }
+
                               </div>
                               {canReviews === true &&
                                 <div className="product-add-review">

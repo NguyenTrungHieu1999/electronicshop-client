@@ -27,6 +27,8 @@
     "react-star-ratings": "^2.3.0",
     "react-toastify": "^7.0.4",
     "redux": "^4.0.5",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.3",
     "slick-carousel": "^1.8.1",
     "web-vitals": "^0.2.4"
   },
