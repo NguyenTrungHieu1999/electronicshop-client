@@ -24,23 +24,11 @@ class Search extends Component {
     this.handlePageClick = this.handlePageClick.bind(this);
   }
 
-  onHandleSubmit = async (event) => {
+  onHandleSubmit = (event) => {
     event.preventDefault();
-    const { sorted, price } = this.state;
-    
-    const search = this.props.location.search;
-    const keyword = new URLSearchParams(search).get("key");
-    const resProducts = await searchProduct(keyword);
+    const { sorted, price, productsData } = this.state;
 
-    if (resProducts && resProducts.isSuccessed) {
-      const productsData = resProducts.resultObj;
-      this.setState({
-        productsData: productsData,
-        keyword: keyword
-      })
-    }
-
-    let data = [...this.state.productsData];
+    let data = [...productsData];
 
     switch (sorted) {
       case "1":
@@ -66,16 +54,13 @@ class Search extends Component {
     }
 
     this.setState({
-      productsData: data,
+      showData: data,
       offset: 0,
       currentPage: 0
     },
-      async () => {
+      async () => await
         this.receivedData()
-      }
     )
-
-    await this.receivedData();
   }
 
   onHandleChange = (event) => {
@@ -89,8 +74,8 @@ class Search extends Component {
   }
 
   async receivedData() {
-    let { productsData } = this.state;
-    const slice = productsData.slice(this.state.offset, this.state.offset + this.state.perPage);
+    let { showData } = this.state;
+    const slice = showData.slice(this.state.offset, this.state.offset + this.state.perPage);
 
     const postData = slice.map(pd =>
       <CardItem
@@ -100,7 +85,7 @@ class Search extends Component {
     )
 
     this.setState({
-      pageCount: Math.ceil(productsData.length / this.state.perPage),
+      pageCount: Math.ceil(showData.length / this.state.perPage),
       postData: postData,
       isShow: true
     })
@@ -129,6 +114,7 @@ class Search extends Component {
       const productsData = resProducts.resultObj;
       this.setState({
         productsData: productsData,
+        showData: productsData,
         keyword: keyword
       })
     }
@@ -201,9 +187,9 @@ class Search extends Component {
 
               </div>
 
-              {isShow === false 
-              ? <h1>Đang tải dữ liệu, vui lòng đợi giây lát</h1>
-              : <React.Fragment>
+              {isShow === false
+                ? <h1>Đang tải dữ liệu, vui lòng đợi giây lát</h1>
+                : <React.Fragment>
                   <section className="section new-arriavls ProductsByCondition">
                     <form onSubmit={this.onHandleSubmit}>
                       <div className="col col-sm-6 col-md-6 no-padding">
@@ -287,7 +273,7 @@ class Search extends Component {
                       }
                     </div>
                   </div>
-              </React.Fragment>
+                </React.Fragment>
               }
             </div>
           </div>

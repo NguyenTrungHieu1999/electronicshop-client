@@ -37,34 +37,11 @@ class ProductCate extends Component {
     })
   }
 
-  onHandleSubmit = async (event) => {
+  onHandleSubmit = (event) => {
     event.preventDefault();
-    const { sorted, price } = this.state;
-    const id = this.props.match.params.id;
+    const { sorted, price, productsData } = this.state;
 
-    try {
-      const resCate = await getCategoryById(id);
-      const resProducts = await getProductByCateId(id);
-
-      if (resCate && resCate.isSuccessed && resProducts && resProducts.isSuccessed) {
-        const productsData = resProducts.resultObj;
-        let rootTitle = "";
-        let rootCate = [];
-        if (resCate.resultObj.rootId !== null) {
-          const resRootCate = await getCategoryById(resCate.resultObj.rootId);
-          rootTitle = resRootCate.resultObj.name;
-          rootCate = resRootCate.resultObj;
-        }
-        this.setState({
-          title: resCate.resultObj.name,
-          rootCate: rootCate,
-          rootTitle: rootTitle,
-          productsData: productsData
-        })
-      }
-    } catch { }
-
-    let data = [...this.state.productsData];
+    let data = [...productsData];
 
     switch (sorted) {
       case "1":
@@ -90,17 +67,17 @@ class ProductCate extends Component {
     }
 
     this.setState({
-      productsData: data,
+      showData: data,
       offset: 0,
       currentPage: 0
-    })
-
-    await this.receivedData();
+    },
+      async () => await this.receivedData()
+    )
   }
 
   async receivedData() {
-    const { productsData } = this.state;
-    const slice = productsData.slice(this.state.offset, this.state.offset + this.state.perPage);
+    const { showData } = this.state;
+    const slice = showData.slice(this.state.offset, this.state.offset + this.state.perPage);
 
     const postData = slice.map(pd =>
       <CardItem
@@ -110,9 +87,9 @@ class ProductCate extends Component {
     )
 
     this.setState({
-      pageCount: Math.ceil(productsData.length / this.state.perPage),
+      pageCount: Math.ceil(showData.length / this.state.perPage),
       postData: postData,
-      isShow : true
+      isShow: true
     })
   }
 
@@ -150,7 +127,8 @@ class ProductCate extends Component {
           title: resCate.resultObj.name,
           rootCate: rootCate,
           rootTitle: rootTitle,
-          productsData: productsData
+          productsData: productsData,
+          showData: productsData
         })
       }
     } catch (err) { console.log(err) }
@@ -232,8 +210,8 @@ class ProductCate extends Component {
 
               </div>
               {isShow === false
-              ? <h1>Đang tải dữ liệu, vui lòng đợi giây lát</h1>
-              : <React.Fragment>
+                ? <h1>Đang tải dữ liệu, vui lòng đợi giây lát</h1>
+                : <React.Fragment>
                   <section className="section new-arriavls ProductsByCondition">
                     <form onSubmit={this.onHandleSubmit}>
                       <div className="col col-sm-6 col-md-6 no-padding">
@@ -320,7 +298,7 @@ class ProductCate extends Component {
                       }
                     </div>
                   </div>
-              </React.Fragment>
+                </React.Fragment>
               }
 
             </div>
