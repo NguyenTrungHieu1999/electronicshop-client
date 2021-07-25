@@ -794,7 +794,7 @@ class Product extends Component {
                                     </div>
                                   </div>
                                 </div>
-                                {this.state.pageCount > 0
+                                {products.length > 0
                                   && <div style={{ display: 'flex' }}>
                                     <ReactPaginate
                                       previousLabel={"<"}
