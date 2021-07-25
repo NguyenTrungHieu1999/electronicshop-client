@@ -6,7 +6,6 @@ import loginservice_json from '../../../api/loginservice_json';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useHistory } from 'react-router-dom';
 
 export default function ExternalLogins() {
 
@@ -19,8 +18,6 @@ export default function ExternalLogins() {
     providerKey: '',
     providerDisplayName: ''
   };
-
-  const history = useHistory();
 
   const responseGoogle = async (res) => {
 
@@ -107,7 +104,7 @@ export default function ExternalLogins() {
           }
           if (cartModels.length > 0) {
             axios.post('https://localhost:5001/api/Carts/create', { cartModels }, { headers })
-              .then(response => { history.goBack()})
+              .then(response => { window.location.href = '/'; console.log(response.data) })
               .catch(err => console.log(err));
           } else {
             axios.get('https://localhost:5001/api/Carts/getAll', { headers }).then(res1 => {
@@ -124,7 +121,7 @@ export default function ExternalLogins() {
               localStorage.setItem('cartItems', JSON.stringify(cartItems1));
               localStorage.removeItem('totalPrice');
               localStorage.setItem('totalPrice', totalPrice);
-              history.goBack();
+              window.location.href = '/';
             });
           }
         } else {
