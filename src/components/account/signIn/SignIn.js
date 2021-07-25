@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { validateEmail, validatePassword } from '../ValidationForm';
 import ExternalLogins from './ExternalLogins';
@@ -70,7 +70,7 @@ function SignIn() {
             }
             if (cartModels.length > 0) {
               axios.post('https://localhost:5001/api/Carts/create', { cartModels }, { headers })
-                .then(response => { window.location.href = '/'; console.log(response.data) })
+                .then(response => { history.goBack();})
                 .catch(err => console.log(err));
             } else {
               axios.get('https://localhost:5001/api/Carts/getAll', { headers }).then(res1 => {
@@ -87,7 +87,7 @@ function SignIn() {
                 localStorage.setItem('cartItems', JSON.stringify(cartItems1));
                 localStorage.removeItem('totalPrice');
                 localStorage.setItem('totalPrice', totalPrice);
-                window.location.href = '/';
+                history.goBack()
               });
             }
           } else {

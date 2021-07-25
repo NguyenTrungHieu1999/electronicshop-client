@@ -8,7 +8,6 @@ import "./TopMenu.css";
 function TopMenu() {
 
   const history = useHistory();
-  const style = { cursor: 'pointer' };
   const cookiesAuth = Cookies.get('isAuth');
 
   const [isAuth, setisAuth] = useState(cookiesAuth)
@@ -47,38 +46,6 @@ function TopMenu() {
                 <button onClick={() => { window.location.href = (`/tai-khoan`); }} className="dropbtn">Đăng nhập</button>
               </div>
             }
-
-
-
-            {/* {isAuth
-              ?
-              <React.Fragment>
-                <ul className="list-unstyled">
-                  <li className="myaccount" onClick={() => { history.push('thong-tin-tai-khoan') }} style={style}><span>Xin chào, {name}</span></li>
-                  <li className="wishlist" onClick={() => { history.push('/yeu-thich') }} style={style}><span>Yêu thích</span></li>
-                  <li
-                    className="check"
-                    style={style}
-                    onClick={signOutHandle}
-                  >
-                    <span>Đăng xuất</span>
-                  </li>
-                </ul>
-                
-              </React.Fragment>
-              :
-              <React.Fragment>
-                <ul className="list-unstyled">
-                  <li
-                    className="login"
-                    style={style}
-                    onClick={() => { history.push(`/tai-khoan`); }}
-                  >
-                    <span>Đăng nhập</span>
-                  </li>
-                </ul>
-              </React.Fragment>
-            } */}
           </div>
           <div className="clearfix" />
         </div>
