@@ -49,7 +49,7 @@ class Product extends Component {
       commentValid: '',
       allReviews: [],
       allComments: [],
-      listCmt: [],
+      totalCmt: 0,
       canReviews: false,
     }
 
@@ -98,7 +98,7 @@ class Product extends Component {
               })
               this.setState({
                 allComments: cmts,
-                listCmt: res.data.resultObj,
+                totalCmt: parseInt(res.data.message),
                 pageCountForCmt: Math.ceil(res.data.resultObj.length / this.state.perPageForCmt),
               })
             }
@@ -344,7 +344,7 @@ class Product extends Component {
 
   render() {
     document.title = "Chi tiết sản phẩm";
-    const { product, products, photos, cate, allReviews, allComments, canReviews, commentValid, reviewValid, listCmt, listReview } = this.state;
+    const { product, products, photos, cate, allReviews, allComments, canReviews, commentValid, reviewValid, totalCmt, listReview } = this.state;
     let hasItem = 0;
     let hasCart = 0;
     const settings = {
@@ -711,7 +711,7 @@ class Product extends Component {
                               <div className="col-12">
                                 <div className="comments">
                                   <div className="comments-details">
-                                    <span className="total-comments comments-sort">{listCmt.length} bình luận</span>
+                                    <span className="total-comments comments-sort">{totalCmt} bình luận</span>
                                     <span className="dropdown">
                                     </span>
                                   </div>
@@ -742,7 +742,7 @@ class Product extends Component {
                           </section>
                         </div>
                       </div>
-                      {listCmt.length > 0 && <div style={{ display: 'flex' }}>
+                      {totalCmt > 0 && <div style={{ display: 'flex' }}>
                         <ReactPaginate
                           previousLabel={"<"}
                           nextLabel={">"}
