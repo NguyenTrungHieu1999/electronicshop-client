@@ -24,9 +24,7 @@
     font-weight: 500;
     color: #5e5e5e;
 }
-.comments-details {
-    padding: 15px 15px;
-}
+
 .comments .comments .dropdown,
 .comments .dropup {
     position: relative;
@@ -40,8 +38,8 @@
     float: left;
     height: 100%;
     background-color: #FAFAFA;
-    padding: 10px 10px 10px;
-    margin-bottom: 15px;
+    padding: 5px 5px 5px;
+    margin-bottom: 5px;
     border-radius: 5px;
     border: 1px solid #ddd;
 }
@@ -49,7 +47,7 @@
     background-color: transparent;
     border: none;
     position: relative;
-    margin-bottom: 50px;
+    margin-bottom: 100px;
 }
 .comments .commenter-pic {
     width: 50px;
@@ -62,7 +60,7 @@
 }
 .comments .add-comment .commenter-name {
     width: 100%;
-    padding-left: 75px;
+    padding-left: 5%;
     position: absolute;
     top: 20px;
     left: 0px;
@@ -98,26 +96,26 @@
 .comments .commenter-name .comment-time {
     font-weight: normal;
     margin-left: 8px;
-    font-size: 15px;
+    font-size: 12px;
 }
 .comments p.comment-txt {
-    font-size: 15px;
+    font-size: 13px;
     border-bottom: 1px solid #ddd;
-    padding: 0px 0px 15px;
+    padding: 0px 6%;
 }
 .comments .commenter-name {
     display: inline-block;
     position: relative;
     top: -20px;
     left: 10px;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
 }
 .comments .comment-meta {
-    font-size: 14px;
+    font-size: 12px;
     color: #333;
-    padding: 2px 5px 0px;
-    line-height: 20px;
+    padding: 0px 2px 0px;
+    line-height: 5px;
     float: right;
 }
 .comments .reply-box {
@@ -127,13 +125,25 @@
     background-color: #fff;
     width: 95%;
     float: right;
-    margin-top: 15px;
+}
+
+.collapse-button {
+  display: block;
+  width: 100%;
+}
+
+.collapse-content.collapsed {
+  display: none;
+}
+
+.collapsed-content.expanded {
+  display: block;
 }
 
 /*======Responsive CSS=======*/
 @media (max-width: 767px){
 .comments .commenter-name {
-    font-size: 13px;
+    font-size: 12px;
     top: -5px;
 }
 .comments .commenter-pic {

@@ -22,6 +22,7 @@ import { validateString } from '../account/ValidationForm';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Comment from './Comment';
+import { nameDecode } from '../../services/DecodeService';
 
 class Product extends Component {
 
@@ -68,10 +69,24 @@ class Product extends Component {
 
   replyComment = (userName, id) => {
     this.addComment.current.focus();
-    document.getElementById("AddCmt").placeholder = "@" + userName + " ";
+    userName === nameDecode
+      ? document.getElementById("AddCmt").placeholder = ""
+      : document.getElementById("AddCmt").placeholder = "@" + userName + " "
     this.setState({
       parentId: id
     })
+  }
+
+  editComment = (text, id) => {
+    console.log(`text: ${text}, id: ${id}`);
+    commentApi.editComment({ id: id, text: text })
+      .then(res => {
+        debugger;
+        if(res.data&&res.data.isSuccessed){
+          this.setState(async() => await this.receivedData() );
+        }
+
+      }).catch(err => console.log(err));
   }
 
   async receivedData() {
@@ -91,8 +106,8 @@ class Product extends Component {
               const sliceForCmt = res.data.resultObj.slice(this.state.offsetForCmt, this.state.offsetForCmt + this.state.perPageForCmt);
               const cmts = sliceForCmt.map(comment => {
                 return (
-                  <div className="comment-box">
-                    <Comment onReplyComment={this.replyComment} key={comment.id} comment={comment} />
+                  <div key={comment.id} className="comment-box">
+                    <Comment onEditComment={this.editComment} onReplyComment={this.replyComment} key={comment.id} comment={comment} />
                   </div>
                 )
               })
@@ -469,7 +484,7 @@ class Product extends Component {
                               </div>
                               <div className="pull-left">
                                 <div className="stock-box">
-                                  <span className="value">{product.inventory > 0 ? <i style={{color: 'blue'}}> Còn {product.inventory} sản phẩm </i> : "Hết hàng"}</span>
+                                  <span className="value">{product.inventory > 0 ? <i style={{ color: 'blue' }}> Còn {product.inventory} sản phẩm </i> : "Hết hàng"}</span>
                                 </div>
                               </div>
                             </div>
@@ -624,20 +639,23 @@ class Product extends Component {
                                   <div className="reviews">
                                     <div className="review">
                                       {listReview}
-                                      <div style={{ display: 'flex' }}>
-                                        <ReactPaginate
-                                          previousLabel={"<"}
-                                          nextLabel={">"}
-                                          breakLabel={"..."}
-                                          breakClassName={"break-me"}
-                                          pageCount={this.state.pageCountForReview}
-                                          marginPagesDisplayed={5}
-                                          pageRangeDisplayed={1}
-                                          onPageChange={this.handlePageClickForReview}
-                                          containerClassName={"pagination"}
-                                          subContainerClassName={"pages pagination"}
-                                          activeClassName={"active"} />
-                                      </div>
+                                      {allReviews.length > 5
+                                        &&
+                                        <div style={{ display: 'flex' }}>
+                                          <ReactPaginate
+                                            previousLabel={"<"}
+                                            nextLabel={">"}
+                                            breakLabel={"..."}
+                                            breakClassName={"break-me"}
+                                            pageCount={this.state.pageCountForReview}
+                                            marginPagesDisplayed={5}
+                                            pageRangeDisplayed={1}
+                                            onPageChange={this.handlePageClickForReview}
+                                            containerClassName={"pagination"}
+                                            subContainerClassName={"pages pagination"}
+                                            activeClassName={"active"} />
+                                        </div>
+                                      }
                                     </div>
                                   </div>
                                   : <h5>Chưa có đánh giá</h5>
@@ -716,9 +734,6 @@ class Product extends Component {
                                     </span>
                                   </div>
                                   <div className="comment-box add-comment">
-                                    <span className="commenter-pic">
-                                      <img className="img-fluid" />
-                                    </span>
                                     <span className="commenter-name">
                                       <form onSubmit={this.onHandleSubmitComment}>
                                         <input
@@ -779,7 +794,7 @@ class Product extends Component {
                                     </div>
                                   </div>
                                 </div>
-                                {products.length > 0
+                                {products.length > 5
                                   && <div style={{ display: 'flex' }}>
                                     <ReactPaginate
                                       previousLabel={"<"}

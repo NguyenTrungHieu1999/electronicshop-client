@@ -7,12 +7,11 @@ class Comments extends Component {
   }
   
   render() {
-    const { comments, userName, onReplyComment} = this.props;
-    debugger
+    const { comments, userName, onReplyComment, onEditComment} = this.props;
     return (
       <div>
         {comments.map(function (comment) {
-          return <Comment onReplyComment={onReplyComment} userName={userName} key={comment.id} comment={comment} />
+          return <Comment onEditComment={onEditComment} onReplyComment={onReplyComment} userName={userName} key={comment.id} comment={comment} />
         })}
       </div>
     );
