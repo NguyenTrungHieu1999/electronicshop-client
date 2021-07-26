@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import moment from 'moment';
 import React, { Component } from 'react';
 import { nameDecode, userIdDecode } from '../../services/DecodeService';
@@ -60,7 +61,7 @@ class Comment extends Component {
                       <a>{comment.user.userName}</a> <span className="comment-time">{moment(comment.createdDate).format('DD/MM/yyyy hh:mm:ss')}</span>
                     </span>
                     <p className="comment-txt more">{comment.status ? comment.text : <i>***Bình luận chứa nội dung không phù hợp***</i>}</p>
-                    {comment.status &&
+                    {comment.status && Cookies.get('isAuth') &&
                       <React.Fragment>
                         <div className="comment-meta">
                           <button onClick={() => { this.setReplyComment(comment.user.userName, comment.id) }} className="comment-reply"><i className="fa fa-reply-all" aria-hidden="true" /> Trả lời</button>
@@ -134,7 +135,7 @@ class Comment extends Component {
                         <i>***Bình luận chứa nội dung không phù hợp***</i>
                       }
                     </p>
-                    {comment.status &&
+                    {comment.status && Cookies.get('isAuth') &&
                       <React.Fragment>
                         <div className="comment-meta">
                           <button onClick={() => { this.setReplyComment(comment.user.userName, comment.id) }} className="comment-reply"><i className="fa fa-reply-all" aria-hidden="true" /> Trả lời</button>
