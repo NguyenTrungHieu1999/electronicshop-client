@@ -5,13 +5,13 @@ class Comments extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   render() {
-    const { comments, userName, onReplyComment, onEditComment} = this.props;
+    const { comments, userName, onReplyComment, onEditComment, onDeleteComment, roles } = this.props;
     return (
       <div>
         {comments.map(function (comment) {
-          return <Comment onEditComment={onEditComment} onReplyComment={onReplyComment} userName={userName} key={comment.id} comment={comment} />
+          return <Comment roles={roles} onDeleteComment={onDeleteComment} onEditComment={onEditComment} onReplyComment={onReplyComment} userName={userName} key={comment.id} comment={comment} />
         })}
       </div>
     );

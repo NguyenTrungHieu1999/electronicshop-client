@@ -23,6 +23,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Comment from './Comment';
 import { nameDecode } from '../../services/DecodeService';
+import { getAllRole } from '../../api/roleApi';
 
 class Product extends Component {
 
@@ -82,10 +83,25 @@ class Product extends Component {
     commentApi.editComment({ id: id, text: text })
       .then(res => {
         debugger;
-        if(res.data&&res.data.isSuccessed){
-          this.setState(async() => await this.receivedData() );
+        if (res.data && res.data.isSuccessed) {
+          this.setState(async () => await this.receivedData());
         }
 
+      }).catch(err => console.log(err));
+  }
+
+  deleteComment = (id) => {
+    commentApi.deleteComment(id)
+      .then(res => {
+        if (res.data && res.data.isSuccessed) {
+          this.setState(
+            {
+              offsetForCmt: 0,
+              currentPageForCmt: 0,
+            },
+            async () => await this.receivedData()
+          );
+        }
       }).catch(err => console.log(err));
   }
 
@@ -97,6 +113,7 @@ class Product extends Component {
         const resCate = await getCategoryById(resProduct.resultObj.categoryId);
         const resProducts = await getProductByCateId(resCate.resultObj.id);
         const restotalRating = await totalRate(id);
+        const roles = await getAllRole();
         const resReviewByProduct = await getReviewByProductId(id);
         const sliceForReview = resReviewByProduct.resultObj.slice(this.state.offsetForReview, this.state.offsetForReview + this.state.perPageForReview);
         commentApi
@@ -107,7 +124,14 @@ class Product extends Component {
               const cmts = sliceForCmt.map(comment => {
                 return (
                   <div key={comment.id} className="comment-box">
-                    <Comment onEditComment={this.editComment} onReplyComment={this.replyComment} key={comment.id} comment={comment} />
+                    <Comment
+                      roles={roles.resultObj}
+                      onDeleteComment={this.deleteComment}
+                      onEditComment={this.editComment}
+                      onReplyComment={this.replyComment}
+                      key={comment.id}
+                      comment={comment}
+                    />
                   </div>
                 )
               })
