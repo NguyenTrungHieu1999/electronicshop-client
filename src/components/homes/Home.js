@@ -7,8 +7,6 @@ import CardItem from './CardItem';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import cartApi from '../../api/cartApi';
-import Cookies from 'js-cookie';
 
 class Home extends Component {
 
@@ -165,23 +163,6 @@ class Home extends Component {
         }
       ]
     };
-    if (Cookies.get('isAuth')) {
-      cartApi.getAllCarts().then(res => {
-        let totalPrice = 0;
-        let cartItems = [];
-        res.data && res.data.resultObj.map(item => {
-          totalPrice += item.product.price * item.quantity;
-          cartItems.push({
-            product: item.product,
-            total: item.quantity
-          })
-        });
-
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-        localStorage.removeItem('totalPrice');
-        localStorage.setItem('totalPrice', totalPrice);
-      });
-    }
     return (
       <div>
         <div className="body-content outer-top-vs" id="top-banner-and-menu">

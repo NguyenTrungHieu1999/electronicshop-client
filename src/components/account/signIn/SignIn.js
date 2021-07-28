@@ -70,26 +70,10 @@ function SignIn() {
             }
             if (cartModels.length > 0) {
               axios.post('https://localhost:5001/api/Carts/create', { cartModels }, { headers })
-                .then(response => { window.location.href = '/'; console.log(response.data) })
+                .then(response => { console.log(response.data) })
                 .catch(err => console.log(err));
-            } else {
-              axios.get('https://localhost:5001/api/Carts/getAll', { headers }).then(res1 => {
-                let totalPrice = 0;
-                let cartItems1 = [];
-                res1.data && res1.data.resultObj.map(item => {
-                  totalPrice += item.product.price * item.quantity;
-                  cartItems1.push({
-                    product: item.product,
-                    total: item.quantity
-                  })
-                });
-
-                localStorage.setItem('cartItems', JSON.stringify(cartItems1));
-                localStorage.removeItem('totalPrice');
-                localStorage.setItem('totalPrice', totalPrice);
-                window.location.href = '/';
-              });
-            }
+            } 
+            window.location.href = '/';
           } else {
             toast.warn(res.data.message, {
               position: "top-right",

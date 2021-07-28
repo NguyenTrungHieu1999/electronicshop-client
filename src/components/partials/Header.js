@@ -5,9 +5,7 @@ import Logo from '../../logo.png';
 import { ContextApi } from '../../contexts/Context';
 import { withRouter } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
-import cartApi from '../../api/cartApi';
 import { validateString } from '../account/ValidationForm';
-import Cookies from 'js-cookie';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -61,24 +59,6 @@ class Header extends Component {
     }
   }
   render() {
-    if (Cookies.get('isAuth')) {
-      cartApi.getAllCarts().then(res => {
-        let totalPrice = 0;
-        let cartItems = [];
-        res.data && res.data.resultObj.map(item => {
-          totalPrice += item.product.price * item.quantity;
-          cartItems.push({
-            product: item.product,
-            total: item.quantity
-          })
-        });
-
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-        localStorage.removeItem('totalPrice');
-        localStorage.setItem('totalPrice', totalPrice);
-      });
-    }
-
     return (
       <header className="header-style-1">
         <ToastContainer />
