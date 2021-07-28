@@ -21,7 +21,8 @@ class ProductCate extends Component {
       sorted: 0,
       price: 0,
       productsData: [],
-      isShow: false
+      isShow: false,
+      showData: []
     };
 
     this.handlePageClick = this.handlePageClick.bind(this);
