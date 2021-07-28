@@ -16,17 +16,21 @@ class CardItem extends Component {
 
   async componentDidMount() {
     const restotalRating = await totalRate(this.props.product.id);
-    this.setState({
-      rating: restotalRating.resultObj
-    })
+    if (restotalRating && restotalRating.isSuccessed) {
+      this.setState({
+        rating: restotalRating.resultObj
+      });
+    }
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    if(prevProps.product !== this.props.product || prevState.rating !== this.state.rating){
+    if (prevProps.product !== this.props.product || prevState.rating !== this.state.rating) {
       const restotalRating = await totalRate(this.props.product.id);
-      this.setState({
-        rating: restotalRating.resultObj
-      })
+      if (restotalRating && restotalRating.isSuccessed) {
+        this.setState({
+          rating: restotalRating.resultObj
+        });
+      }
     }
   }
 
